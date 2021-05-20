@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<title>CSS Variables: var(--subtitle);</title>
+<link href="../../inspire.js/inspire.css" rel="stylesheet" />
+<link href="../../inspire.js/theme.css" rel="stylesheet" />
+<link href="../talks/shared/intro-outro.css" rel="stylesheet" />
+<link href="prism.css" rel="stylesheet" />
+<link href="theme.css" rel="stylesheet" />
+<link href="talk.css" rel="stylesheet" />
+<link href="../talks/shared/browser-support.css" rel="stylesheet" />
+</head>
+<body class="language-css"
+	data-markdown-selectors="details.notes, .md, .takeaway.slide > h1"
+	data-load-plugins="docs">
+
+<header id="intro" class="slide dont-resize" data-source="flickr.com/photos/billward/16601966117">
+	<h1>Dynamic CSS Masterclass</h1>
+	<h2>Day 1: Foundation</h2>
+	<p class="attribution">By <a href="http://lea.verou.me">Lea Verou</a> (<a href="http://twitter.com/leaverou">@LeaVerou</a>)</p>
+</header>
+
+<article class="slide" id="preprocessors" data-steps="1">
+	<h1>Variables in <span class="swap" style="--content: 'Sass'; --content-1: 'Less'"></span></h1>
+	<pre><code style="--content: '$'; --content-1: '@'">
+		<span class="swap"></span>accent-color: #f06;
+		<span class="swap"></span>heading-font: Fancy Webfont, serif;
+
+		h2 {
+			color: <span class="swap"></span>accent-color;
+			font-family: <span class="swap"></span>heading-font;
+		}
+	</code></pre>
+
+	<details class="notes">
+		You may come from a Sass or Less background, where variables are used like this…
+	</details>
+</article>
+
+<article class="slide" id="preprocessors-scope">
+	<h1>So many refactor to this…</h1>
+	<pre><code style="--content: '$'; --content-1: '@'">
+		:root {
+			--accent-color: #f06;
+			--heading-font: Fancy Webfont, serif;
+		}
+
+		h2 {
+			color: var(--accent-color);
+			font-family: var(--heading-font);
+		}
+	</code></pre>
+
+	<details class="notes">
+		So people often migrate to CSS variables by just changing syntax.
+		And it works, for the most part.
+		But it's like hiring a Michelin star chef to fry eggs.
+		CSS Custom properties can do so much more!
+	</details>
+</article>
+
+<article class="isolated demo slide" id="cut-corner" style="--division: 55">
+	<textarea class="language-css">
+		.cut-corner {
+			padding: 1em;
+			clip-path: polygon(
+				calc(100% - var(--corner-size)) 0,
+				100% var(--corner-size),
+				100% 100%, 0 100%, 0 0
+			);
+		}
+
+		#a {
+			background: hotpink;
+			--corner-size: 1em;
+		}
+
+		#b {
+			background: skyblue;
+			--corner-size: 10px;
+		}
+	</textarea>
+	<textarea class="language-html">
+		<p class="cut-corner" id="a">CSS is awesome</p>
+		<p class="cut-corner" id="b">CSS is awesome</p>
+	</textarea>
+	<details class="notes">
+		CSS variables are scoped on elements, not curly bracket blocks,
+		taking full advantage of the browser’s DOM structure knowledge.
+
+		This means that we can set them and use them in entirely unrelated parts of
+		our CSS, and things just work beautifully.
+		Take a look at this example. How would you do it in Sass?
+
+		Try setting the corner size via an inline style.
+		That is definitely something you can't do with preprocessors!
+
+		-------
+
+		*(We revisit this slide after discussing fallbacks)*
+
+		Note that these cutout corners can only be 45 degrees, we cannot have
+		different horizontal and vertical offsets.
+		How can we change this example so that we can also use
+		`--corner-size-x` and `--corner-size-y` (either both or just one)?
+
+		Does this work like a shorthand? If not, what's the difference?
+	</details>
+	<!-- Homework: add --corner-top-left size etc, add shorthands -->
+</article>
+
+<article class="takeaway slide">
+	<h1 class="no-md">
+		Sass variables are scoped on <em><code>{…}</code> blocks</em>,
+		CSS variables are scoped on <em>elements</em>
+		<div class="note">(lexical vs dynamic scope)</div>
+	</h1>
+</article>
+
+<article class="confused slide">
+	<h1 class="balance-lines">
+		<q>I thought we weren’t supposed to call them CSS variables?</q>
+	</h1>
+	<details class="notes bottom-right">
+		* Short answer: *it doesn't matter, use whatever term you want*
+		* [The spec itself](https://drafts.csswg.org/css-variables/) uses both.
+		* Yes, they are custom properties, but they can be used as reactive variables too.
+		Certain use cases naturally make more sense with one or the other term, others work with both.
+		* I will be using both terms throughout this workshop.
+		* Some people have suggested using the term "custom property" when setting (`--foo: ...`)
+		and "CSS variable" when getting (`var(--foo)`).
+		Feel free to adopt this if it resonates with you. Or don't. *It doesn't actually matter.*
+	</details>
+</article>
+
+<article class="isolated demo slide" id="inheritance">
+	<textarea class="language-css">
+		:root {
+			--primary-color: hsl(250 30% 40%);
+			--secondary-color: hsl(190 40% 40%);
+		}
+
+		h1 {
+			color: var(--primary-color);
+		}
+
+		article {
+			background: var(--primary-color);
+		}
+
+		article h2 {
+			background: var(--primary-color);
+			color: white;
+		}
+
+		article .content {
+			background: hsl(0 0% 100% / .8);
+		}
+	</textarea>
+	<!--
+	article.alt {
+		--primary-color: var(--secondary-color);
+	}
+	 -->
+	<style class="demo" data-slide>
+		body {
+			background: white;
+			color: black;
+			font: 100%/1.5 Helvetica Neue, Segoe UI, sans-serif;
+		}
+
+		article {
+			border-radius: .3rem;
+			overflow: hidden;
+			margin: 1em 0;
+		}
+
+		article h2 {
+			padding: .3rem .5rem;
+			margin: 0;
+		}
+
+		article .content {
+			padding: .1em .5rem;
+		}
+	</style>
+	<textarea class="language-html">
+		<h1>Lea Verou's blog</h1>
+
+		<article>
+			<h2>Blog Post 1</h2>
+			<div class="content">
+				<p>Blog post 1 content</p>
+			</div>
+		</article>
+
+		<article class="alt">
+			<h2>Blog Post 2</h2>
+			<div class="content">
+				<p>Blog post 2 content</p>
+			</div>
+		</article>
+	</textarea>
+	<details class="notes">
+		The browser is aware of our DOM structure, and custom properties inherit by default.
+		Here we have defined our properties on the `:root` selector,
+		but they are available on every other element.
+		But even better, we can *override* variables on individual elements
+		and it's the more specific value that inherits down.
+
+		Exercise: Let's make any blog post with the `.alt` class use the secondary color instead.
+	</details>
+</article>
+
+<article class="takeaway slide">
+	<h1>CSS Variables are actually <br>
+		<span class="delayed collapsed">inherited</span> CSS properties</h1>
+</article>
+
+<article class="question slide">
+	<h1>What if we don’t want inheritance?</h1>
+</article>
+
+<article class="isolated demo slide" id="cut-corner">
+	<textarea class="language-css">
+		* {
+			clip-path: polygon(
+				calc(100% - var(--corner-size)) 0,
+				100% var(--corner-size),
+				100% 100%, 0 100%, 0 0
+			);
+		}
+
+		p {
+			padding: 1em;
+			background: skyblue;
+			--corner-size: 1em;
+		}
+	</textarea>
+	<textarea class="language-html">
+		<p>CSS is <mark>awesome</mark></p>
+	</textarea>
+	<details class="notes">
+		Sometimes inheritance is not desirable.
+
+		One common pattern for using custom properties more as properties
+		is to use them on very liberal selectors, e.g. `input` or even `*`
+		and then specify them only when we want to trigger the corresponding effect.
+		Often, these effects should not be inherited.
+
+		One way to disable inheritance is to just make sure the property always has a non-inherited value.
+		`initial` is perfect for that: it resets the property to its initial value,
+		as if it had not been set at all, but still prevents it from inheriting.
+		4. There is a newer, more explicit way to disable inheritance that we will see later on.
+		We can always enable inheritance on a case-by-case basis by using the `inherit` keyword.
+	</details>
+</article>
+
+<article class="takeaway slide">
+	<h1>
+		Disable inheritance by setting the property to `initial` on `*`
+		<div class="note no-md">(for now)</span>
+	</h1>
+</article>
+
+<article class="isolated demo slide" id="cut-corner">
+	<textarea class="language-css">
+		@property --corner-size {
+			syntax: "<length>";
+			initial-value: 0;
+			inherits: false;
+		}
+
+		* {
+			clip-path: polygon(
+				calc(100% - var(--corner-size)) 0,
+				100% var(--corner-size),
+				100% 100%, 0 100%, 0 0
+			);
+		}
+
+		p {
+			padding: 1em;
+			background: skyblue;
+			--corner-size: 1em;
+		}
+	</textarea>
+	<textarea class="language-html">
+		<p>CSS is <mark>awesome</mark></p>
+	</textarea>
+	<details class="notes">
+		There is a newer, more explicit way to disable inheritance: the <code class="css">@property</code> rule.
+		It makes custom properties tremendously more powerful, and we will keep revisiting it
+		throughout this workshop.
+
+		Unfortunately, it cannot help with *every* case where you may want to disable inheritance,
+		because all three of its descriptors are mandatory,
+		and you can’t describe all your custom properties with the `syntax` descriptor.
+	</details>
+</article>
+
+<article class="takeaway slide">
+	<h1>`@property` allows us to register our properties and control how they behave</h1>
+</article>
+
+<article class="slide">
+	<h1>Remember this?</h1>
+	<pre><code class="language-javascript">
+		CSS.registerProperty({
+			name: "--corner-size",
+			syntax: "&lt;length>";
+			initialValue: "0",
+			inherits: false
+		})
+	</code></pre>
+	<details class="notes">
+		Registering custom properties, started as a JS API,
+		and we got the declarative `@property` rule later.
+
+		However, today there is only a very marginal benefit to using the JS API,
+		as it's supported by the same browsers,
+		it just shipped in a slightly older version compared to `@property`.
+		Given that most users of these browsers have updated to a version that supports `@property`
+		at this point, you would only be getting a small increase in support,
+		for a significant increase in maintainability cost.
+
+		Also, Safari has [hinted](https://github.com/w3c/css-houdini-drafts/issues/940)
+		that they may implement `@property` *first* due to its improved performance.
+	</details>
+</article>
+
+<article class="browser-support slide">
+	<table>
+		<thead>
+			<tr>
+				<th></th>
+				<th><img src="img/chrome-logo.svg" alt="Chrome"></th>
+				<th><img src="img/firefox-logo.svg" alt="Firefox"></th>
+				<th><img src="img/edge-logo.svg" alt="Edge"></th>
+				<th><img src="img/safari-logo.png" alt="Safari"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th><a href="https://caniuse.com/mdn-css_at-rules_property">@property</a></th>
+				<td>85</td>
+				<td></td>
+				<td>85</td>
+				<td></td>
+			</tr>
+			<tr>
+				<th><a href="https://caniuse.com/mdn-api_css_registerproperty">CSS.registerProperty()</a></th>
+				<td>79</td>
+				<td></td>
+				<td>79</td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+</article>
+
+<section>
+	<header class="slide">
+		<h1>Fallbacks</h1>
+	</header>
+
+	<article class="isolated demo slide" id="gallery" style="--division: 55">
+		<textarea class="language-css">
+			img {
+				--size: 20vw;
+				width: var(--size);
+				height: var(--size);
+				object-fit: cover;
+				transform: scale(var(--scale))
+				           rotate(var(--rotate));
+			}
+
+			img:hover {
+				background: yellow;
+			}
+		</textarea>
+		<style class="demo" data-slide>
+			img {
+				margin: .3em;
+				padding: .2em;
+				background: white;
+				box-shadow: 0 .05em .1em rgb(0 0 0 / .1);
+				transition: .3s;
+			}
+		</style>
+		<textarea class="language-html">
+			<img src="img/cat1.jpg" alt="">
+			<img src="img/cat2.jpg" alt="">
+			<img src="img/cat3.jpg" alt="">
+			<img src="img/cat4.jpg" alt="">
+			<img src="img/cat5.jpg" alt="">
+			<img src="img/cat6.jpg" alt="">
+			<img src="img/cat7.jpg" alt="">
+			<img src="img/cat8.jpg" alt="">
+			<img src="img/cat9.jpg" alt="">
+			<img src="img/cat10.jpg" alt="">
+		</textarea>
+		<!-- TODO translate to show it can have two tokens -->
+		<details class="notes">
+			* Often, we use custom properties as optional styling hooks that may or may not be used.
+			This allows us to create a sort of *"styling API"* for us or even other developers.
+			* In these cases, we want to provide default values along,
+			so that people using our code do not need to set every single property.
+			* Here, we are using `--rotate` and `--scale` properties to allow specifying
+			transforms individually on these images
+			(aside: there are [actual standardized properties for this, but support is still limited](https://developer.mozilla.org/en-US/docs/Web/CSS/rotate)).
+			* Let's try to apply subtle rotations to some images ([Cicada principle](https://lea.verou.me/2020/07/the-cicada-principle-revisited-with-css-variables/))
+			and also enlarge them slightly on `:hover`.
+			* Notice that for our transforms to be applied, both need to be set, defeating the purpose. What to do?
+			* We *could* set `--scale` and `--rotate` on `img` as well, and it would fix the demo,
+			but is not ideal because:
+			  - it breaks inheritance
+			  - in "real life" cases where our selectors are not as simple as `img` it forces our API consumers to battle specificity
+			* Thankfully, the `var()` function allows for a fallback parameter too, which is perfect for this.
+			* Unlike just setting variables to values, the fallback parameter also allows us to provide
+			different fallbacks per usage, **for the same custom property**
+		</details>
+	</article>
+
+	<article class="question slide">
+		<h1>How do these fallbacks actually work?</h1>
+	</article>
+
+	<article class="slide color-reveal">
+		<div class="delayed-children">
+			<br>
+			<div style="background: yellowgreen">--accent-color: yellowgreen</div>
+			<br>
+			<div style="background: orange">No --accent-color set</div>
+			<br>
+			<div style="background: red">No CSS variables support</div>
+		</div>
+
+		<pre style="margin-top: 2em; overflow: visible"><code>
+			background: red;
+			background: var(--accent-color, orange);
+		</code></pre>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>The `var()` fallback is no help in browsers that don’t support CSS variables</h1>
+	</article>
+
+	<article class="browser-support slide">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th><img src="img/chrome-logo.svg" alt="Chrome"></th>
+					<th><img src="img/firefox-logo.svg" alt="Firefox"></th>
+					<th><img src="img/edge-logo.svg" alt="Edge"></th>
+					<th><img src="img/safari-logo.png" alt="Safari"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th><a href="https://caniuse.com/css-variables" target="_blank">CSS Variables</a></th>
+					<td>49</td>
+					<td>31</td>
+					<td>15</td>
+					<td>9.1</td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+
+	<article class="demo slide" id="atsupports">
+		<textarea class="language-css">
+			article {
+				background: red;
+			}
+
+			@supports (--css: variables) {
+				article {
+					background: green;
+				}
+			}
+		</textarea>
+		<details class="notes">
+			For most cases, providing fallbacks via the cascade
+			works fine to provide a baseline accessible experience to the
+			few browsers that still don’t support custom properties.
+			However, if you need a more elaborate fallback, you can use the
+			[`@supports`](https://developer.mozilla.org/en-US/docs/Web/CSS/@supports)
+			rule. Any custom property and any value will do as the test.
+
+			Avoid using its negative form (`@supports not (--css: variables)`),
+			as that will prevent you from targeting the really old browsers (notably, IE 11 or under)
+			that don’t even support `@supports`.
+		</details>
+	</article>
+
+	<article class="browser-support slide">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th><img src="img/chrome-logo.svg" alt="Chrome"></th>
+					<th><img src="img/firefox-logo.svg" alt="Firefox"></th>
+					<th><img src="img/edge-logo.svg" alt="Edge"></th>
+					<th><img src="img/safari-logo.png" alt="Safari"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>CSS Variables</th>
+					<td>49</td>
+					<td>31</td>
+					<td>15</td>
+					<td>9.1</td>
+				</tr>
+				<tr>
+					<th><a href="https://caniuse.com/css-featurequeries">@supports</a></th>
+					<td>28</td>
+					<td>22</td>
+					<td>13</td>
+					<td>9</td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+
+	<article class="slide color-reveal">
+		<div class="delayed-children">
+			<br>
+			<div style="background: orange">--accent-color: initial</div>
+			<br>
+			<div style="background: orange">--accent-color: unset</div>
+			<br>
+			<div style="background: orange">--accent-color: inherit</div>
+			<br>
+			<div style="background: orange">--accent-color: revert</div>
+		</div>
+
+		<pre style="margin-top: 2em; overflow: visible"><code>
+			background: red;
+			background: var(--accent-color, orange);
+		</code></pre>
+	</article>
+
+	<article class="question slide">
+		<h1>Do all CSS wide keywords trigger a variable’s fallback?!</h1>
+	</article>
+
+	<article class="demo slide reveal" data-steps="1">
+		<textarea class="language-css preserve-selectors">
+			:root {
+				--accent-color: skyblue;
+			}
+
+			.slide {
+				/* --accent-color: inherit; */
+				background: var(--accent-color, orange);
+			}
+		</textarea>
+		<details class="notes css">
+			No, not all global CSS values simply trigger a variable's fallback.
+
+			* `initial` does, by definition
+			* `inherit` does not, unless there's no value to inherit
+			* `unset` in custom properties behaves identically to `inherit`
+				(unless they are defined as non-inheriting).
+			* `revert` reverts the custom property to its UA provided value,
+				which is ...`unset`.
+			* Surprised by the result of `revert`?
+			[You're not alone](https://twitter.com/LeaVerou/status/1395379573190168576)!
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Out of all CSS wide keywords, only `initial` actually triggers the fallback
+			<div class="note">(and anything that resolves to it)</div>
+		</h1>
+	</article>
+
+	<article class="slide" id="multiple-default-values" data-steps="1">
+		<h1>Multiple fallbacks?</h1>
+		<div>
+			<pre><code>background: var(--nonexistent, none, yellowgreen);</code></pre>
+			<pre><code>
+				/* Resolves to: */
+				background: none, yellowgreen;
+			</code></pre>
+		</div>
+		<details class="notes">
+			Anything after the comma is part of the fallback, including …other commas.
+		</details>
+	</article>
+
+	<article class="slide dont-resize" id="daisy-chain" data-source="Image source: https://www.flickr.com/photos/26235325@N05/5641177399">
+		<pre><code>
+			var(--color1<span class="delayed">, var(--color2<span class="delayed">, var(--color3<span class="delayed" style="--length: 5">, gray</span>)</span>)</span>)
+		</code></pre>
+		<details class="notes">
+			A variable’s fallback can be another variable reference,
+			allowing us to have interactive defaults that can depend on other values.
+		</details>
+	</article>
+
+	<article class="slide" data-insert="#cut-corner"></article>
+
+	<article class="takeaway slide">
+		<h1>
+			Default values allow us to create “shorthands” of sorts
+			<div class="note">(but careful, they’re not real shorthands!)</div>
+		</h1>
+	</article>
+
+	<article class="isolated demo slide" id="button">
+		<textarea class="language-html">
+			<button>Click me</button>
+			<button class="pink">Click me</button>
+		</textarea>
+
+		<textarea class="language-css">
+			button {
+				border: .1em solid black;
+				background: transparent;
+				color: black;
+			}
+
+			button:hover {
+				background: black;
+				color: white;
+			}
+
+			button.pink {
+				border-color: #f06;
+				color: #f06;
+			}
+
+			button.pink:hover {
+				background: #f06;
+				color: white;
+			}
+		</textarea>
+		<style class="demo" data-slide>
+			button {
+				border-radius: .3em;
+				padding: .1em .5em .15em;
+				font-weight: bold;
+				font-size: 180%;
+				margin: .2em;
+				cursor: pointer;
+			}
+		</style>
+		<details class="notes">
+			This is a simplified flat button whose text color becomes its background color on hover, a common effect.
+			Note the repetition required to specify a color variation. Let's use CSS variables to eliminate that!
+
+			After rewriting with CSS variables, only a single `--color` declaration is sufficient to create a color variation of the entire component.
+
+			However, the fallbacks are getting quite repetitive.
+
+			Although the syntax allows us to use a different fallback in every usage,
+			in most cases, we don't need that.
+			Repeating the fallback value over and over is not [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
+			What can we do to reduce that duplication?
+
+			-----------
+
+			Another benefit of custom properties is *encapsulation*.
+			We can change how styling works completely, and as long as we use the same custom properties
+			anyone using and styling our component doesn't need to change a thing.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1><abbr title="Don’t Repeat Yourself">DRY</abbr> fallback strategies</h1>
+
+		<ol>
+			<li>
+				Fallback in a variable
+				<pre><code>
+					--color-initial: black;
+					...
+					color: var(--color, var(--color-initial));
+				</code></pre>
+			</li>
+			<li>
+				Pseudo-private properties
+				<pre><code>
+					--__color: var(--color, black);
+					...
+					color: var(--__color);
+				</code></pre>
+			</li>
+		</ol>
+		<details class="notes">
+			The first way allows you to use the same property internally
+			that you expose to other people, but it makes each usage far more verbose.
+
+			The second way is more concise, but it suffers from the wart that
+			you have to use a different property internally than the one you expose
+			and it's only private by convention.
+		</details>
+	</article>
+
+	<article class="slide" data-insert="button"></article>
+
+	<article class="takeaway slide">
+		<h1><abbr title="Don’t Repeat Yourself">DRY</abbr> fallbacks: `@property`</h1>
+
+		<pre><code>
+			@property --color {
+				syntax: "<color>";
+				initial-value: black;
+				inherits: true;
+			}
+			...
+			color: var(--color);
+		</code></pre>
+
+		<details class="notes">
+			In most cases, `@property offers a far better solution,
+			with the main drawback being its browser support.
+
+			However, do note that the other approaches allow for different defaults
+			per element, whereas an `@property` rule is global.
+		</details>
+	</article>
+
+	<article class="takeaway slide" id="button-takeaway">
+		<h1>CSS Variables enable theming<br> independent of CSS structure</h1>
+	</article>
+</section>
+
+<section>
+	<header class="slide">
+		<h1>Invalid Values</h1>
+	</header>
+
+	<article class="slide color-reveal" id="invalid-values">
+		<div class="delayed-children">
+			<br>
+			<div style="background: transparent;">--accent-color: 42deg;</div>
+		</div>
+
+		<pre style="margin-top: 2em; overflow: visible"><code>
+			background: red;
+			background: var(--accent-color, orange);
+		</code></pre>
+	</article>
+
+	<article class="takeaway slide">
+		<h1 class="no-md">
+			Otherwise valid CSS values may make declarations <br>
+			<a href="https://drafts.csswg.org/css-variables/#invalid-at-computed-value-time">
+				<strong>Invalid At Computed Value Time (IACVT)</strong>
+			</a>
+		</h1>
+	</article>
+
+	<article class="takeaway slide">
+		<h1 class="no-balance-lines">IACVT → `unset`</h1>
+	</article>
+
+	<article class="slide heading-3x3" id="iavct-cascade">
+		<h1>Are these equivalent?</h1>
+		<pre><code>
+			background: gold;
+			background: lch(60% 100 0);
+		</code></pre>
+		<pre><code>
+			--color: lch(60% 100 0);
+			background: gold;
+			background: var(--color);
+		</code></pre>
+		<pre><code>
+			--color: gold;
+			--color: lch(60% 100 0);
+			background: var(--color);
+		</code></pre>
+		<p class="supported">
+			LCH: <span class="swatch lch-pink" style=""></span>
+		</p>
+		<p class="supported">
+			LCH: <span class="swatch lch-pink" style=""></span>
+		</p>
+		<p class="supported">
+			LCH: <span class="swatch lch-pink" style=""></span>
+		</p>
+		<p class="not-supported delayed">
+			No LCH: <span class="swatch" style="background: gold;"></span>
+		</p>
+		<p class="not-supported delayed">
+			No LCH: <span class="swatch transparent"></span>
+		</p>
+		<p class="not-supported delayed">
+			No LCH: <span class="swatch transparent"></span>
+		</p>
+		<details class="notes">
+			We are used to the classic cascade behavior,
+			where if a value is not supported, the browser just discards the entire declaration
+			and falls back to any preceding declarations for the same property.
+			This happens at parse time.
+
+			This does not work with custom properties.
+			Since their values are resolved at computed value time,
+			the browser has already thrown away any preceding declarations.
+			This is exactly why the concept of Invalid At Computed Value Time (IACVT)
+			was introduced.
+		</details>
+	</article>
+
+	<article class="demo slide reveal" data-steps="1">
+		<textarea class="language-css">
+			@property --color {
+				syntax: '<color>';
+				inherits: true;
+				initial-value: skyblue;
+			}
+
+			.slide {
+				--color: gold;
+				--color: lch(60% 100 0);
+				background: var(--color);
+			}
+		</textarea>
+	</article>
+
+	<article class="slide color-reveal" id="invalid-values">
+		<div class="delayed-children">
+			<br>
+			<div style="background: orange;">--accent-color:;</div>
+			<br>
+			<div style="background: orange;">--accent-color: ;</div>
+		</div>
+
+		<pre style="margin-top: 2em; overflow: visible"><code>
+			background: red;
+			background: var(--accent-color, orange);
+		</code></pre>
+	</article>
+
+	<article class="slide color-reveal" id="invalid-values">
+		<div class="delayed-children">
+			<br>
+			<div style="background: linear-gradient(white, transparent) orange;">--accent-color:;</div>
+			<br>
+			<div style="background: linear-gradient(white, transparent);">--accent-color: ;</div>
+		</div>
+
+		<pre style="margin-top: 2em; overflow: visible"><code>
+			background: red;
+			background: linear-gradient(white, transparent)
+			            var(--accent-color, orange);
+		</code></pre>
+	</article>
+</section>
+
+<section id="vars-intro" class="language-css">
+
+	<article class="horizontal demo slide" id="url">
+		<textarea class="language-css">
+			article {
+				background: url("img/cat1.jpg") center / cover;
+			}
+		</textarea>
+	</article>
+
+	<article class="slide" id="url-cases">
+		<table>
+			<tr>
+				<td><pre><code>
+					--img: "cat1.jpg";
+					background: url("img/" var(--img));
+				</code></pre></td>
+				<td style="color: red">CSS limitation</td>
+			</tr>
+			<tr class="delayed">
+				<td><pre><code>
+					--img: "img/cat1.jpg";
+					background: url(var(--img));
+				</code></pre></td>
+				<td style="color: red">CSS bug</td>
+			</tr>
+			<tr class="delayed">
+				<td><pre><code>
+					--img: url("img/cat1.jpg");
+					background: var(--img);
+				</code></pre></td>
+				<td style="color: yellowgreen">Works!</td>
+			</tr>
+		</table>
+	</article>
+
+	<!-- <article class="slide">
+		<pre><code>
+			/* a.css */
+			--a: "a.png";
+
+			/* b.css */
+			--b: url(var(--a));
+
+			/* c.css */
+			background-image: var(--b);
+		</code></pre>
+		<p><a href="https://github.com/w3c/csswg-drafts/issues/757">github.com/w3c/csswg-drafts/issues/757</a></p>
+	</article> -->
+
+	<article class="takeaway slide poop" id="url-poop">
+		<h1>CSS variables <span class="plus">+</span> url() <span class="equals">=</span><span class="poop"><img src="img/poop.png" alt="💩"></span></h1>
+	</article>
+
+	<section id="post-url">
+
+
+		<article class="background slide" id="wtf" data-steps="1" data-credits="flickr.com/photos/mugley/3421060154">
+			<div class="caption">
+				<h1>WTFs</h1>
+				<ul class="delayed-children">
+					<li><code>--foo:;</code> is invalid</li>
+					<li><code>--foo: ;</code> is valid</li>
+					<li><code>--foo</code> ≠ <code>--FOO</code></li>
+				</ul>
+			</div>
+		</article>
+
+		<article class="slide" id="default-values">
+			<div class="delayed-children">
+				<div style="background: red">No CSS variables support</div>
+				<div style="background: orange">No --accent-color set</div>
+				<div style="background: yellowgreen">--accent-color: yellowgreen</div>
+				<div style="background: transparent; border: 1px dashed gray">--accent-color: 42deg</div>
+			</div>
+
+			<pre style="margin-top: 2em; overflow: visible"><code>
+				background: red;
+				background: var(--accent-color, orange);
+			</code></pre>
+		</article>
+
+
+		<article class="demo slide" id="cycles" style="--division: 50">
+			<textarea class="language-css">
+				div {
+					--size: 6em;
+					width: var(--size);
+				}
+
+				.declarative {
+					filter: invert(100%);
+				}
+			</textarea>
+			<textarea class="language-html">
+				<div class="block">CSS is awesome</div>
+				<div class="block declarative">CSS is declarative</div>
+			</textarea>
+		</article>
+
+		<article class="takeaway slide" id="takeaway-5">
+			<h1>Cycles make variables invalid <br> at computed-value time</h1>
+		</article>
+
+		<article class="slide" data-steps="2">
+			<style data-slide>
+				article.slide[data-step] {
+					background: orange;
+				}
+
+				article.slide[data-step] pre {
+					filter: invert(100%);
+					mix-blend-mode: multiply;
+				}
+
+				article.slide[data-step="2"] {
+					background: none;
+				}
+
+				article.slide[data-step="2"] pre code .delete {
+					opacity: 0;
+				}
+			</style>
+
+			<pre><code>
+				--accent-color: 42deg;
+				<span class="delete">--accent-color: var(--accent-color);</span>
+				background: red;
+				background: var(--accent-color, orange);
+			</code></pre>
+		</article>
+
+		<article class="talking housewife slide" data-source="flickr.com/photos/x-ray_delta_one/4264423055/">
+			<h1>Won’t someone, please, think of browser support?!</h1>
+		</article>
+
+
+
+		<!-- <article class="image slide" id="edgestatus">
+			<h1><a href="https://developer.microsoft.com/en-us/microsoft-edge/platform/status/csscustompropertiesakacssvariables">status.modern.ie</a></h1>
+		</article> -->
+
+		<article class="horizontal demo slide">
+			<p class="hint">Show division not working</p>
+			<textarea class="language-css">
+				.block {
+					width: 33vw;
+					height: 33vh;
+				}
+			</textarea>
+			<textarea class="language-html"><h1 class="block">Variable values are token lists</h1></textarea>
+		</article>
+
+		<article class="slide">
+			<table>
+				<tr>
+					<td>Number → unit: </td>
+					<td><code class="language-css">calc(var(--foo) * 1px)</code></td>
+				</tr>
+				<tr>
+					<td>Unit → number:</td>
+					<td style="font-size: 100px"><span class="poop"></span><span class="poop"></span><span class="poop"></span></td>
+				</tr>
+			</table>
+		</article>
+
+		<article class="takeaway slide">
+			<h1>Use variables for pure data, <br>not CSS values</h1>
+		</article>
+
+		<article class="horizontal demo slide" id="animation" style="--division: 70">
+			<p class="hint">Try to animate --color | show that var() is ok</p>
+			<textarea class="language-css">
+				@keyframes bg {
+					from { background-color: yellow; }
+					to { background-color: #0ca; }
+				}
+
+				#animation.slide {
+					animation: 1s bg infinite alternate;
+				}
+			</textarea>
+			<h1>CSS Variables in @keyframes?</h1>
+		</article>
+
+		<article class="slide">
+			<blockquote style="width: 21em">
+				<p>[CSS variables] can even be <strong>tran&shy;sitioned or ani&shy;mated</strong>, but since the UA has no way to interpret their con&shy;tents, <strong>they always use the "flips at 50%"</strong> behav&shy;ior that is used for any oth&shy;er pair of val&shy;ues that can’t be intelligently interpolated.</p>
+				<p class="cite">— <a href="https://w3.org/TR/css-variables-1/">CSS Custom Properties for Cascading Variables Module Level 1</a></p>
+			</blockquote>
+		</article>
+
+		<article class="takeaway slide poop" id="animation-poop">
+			<h1>CSS variables <span class="plus">+</span> animations <span class="equals">=</span><span class="poop"><img src="img/poop.png" alt="💩"></span></h1>
+		</article>
+
+		<article class="future slide" id="registerProperty">
+			<h1>🔮 Near Future 🔮</h1>
+			<textarea class="language-javascript prism-live">CSS.registerProperty({
+		name: "--color",
+		syntax: "&lt;color>",
+		initialValue: "black",
+		inherits: false
+	});</textarea>
+			<button onclick="eval(registerPropertyCode.textContent)" class="run delayed">Run!</button>
+		</article>
+
+		<article class="slide" data-insert="animation"></article>
+
+		<article class="browser-support slide">
+			<table>
+				<thead>
+					<tr>
+						<th></th>
+						<th><img src="img/chrome-logo.svg" alt="Chrome"></th>
+						<th><img src="img/firefox-logo.svg" alt="Firefox"></th>
+						<th><img src="img/edge-logo.svg" alt="Edge"></th>
+						<th><img src="img/safari-logo.png" alt="Safari"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>CSS.registerProperty()</th>
+						<td class="incomplete">⛳️</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</article>
+
+		<!-- <article class="horizontal demo slide" id="transition" style="--division: 70">
+			<textarea class="language-css">
+				#transition.slide {
+					background: yellow;
+					transition: 1s;
+				}
+
+				#transition.slide:active {
+					background: #0ca;
+				}
+			</textarea>
+			<h1>CSS Variables + Transitions = ?</h1>
+		</article>
+
+		<article class="takeaway slide">
+			<h1>CSS Variables can still <br>trigger transitions</h1>
+		</article> -->
+
+		<article class="takeaway slide">
+			<h1>CSS variables <span class="plus">+</span> animations <span class="equals">=</span>🔮<span class="heart" style="font-size: 90px;">❤️</span></h1>
+		</article>
+	</section>
+</section>
+
+<section>
+
+
+	<article class="slide demo" id="responsive">
+		<section></section>
+		<section></section>
+		<section></section>
+
+		<section class="wide3"></section>
+
+		<section class="wide2"></section>
+		<section></section>
+		<textarea class="language-css">
+		:root {
+			--gutter: 5px;
+		}
+
+		section {
+			margin: var(--gutter);
+			padding: calc(var(--gutter) * 3);
+		}
+
+		@media (min-width: 1000px) {
+			:root {
+				--gutter: 10px;
+			}
+		}
+		</textarea>
+	</article>
+
+	<article class="takeaway slide" id="responsive-takeaway">
+		<h1>CSS Variables make <br>responsive design easier</h1>
+	</article>
+</section>
+
+<section>
+	<header class="slide">
+		<h1>Cool use cases</h1>
+	</header>
+
+	<article class="demo slide" id="autoprefixing" style="--division: 70;">
+		<textarea class="language-css">
+			* {
+				--clip-path: initial;
+				-webkit-clip-path: var(--clip-path);
+				clip-path: var(--clip-path);
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="blocks">
+				<div class="block1">
+					<div></div>
+				</div>
+				<div class="block2">
+					<div></div>
+				</div>
+			</div>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS Variables enable you to <br>set multiple properties at once</h1>
+	</article>
+
+	<article class="horizontal demo slide" id="purple-shadow" style="--division: 70;">
+		<textarea class="language-css">
+			* {
+				--purple-shadow: initial;
+				box-shadow: var(--purple-shadow) rebeccapurple;
+			}
+
+			.block {
+				--purple-shadow: .1em .1em .5em;
+			}
+		</textarea>
+
+		<textarea class="language-html">
+			<div class="block">
+				<div>🎶 Laughing in the purple rain 👬☔️</div>
+			</div>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS Variables let you create <br>single property mixins
+		<div class="delayed note">(like function currying, in programmerese)</div></h1>
+	</article>
+
+	<article class="demo slide" id="box-shadow" style="--font-size-multiplier: .8; --division: 70;">
+		<p class="hint">No inherit from box-shadow, invalid at computed value time</p>
+		<textarea class="language-css">
+			* {
+				--box-shadow-x: initial;
+				--box-shadow-y: initial;
+				--box-shadow-blur: initial;
+				--box-shadow-spread: initial;
+				--box-shadow-color: initial;
+				--box-shadow-inset: initial;
+
+				box-shadow: var(--box-shadow-x, 0)
+				            var(--box-shadow-y, 0)
+				            var(--box-shadow-blur)
+				            var(--box-shadow-spread, 0)
+				            var(--box-shadow-color, currentColor)
+				            var(--box-shadow-inset, );
+			}
+
+			.block1 {
+
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="blocks">
+				<div class="block1">
+					<div></div>
+				</div>
+				<div class="block2">
+					<div></div>
+				</div>
+			</div>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS Variables enable you to <br>create custom longhands</h1>
+	</article>
+
+	<article class="demo slide" id="prepend">
+		<p class="hint">inline style too</p>
+		<textarea class="language-css">
+			* {
+				--prepend: initial;
+			}
+
+			::before {
+				content: var(--prepend);
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="blocks">
+				<div class="block1">
+					<div></div>
+				</div>
+				<div class="block2">
+					<div></div>
+				</div>
+				<div class="block3">
+					<div></div>
+				</div>
+			</div>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS Variables enable you to <br>define your own properties
+		<div class="delayed note">(in some cases)</div></h1>
+	</article>
+</section>
+
+<section>
+	<header class="slide">
+		<h1>CSS Variables & SVG</h1>
+	</header>
+
+	<article class="horizontal demo slide" id="svg-eyes">
+		<textarea class="language-css">
+			.iris {
+				cx: 50px;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<svg viewBox="0 0 250 100">
+				<clipPath id="white-clip">
+					<path id="white-path" d="M1,50 a65,80 0 0,1 100,0 a80,80 0 0,1 -100,0 Z" />
+				</clipPath>
+				<use id="eye-white" href="#white-path" />
+				<use href="#eye-white" x="148" />
+				<circle id="iris" class="iris" cx="50" cy="45" r="18" clip-path="url(#white-clip)" />
+				<use class="iris" href="#iris" x="148" />
+			</svg>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS variables <span class="plus">+</span> SVG <span class="equals">=</span><span class="heart" style="font-size: 90px;">♥️</span></h1>
+	</article>
+</section>
+
+<article class="slide" id="specs">
+	<a href="https://w3.org/TR/css-variables" class="w3c" target="_blank">w3.org/TR/css-variables</a>
+	<a href="https://drafts.csswg.org/css-variables" class="w3c ed" target="_blank">drafts.csswg.org/css-variables</a>
+</article>
+
+<!-- <section>
+	<header class="future slide">
+		<h1>🔮 Future 🔮</h1>
+	</header>
+
+	<article class="demo slide">
+		<textarea class="language-css">
+		:root {
+			--bg: {
+				background: yellowgreen;
+			}
+		}
+
+		.block {
+			background: red;
+			@apply --bg;
+		}
+		</textarea>
+		<div class="block">Native mixins are coming!</div>
+	</article>
+</section> -->
+
+<footer class="dark slide dont-resize">
+	<img src="img/mark.svg" class="logo" />
+	<h1>Thank you!</h1>
+	<img src="img/stickers.jpg" class="stickers delayed" alt="">
+	<p class="stickercaption delayed">Want one? Just ask! ---></p>
+	<ul>
+		<li style="--icon: '🌍'"><a href="http://mavo.io">lea.verou.me</a></li>
+		<li style="--icon: '✉'"><a href="mailto:lea@verou.me">lea@verou.me</a></li>
+		<li style="--icon: '🐦'"><a href="http://twitter.com/leaverou">@leaverou</a></li>
+	</ul>
+
+	<p>Slides: <a href="https://leaverou.github.io/talks/css-variables">leaverou.github.io/talks/css-variables</a></p>
+	<p style="font-size: 50%;">This slide deck was entirely built with open web technologies! Slideshow framework: <a href="http://github.com/LeaVerou/CSSS">github.com/LeaVerou/CSSS</a></p>
+</footer>
+
+<script src="../talks/shared/js/bliss.shy.min.js"></script>
+<script src="../talks/shared/js/prism.js"></script>
+<script src="../incrementable/incrementable.js"></script>
+<script src="../../inspire.js/inspire.js"></script>
+<script src="talk.js"></script>
+
+</body>
+</html>

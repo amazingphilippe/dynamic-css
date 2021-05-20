@@ -1,0 +1,11 @@
+{
+  "scripts": {
+      "build": "npx postcss *.postcss --dir . --ext .css",
+      "watch": " npx postcss *.postcss --dir . --ext .css --watch"
+  },
+  "devDependencies": {
+    "postcss": "^8.2.15",
+    "postcss-cli": "^8.3.1",
+    "postcss-nesting": "^8.0.1"
+  }
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<title>CSS Variables: var(--subtitle);</title>
+<link href="../../inspire.js/inspire.css" rel="stylesheet" />
+<link href="../../inspire.js/theme.css" rel="stylesheet" />
+<link href="../talks/shared/intro-outro.css" rel="stylesheet" />
+<link href="prism.css" rel="stylesheet" />
+<link href="theme.css" rel="stylesheet" />
+<link href="talk.css" rel="stylesheet" />
+<link href="../talks/shared/browser-support.css" rel="stylesheet" />
+</head>
+<body class="language-css" data-markdown-selectors="details.notes>div .md">
+
+<header id="intro" class="slide dont-resize" data-source="flickr.com/photos/billward/16601966117">
+	<h1>Dynamic CSS Masterclass</h1>
+	<h2>Day ?: JS</h2>
+	<p class="attribution">By <a href="http://lea.verou.me">Lea Verou</a> (<a href="http://twitter.com/leaverou">@LeaVerou</a>)</p>
+</header>
+
+<section id="cssvars-js">
+	<article class="slide language-javascript" style="align-items: flex-start; padding: 3em">
+		<pre><code>
+			// Get variable from inline style
+			element.style.getPropertyValue("--foo");
+		</code></pre>
+		<pre class="delayed"><code>
+			// Get variable from wherever
+			getComputedStyle(element).getPropertyValue("--foo");
+		</code></pre>
+		<pre class="delayed"><code>
+			// Set variable on inline style
+			element.style.setProperty("--foo", 38 + 4);
+		</code></pre>
+	</article>
+
+	<article class="slide language-javascript">
+		<pre><code>
+			var root = document.documentElement;
+
+			document.addEventListener("mousemove", evt => {
+				let x = evt.clientX / innerWidth;
+				let y = evt.clientY / innerHeight;
+
+				root.style.setProperty("--mouse-x", x);
+				root.style.setProperty("--mouse-y", y);
+			});
+		</code></pre>
+	</article>
+
+	<article class="slide language-javascript">
+		<p><a href="https://mavo.io"><img src="../html-reimagined/img/logo.svg" alt="Mavo" style="height: 4em"></a></p>
+		<pre><code class="language-markup">&lt;html mv-app
+      style="--mouse-x: [$mouse.x / innerWidth];
+	          --mouse-y: [$mouse.y / innerHeight];"></code></pre>
+	</article>
+
+	<article class="horizontal demo slide" id="mouse">
+		<textarea class="language-css">
+			#mouse.slide {
+				background-image: radial-gradient(
+					at 50% 50%,
+					transparent, black);
+			}
+		</textarea>
+	</article>
+
+	<article class="slide" data-insert="svg-eyes"></article>
+
+	<article class="language-javascript slide">
+		<div><pre><code>
+			for (input of document.querySelectorAll("input")) {
+				input.style.setProperty("--value", input.value);
+			}
+		</code></pre>
+		<pre class="delayed"><code>
+			document.addEventListener("input", evt => {
+				var input = evt.target;
+				input.style.setProperty("--value", input.value);
+			});
+		</code></pre></div>
+	</article>
+
+	<article class="horizontal demo slide" id="slider">
+		<p class="hint">Show value indicator</p>
+		<textarea class="language-css">
+			input {
+				appearance: none;
+				background: linear-gradient(to right, #f06 50%, white 0);
+			}
+		</textarea>
+		<style class="demo" data-slide>
+			input {
+				width: 300px;
+				-webkit-appearance: none;
+				transform: scale(3);
+				transform-origin: top;
+				border-radius: .1em;
+			}
+		</style>
+		<textarea class="language-html"><input type="range" /></textarea>
+	</article>
+
+	<article class="horizontal demo typing slide" id="typing" style="--division: 70">
+		<p class="typing" contentEditable>CSS variables are awesome</p>
+		<textarea class="language-css">
+			@keyframes typing { from { width: 0; } }
+			@keyframes caret { 50% { border-color: transparent; } }
+
+			p.typing {
+				width: 25ch;
+				border-right: 2px solid;
+				overflow: hidden;
+				animation: caret .5s step-end infinite alternate;
+			}
+		</textarea>
+	</article>
+
+	<article class="language-javascript slide">
+		<pre><code>
+			for (let element of document.querySelectorAll(".typing")) {
+				let length = element.textContent.length;
+				element.style.setProperty("--length", length);
+			}
+		</code></pre>
+	</article>
+
+	<article class="slide" data-insert="typing"></article>
+
+	<article class="horizontal demo typing slide" id="typing2">
+		<p class="typing" contentEditable>CSS variables are awesome</p>
+		<textarea class="language-css">
+			@keyframes typing { from { width: 0; } }
+			@keyframes caret { 50% { border-color: transparent; } }
+
+			p.typing {
+				width: calc(var(--length) * 1ch);
+				border-right: 2px solid;
+				overflow: hidden;
+				animation: typing calc(var(--length) * .3s) steps(var(--length)),
+				           caret .5s step-end infinite alternate;
+			}
+		</textarea>
+	</article>
+
+	<article class="slide">
+		<pre><code class="language-javascript">
+			for (let el of document.querySelectorAll(".scrolling")) {
+				el.addEventListener("scroll", evt => {
+					let maxScroll = el.scrollHeight - el.offsetHeight;
+					let scroll = el.scrollTop / maxScroll;
+					el.style.setProperty("--scroll", scroll);
+				});
+			}
+		</code></pre>
+	</article>
+
+	<article class="horizontal demo slide" id="scrolling">
+		<textarea class="language-css">
+			.scrolling {
+				background-image: linear-gradient(to right,
+					white 20%, transparent 0)
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="scrolling">
+				<p>The allowed syntax for custom properties is extremely permissive. The &lt;declaration-value> production matches any sequence of one or more tokens, so long as the sequence does not contain &lt;bad-string-token>, &lt;bad-url-token>, unmatched &lt;)-token>, &lt;]-token>, or &lt;}-token>, or top-level &lt;semicolon-token> tokens or &lt;delim-token> tokens with a value of "!".</p>
+				<p>In addition, if the value of a custom property contains a var() reference, the var() reference must be valid according to the specified var() grammar. If not, the custom property is invalid and must be ignored.</p>
+				<p>The values of custom properties, and the values of var() functions substituted into custom properties, are case-sensitive, and must be preserved in their original author-given casing. (Many CSS values are ASCII case-insensitive, which user agents can take advantage of by "canonicalizing" them into a single casing, but that isn’t allowed for custom properties.)
+				<p>The initial value of a custom property is an empty value; that is, nothing at all. This initial value has a special interaction with the var() notation, which is explained in the section defining var().
+				<p>Custom properties are ordinary properties, so they can be declared on any element, are resolved with the normal inheritance and cascade rules, can be made conditional with @media and other conditional rules, can be used in HTML’s style attribute, can be read or set using the CSSOM, etc.
+				<p>Notably, they can even be transitioned or animated, but since the UA has no way to interpret their contents, they always use the "flips at 50%" behavior that is used for any other pair of values that can’t be intelligently interpolated. However, any custom property used in a @keyframes rule becomes animation-tainted, which affects how it is treated when referred to via the var() function in an animation property.</p>
+			</div>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS Variables are a revolution for <br>separation of style and behavior</h1>
+	</article>
+</section>
+
+<article class="slide" id="specs">
+	<a href="https://w3.org/TR/css-variables" class="w3c" target="_blank">w3.org/TR/css-variables</a>
+	<a href="https://drafts.csswg.org/css-variables" class="w3c ed" target="_blank">drafts.csswg.org/css-variables</a>
+</article>
+
+<!-- <section>
+	<header class="future slide">
+		<h1>🔮 Future 🔮</h1>
+	</header>
+
+	<article class="demo slide">
+		<textarea class="language-css">
+		:root {
+			--bg: {
+				background: yellowgreen;
+			}
+		}
+
+		.block {
+			background: red;
+			@apply --bg;
+		}
+		</textarea>
+		<div class="block">Native mixins are coming!</div>
+	</article>
+</section> -->
+
+<footer class="dark slide dont-resize">
+	<img src="img/mark.svg" class="logo" />
+	<h1>Thank you!</h1>
+	<img src="img/stickers.jpg" class="stickers delayed" alt="">
+	<p class="stickercaption delayed">Want one? Just ask! ---></p>
+	<ul>
+		<li style="--icon: '🌍'"><a href="http://mavo.io">lea.verou.me</a></li>
+		<li style="--icon: '✉'"><a href="mailto:lea@verou.me">lea@verou.me</a></li>
+		<li style="--icon: '🐦'"><a href="http://twitter.com/leaverou">@leaverou</a></li>
+	</ul>
+
+	<p>Slides: <a href="https://leaverou.github.io/talks/css-variables">leaverou.github.io/talks/css-variables</a></p>
+	<p style="font-size: 50%;">This slide deck was entirely built with open web technologies! Slideshow framework: <a href="http://github.com/LeaVerou/CSSS">github.com/LeaVerou/CSSS</a></p>
+</footer>
+
+<script src="../talks/shared/js/bliss.shy.min.js"></script>
+<script src="../talks/shared/js/prism.js"></script>
+<script src="../incrementable/incrementable.js"></script>
+<script src="../../inspire.js/inspire.js"></script>
+<script src="cssvars-js.js"></script>
+<script src="talk.js"></script>
+
+</body>
+</html>
