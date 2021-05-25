@@ -137,7 +137,7 @@
 	</details>
 </article>
 
-<article class="isolated demo slide" id="cut-corner" style="--division: 55">
+<article class="isolated demo slide" id="cut-corner" style="--division: 65">
 	<textarea class="language-css">
 		.cut-corner {
 			padding: 1em;
@@ -172,6 +172,7 @@
 
 		Try setting the corner size via an inline style.
 		That is definitely something you can't do with preprocessors!
+		You could also use any unit you want, even viewport units!
 
 		-------
 
@@ -184,7 +185,6 @@
 
 		Does this work like a shorthand? If not, what's the difference?
 	</details>
-	<!-- Homework: add --corner-top-left size etc, add shorthands -->
 </article>
 
 <article class="takeaway slide">
@@ -212,7 +212,7 @@
 </article>
 
 <section>
-	<header class="slide">
+	<header class="slide" id="inheritance-header">
 		<h1>Inheritance</h1>
 	</header>
 
@@ -346,23 +346,20 @@
 			One way to disable inheritance is to just make sure the property always has a non-inherited value.
 			`initial` is perfect for that: it resets the property to its initial value,
 			as if it had not been set at all, but still prevents it from inheriting.
-			4. There is a newer, more explicit way to disable inheritance that we will see later on.
-			We can always enable inheritance on a case-by-case basis by using the `inherit` keyword.
+			We can always opt-in inheritance on a case-by-case basis by using the `inherit` keyword.
 		</details>
 	</article>
 
 	<article class="takeaway slide">
 		<h1>
-			Disable inheritance by setting the property to `initial` on `*`
-			<div class="note no-md">(for now)</span>
+			You can disable inheritance by setting the property to `initial` on `*`
 		</h1>
 	</article>
 
 	<article class="isolated demo slide" id="cut-corner">
 		<textarea class="language-css">
 			@property --corner-size {
-				syntax: "<length>";
-				initial-value: 0;
+				syntax: "*";
 				inherits: false;
 			}
 
@@ -387,10 +384,6 @@
 			There is a newer, more explicit way to disable inheritance: the <code class="css">@property</code> rule.
 			It makes custom properties tremendously more powerful, and we will keep revisiting it
 			throughout this workshop.
-
-			Unfortunately, it cannot help with *every* case where you may want to disable inheritance,
-			because all three of its descriptors are mandatory,
-			and you can’t describe all your custom properties with the `syntax` descriptor.
 		</details>
 	</article>
 
@@ -403,8 +396,7 @@
 		<pre><code class="language-javascript">
 			CSS.registerProperty({
 				name: "--corner-size",
-				syntax: "&lt;length>";
-				initialValue: "0",
+				syntax: "*";
 				inherits: false
 			})
 		</code></pre>
@@ -544,6 +536,7 @@
 				object-fit: cover;
 				transform: scale(var(--scale))
 				           rotate(var(--rotate));
+				transition: .3s;
 			}
 
 			img:hover {
@@ -556,7 +549,6 @@
 				padding: .2em;
 				background: white;
 				box-shadow: 0 .05em .1em rgb(0 0 0 / .1);
-				transition: .3s;
 			}
 		</style>
 		<textarea class="language-html">
@@ -641,14 +633,14 @@
 		</table>
 	</article>
 
-	<article class="demo slide" id="atsupports" style="--division: 50">
+	<article class="isolated demo slide" id="atsupports" style="--division: 50">
 		<textarea class="language-css">
-			article {
+			body {
 				background: red;
 			}
 
 			@supports (--css: variables) {
-				article {
+				body {
 					background: green;
 				}
 			}
@@ -1170,8 +1162,34 @@
 
 	<article class="takeaway slide">
 		<h1>
-			Invalid registered properties become IACVT
+			The syntax of registered properties is checked at computed value time,
+			not parse time
 		</h1>
+	</article>
+
+	<article class="question slide">
+		<h1>
+			Then how do we provide fallbacks for unsupported features??
+			<div class="note delayed">@supports to the rescue!</div>
+		</h1>
+	</article>
+
+	<article class="isolated demo slide">
+		<textarea class="language-css">
+			:root {
+				--primary-color: rgb(100% 19% 58%);
+			}
+
+			@supports (color: lch(0% 0 0)) {
+				:root {
+					--primary-color: lch(60% 100 0);
+				}
+			}
+
+			body {
+				background: var(--primary-color);
+			}
+		</textarea>
 	</article>
 
 	<article class="slide color-reveal" id="invalid-values">
@@ -1232,8 +1250,8 @@
 			background: var(--accent-color, orange);
 		</code></pre>
 		<details class="notes">
-			The empty value is always invalid. In fact it's the only value that is
-			invalid at parse time, and not at computed value time.
+			The empty value is always invalid. In fact it's **the only value that is
+			invalid at parse time**, and not at computed value time.
 			Thus, declarations that set custom properties to the empty value will
 			be discarded by the cascade, and not trigger IACVT.
 		</details>
@@ -1474,20 +1492,52 @@
 			does not have enough context to compute them.
 		</details>
 	</article>
+
+	<article class="isolated demo slide">
+		<textarea class="language-css">
+			p {
+				--font-size: clamp(20px, var(--font-size), 40px);
+				font-size: var(--font-size);
+			}
+
+			.tinytiny {
+				--font-size: 5px;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<p class="tinytiny">
+				Hello there. Let's try to make this text
+				<em>really</em> small
+			</p>
+		</textarea>
+		<details class="notes css">
+			One way we may inadvertently end up with cycles is when we want to
+			do math on the inherited value of a custom property.
+			Another way is when we want to enforce some sort of constraint on its value,
+			such as a minimum or maximum.
+
+			Haven't seen the `clamp()` function before?
+			It's pretty cool, and [supported everywhere](https://caniuse.com/css-math-functions)!
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Use fake "private" variables to enforce constraints and avoid cycles</h1>
+	</article>
 </section>
 
-<article class="slide" id="homework-bar-chart">
+<article class="slide allow-attendee" id="homework-bar-chart">
 		<h1>Homework!</h1>
 		<style data-slide>
 			@import url("css/bar-chart.css")
 		</style>
 		<div class="bar-chart">
-			<div style="--p: .95">A</div>
-			<div style="--p: 1">B</div>
-			<div style="--p: .95">C</div>
-			<div style="--p: .38">D</div>
-			<div style="--p: .8421">E</div>
-			<div style="--p: .49">F</div>
+			<div style="--p: 95%">A</div>
+			<div style="--p: 100%">B</div>
+			<div style="--p: 95%">C</div>
+			<div style="--p: 38%">D</div>
+			<div style="--p: 84.21%">E</div>
+			<div style="--p: 49%">F</div>
 		</div>
 		<div data-visit="2" class="md">
 			1. **Base**: Fill in the CSS missing to make this bar chart work
@@ -1504,7 +1554,7 @@
 		</div>
 </article>
 
-<article class="isolated demo slide">
+<article class="isolated demo slide" id="bar-chart">
 	<textarea class="language-css">
 		:root {
 			background: hsl(200, 15%, 20%);
@@ -1535,17 +1585,172 @@
 	</textarea>
 	<textarea class="language-html">
 		<div class="bar-chart">
-			<div style="--p: .95">A</div>
-			<div style="--p: 1">B</div>
-			<div style="--p: .95">C</div>
-			<div style="--p: .38">D</div>
-			<div style="--p: .8421">E</div>
-			<div style="--p: .49">F</div>
+			<div style="--p: 95%">A</div>
+			<div style="--p: 100%">B</div>
+			<div style="--p: 95%">C</div>
+			<div style="--p: 38%">D</div>
+			<div style="--p: 84.21%">E</div>
+			<div style="--p: 49%">F</div>
 		</div>
 	</textarea>
 </article>
 
 <article class="slide" data-insert="#homework-bar-chart"></article>
+
+<footer class="slide" id="day-end">
+	<h1>Thank you!</h1>
+	<p>See you tomorrow! 👋🏼</p>
+</footer>
+
+<section id="types">
+	<header class="slide">
+		<h1>Datatypes <span class="amp">&</span> Conversions</h1>
+	</header>
+
+	<article class="isolated demo slide" id="viewport">
+		<textarea class="language-css">
+			.viewport {
+				width: 50vw;
+				height: 50vh;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="viewport">your viewport</div>
+		</textarea>
+		<style class="demo" data-slide>
+			.viewport {
+				box-sizing: border-box;
+				padding: 1em;
+				background: hsl(220 10% 50%);
+				color: white;
+			}
+		</style>
+		<details class="notes">
+			Here we have an element whose aspect ratio we want to mirror
+			the aspect ratio of our viewport.
+			To avoid repeating the fraction of the viewport its dimensions are twice,
+			it's a reasonable thought to try and abstract that into a variable.
+			However, simple concatenation like in Sass
+			does not work to get a `&lt;length>` out of that.
+			We can still convert, but we need to use `calc()`.
+
+			Yes, `calc()` is a little verbose.
+			Another idea idea may be to specify the entire width in
+			the variable, then only use `calc()` in `height`.
+			It's a good idea, but does not work yet.
+
+			--------
+
+			Now let's try to display the number we have through generated content.
+			Why doesn't it work? How can we fix that?
+		</details>
+	</article>
+
+	<article class="slide">
+		<table>
+			<tr>
+				<td>Number → unit: </td>
+				<td><code class="language-css">calc(var(--foo) * 1px)</code></td>
+			</tr>
+			<tr>
+				<td>Unit → number:</td>
+				<td style="font-size: 100px"><span class="poop"></span><span class="poop"></span><span class="poop"></span></td>
+			</tr>
+		</table>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Use variables for pure data, not CSS values</h1>
+	</article>
+
+	<article class="slide" data-insert="#viewport"></article>
+
+	<article class="takeaway slide">
+		<h1>`content` only accepts strings. You can convert numbers to strings via `counter-reset`.</h1>
+	</article>
+
+	<article class="isolated demo slide needs-base" id="bar-chart">
+		<textarea class="language-css">
+			@import url("css/bar-chart.css");
+
+			.bar-chart > div {
+				align-items: flex-end;
+				justify-content: center;
+				height: var(--p);
+			}
+
+			.bar-chart > div::before {
+				content: var(--p);
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="bar-chart">
+				<div style="--p: 95%">A</div>
+				<div style="--p: 100%">B</div>
+				<div style="--p: 95%">C</div>
+				<div style="--p: 38%">D</div>
+				<div style="--p: 84.21%">E</div>
+				<div style="--p: 49%">F</div>
+			</div>
+		</textarea>
+		<style data-slide class="demo">
+			:root {
+				background: hsl(200, 15%, 20%);
+			}
+		</style>
+		<details class="notes">
+			Let's try to use this trick to display a percentage on each bar.
+			What problem do you see?
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>The counter trick only works with positive integers. Sorry! 😞</h1>
+		<details class="notes">
+			Unfortunately, there is no way currently to convert a (non-integer)
+			number to a string in CSS. Or a string to a number.
+			If you know in advance how much precision you will need, it
+			may be worth it to specify variables multiplied by a power of 10,
+			but this is not always applicable.
+		</details>
+	</article>
+
+	<article class="isolated demo slide" style="--division: 60">
+		<textarea class="language-css">
+			:root {
+				font-size: 12pt;
+				--large: calc(1em + 1vh);
+			}
+
+			header {
+				font-size: 36pt;
+			}
+
+			header p {
+				font-size: var(--large);
+			}
+		</textarea>
+		<textarea class="language-html">
+			<header>
+				<h1>Heading</h1>
+				<p>Some heading text</p>
+			</header>
+			<p>Body text</p>
+		</textarea>
+		<style data-slide class="demo">
+
+		</style>
+		<details class="notes">
+			The computed value of unregistered properties is the specified value
+			with any variables substituted.
+			This means that any relative units, such as `em` are resolved at the point of usage,
+			not the point of definition.
+			Registering the property changes this.
+
+			However, that doesn't seem to work with `currentColor`
+		</details>
+	</article>
+</section>
 
 <section>
 	<header class="slide">
@@ -1714,118 +1919,62 @@
 			 ***unless* they are registered as `&lt;url>`**
 		</h1>
 	</article>
+</section>
 
-	<section id="post-url">
+<section id="animations">
+	<header class="slide">
+		<h1>Transitions <span class="amp">&</span> Animations</h1>
+	</header>
 
+	<article class="horizontal demo slide" id="animation" style="--division: 70">
+		<p class="hint">Try to animate --color | show that var() is ok</p>
+		<textarea class="language-css">
+			@keyframes bg {
+				from { background-color: yellow; }
+				to { background-color: #0ca; }
+			}
 
+			#animation.slide {
+				animation: 1s bg infinite alternate;
+			}
+		</textarea>
+		<h1>CSS Variables in @keyframes?</h1>
+	</article>
 
-		<article class="horizontal demo slide">
-			<p class="hint">Show division not working</p>
-			<textarea class="language-css">
-				.block {
-					width: 33vw;
-					height: 33vh;
-				}
-			</textarea>
-			<textarea class="language-html"><h1 class="block">Variable values are token lists</h1></textarea>
-		</article>
+	<article class="slide">
+		<blockquote style="width: 21em">
+			<p>[CSS variables] can even be <strong>tran&shy;sitioned or ani&shy;mated</strong>, but since the UA has no way to interpret their con&shy;tents, <strong>they always use the "flips at 50%"</strong> behav&shy;ior that is used for any oth&shy;er pair of val&shy;ues that can’t be intelligently interpolated.</p>
+			<p class="cite">— <a href="https://w3.org/TR/css-variables-1/">CSS Custom Properties for Cascading Variables Module Level 1</a></p>
+		</blockquote>
+	</article>
 
-		<article class="slide">
-			<table>
-				<tr>
-					<td>Number → unit: </td>
-					<td><code class="language-css">calc(var(--foo) * 1px)</code></td>
-				</tr>
-				<tr>
-					<td>Unit → number:</td>
-					<td style="font-size: 100px"><span class="poop"></span><span class="poop"></span><span class="poop"></span></td>
-				</tr>
-			</table>
-		</article>
+	<article class="takeaway slide" id="animation-poop">
+		<h1>CSS variables do not interpolate by default</h1>
+	</article>
 
-		<article class="takeaway slide">
-			<h1>Use variables for pure data, <br>not CSS values</h1>
-		</article>
+	<article class="slide" data-insert="animation"></article>
 
-		<article class="horizontal demo slide" id="animation" style="--division: 70">
-			<p class="hint">Try to animate --color | show that var() is ok</p>
-			<textarea class="language-css">
-				@keyframes bg {
-					from { background-color: yellow; }
-					to { background-color: #0ca; }
-				}
+	<article class="horizontal demo slide" id="transition" style="--division: 70">
+		<textarea class="language-css">
+			#transition.slide {
+				background: yellow;
+				transition: 1s;
+			}
 
-				#animation.slide {
-					animation: 1s bg infinite alternate;
-				}
-			</textarea>
-			<h1>CSS Variables in @keyframes?</h1>
-		</article>
+			#transition.slide:active {
+				background: #0ca;
+			}
+		</textarea>
+		<h1>CSS Variables + Transitions = ?</h1>
+	</article>
 
-		<article class="slide">
-			<blockquote style="width: 21em">
-				<p>[CSS variables] can even be <strong>tran&shy;sitioned or ani&shy;mated</strong>, but since the UA has no way to interpret their con&shy;tents, <strong>they always use the "flips at 50%"</strong> behav&shy;ior that is used for any oth&shy;er pair of val&shy;ues that can’t be intelligently interpolated.</p>
-				<p class="cite">— <a href="https://w3.org/TR/css-variables-1/">CSS Custom Properties for Cascading Variables Module Level 1</a></p>
-			</blockquote>
-		</article>
-
-		<article class="takeaway slide poop" id="animation-poop">
-			<h1>CSS variables <span class="plus">+</span> animations <span class="equals">=</span><span class="poop"><img src="img/poop.png" alt="💩"></span></h1>
-		</article>
-
-		<article class="slide" data-insert="animation"></article>
-
-		<article class="browser-support slide">
-			<table>
-				<thead>
-					<tr>
-						<th></th>
-						<th><img src="img/chrome-logo.svg" alt="Chrome"></th>
-						<th><img src="img/firefox-logo.svg" alt="Firefox"></th>
-						<th><img src="img/edge-logo.svg" alt="Edge"></th>
-						<th><img src="img/safari-logo.png" alt="Safari"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th>CSS.registerProperty()</th>
-						<td class="incomplete">⛳️</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
-		</article>
-
-		<!-- <article class="horizontal demo slide" id="transition" style="--division: 70">
-			<textarea class="language-css">
-				#transition.slide {
-					background: yellow;
-					transition: 1s;
-				}
-
-				#transition.slide:active {
-					background: #0ca;
-				}
-			</textarea>
-			<h1>CSS Variables + Transitions = ?</h1>
-		</article>
-
-		<article class="takeaway slide">
-			<h1>CSS Variables can still <br>trigger transitions</h1>
-		</article> -->
-
-		<article class="takeaway slide">
-			<h1>CSS variables <span class="plus">+</span> animations <span class="equals">=</span>🔮<span class="heart" style="font-size: 90px;">❤️</span></h1>
-		</article>
-	</section>
+	<article class="takeaway slide">
+		<h1>CSS Variables can still <br>trigger transitions</h1>
+	</article>
 </section>
 
 <section>
-
-
-	<article class="slide demo" id="responsive">
+	<!-- <article class="slide demo" id="responsive">
 		<section></section>
 		<section></section>
 		<section></section>
@@ -1854,7 +2003,7 @@
 
 	<article class="takeaway slide" id="responsive-takeaway">
 		<h1>CSS Variables make <br>responsive design easier</h1>
-	</article>
+	</article> -->
 </section>
 
 <section>

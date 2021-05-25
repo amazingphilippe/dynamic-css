@@ -145,6 +145,12 @@ button {
 	opacity: 1;
 }
 
+.amp {
+	font-family: Baskerville, var(--font-heading);
+	font-style: italic;
+	display: inline-block;
+}
+
 section > header.slide {
 	align-items: center;
 	justify-content: center;

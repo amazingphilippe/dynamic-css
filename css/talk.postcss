@@ -68,18 +68,29 @@
 	--q: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
 	<text style="fill: black; fill-opacity: .2; font: bold 80px/1 Times;" y=".8em">?</text></svg>');
 	--size: 30vmin;
-	--photo: url(img/puzzled-1.jpg);
+	--photo: url(../img/puzzled-1.jpg);
 	background: var(--q) 0 0, var(--q) calc(var(--size) / 2) calc(var(--size) / 2),
 	var(--photo) bottom;
 	background-size: var(--size) var(--size), var(--size) var(--size), cover;
-	animation: matrix 10s infinite alternate ease-in;
+	animation: matrix 10s 1 alternate ease-in;
 
 	text-shadow: 0 0 .1em rgb(0 0 0 / .3);
+
+	&:nth-child(even) {
+		--photo: url(../img/puzzled-2.jpg);
+
+		& .note {
+			color: var(--accent4);
+		}
+	}
+
+	& .note {
+		color: var(--accent1);
+		text-shadow: none;
+	}
 }
 
-	.question.slide:nth-child(even) {
-		--photo: url(img/puzzled-2.jpg);
-	}
+
 
 kbd {
 	position: absolute;
@@ -95,62 +106,6 @@ kbd {
 	font-family: var(--font-body);
 	box-shadow: 3px 3px hsl(0,0%,40%), 3px 3px 10px rgba(0,0,0,.4);
 }
-
-#specs {
-	color: white;
-	padding: 0;
-	align-items: stretch;
-}
-
-	#specs > a {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		flex: 1;
-		padding: 1em;
-		padding-left: 3em;
-		background: url(img/w3c.svg) no-repeat 1em / auto 50% #1a5e9a;
-		text-align: right;
-		font-size: 180%;
-	}
-
-		#specs > a:not(:hover) {
-			text-decoration: none;
-		}
-
-	#specs .w3c.ed {
-		background-color: #d00;
-	}
-
-		.fordemo {
-			font-family: var(--font-handwritten);
-			position: absolute;
-			bottom: -.2em;
-			right: .5em;
-			color: hsl(0, 50%, 60%);
-			line-height: 1rem;
-			font-size: 140%;
-		}
-
-.block,
-.blocks div {
-	display: flex;
-	padding: 1em;
-	margin-bottom: 1em;
-	align-items: center;
-	justify-content: center;
-	font-weight: bold;
-	line-height: 1.1;
-	letter-spacing: -.05em;
-	background: white;
-}
-
-	.block .block,
-	.blocks div .block,
-	.blocks div div {
-		background: #f06;
-		margin: 1em;
-	}
 
 .browser-support {
 	align-items: center;
@@ -273,7 +228,7 @@ span.poop {
 
 #daisy-chain {
 	padding: 2em;
-	background: url(img/daisy-chain.jpg) no-repeat top / auto calc(100vh - 5em) black;
+	background: url(../img/daisy-chain.jpg) no-repeat top / auto calc(100vh - 5em) black;
 	justify-content: flex-end;
 }
 
@@ -333,11 +288,11 @@ span.poop {
 }
 
 #wtf {
-	background-image: url(img/wtf.jpg);
+	background-image: url(../img/wtf.jpg);
 }
 
 #limitations {
-	background-image: url(img/sad.jpg);
+	background-image: url(../img/sad.jpg);
 }
 
 	.background.slide .caption {
@@ -439,7 +394,7 @@ span.poop {
 
 .talking.housewife.slide {
 	display: block;
-	background: #978 url(img/housewife.png) no-repeat bottom right / 50vmin auto;
+	background: #978 url(../img/housewife.png) no-repeat bottom right / 50vmin auto;
 	padding: 2em;
 	transition: 1s ease-in-out background-size;
 	color: black;
@@ -564,7 +519,7 @@ span.poop {
 }
 
 .confused.slide {
-	background: url(img/confused.jpg) -25vw 100% / auto 100% no-repeat,
+	background: url(../img/confused.jpg) -25vw 100% / auto 100% no-repeat,
 	linear-gradient(#564232, #4C3629, #322319);
 
 	& h1 {
@@ -780,23 +735,6 @@ span.poop {
 	animation: fall 3s infinite ease-in, pos 30s steps(1) infinite;
 	filter: drop-shadow(0 10px 10px rgba(0,0,0,.5));
 }
-
-#edgestatus {
-	justify-content: flex-start;
-	background-image: url(img/edgestatus.png);
-}
-
-	#edgestatus h1 {
-		position: absolute;
-		width: auto;
-		margin: 0;
-		padding: .5em 1em;
-		background: black;
-	}
-
-		#edgestatus h1 a:not(:hover) {
-			text-decoration: none;
-		}
 
 #url-cases {
 

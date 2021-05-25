@@ -25,4 +25,24 @@ $$(".demo.slide.reveal").forEach(slide => {
 		onclick: Inspire.nextItem,
 		inside: slide
 	});
-})
+});
+
+(async () => {
+
+await Inspire.importsLoaded;
+
+// Reduced slide deck for attendees to follow along with certain activities
+if (Inspire.profile !== "speaker") {
+	let keep = `header, footer, .demo, .browser-support, .allow-attendee, [data-insert]`;
+	let remove = `.speaker-only, .demo.reveal`;
+	let slidesToRemove = $$(`.slide:not(${keep}), ${remove}`);
+
+	slidesToRemove.forEach(slide => slide.remove());
+
+	// Remove empty sections
+	$$("header.slide:only-child").forEach(slide => slide.remove());
+}
+
+})();
+
+$$("#day-end ~ section .slide, #day-end ~ .slide").forEach(s => s.remove());
