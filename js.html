@@ -67,6 +67,29 @@
 		</textarea>
 	</article>
 
+	<article class="horizontal demo slide" id="svg-eyes">
+		<textarea class="language-css">
+			.iris {
+				cx: 50px;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<svg viewBox="0 0 250 100">
+				<clipPath id="white-clip">
+					<path id="white-path" d="M1,50 a65,80 0 0,1 100,0 a80,80 0 0,1 -100,0 Z" />
+				</clipPath>
+				<use id="eye-white" href="#white-path" />
+				<use href="#eye-white" x="148" />
+				<circle id="iris" class="iris" cx="50" cy="45" r="18" clip-path="url(#white-clip)" />
+				<use class="iris" href="#iris" x="148" />
+			</svg>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS variables <span class="plus">+</span> SVG <span class="equals">=</span><span class="heart" style="font-size: 90px;">♥️</span></h1>
+	</article>
+
 	<article class="slide" data-insert="svg-eyes"></article>
 
 	<article class="language-javascript slide">

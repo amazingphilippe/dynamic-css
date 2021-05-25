@@ -648,6 +648,10 @@ span.poop {
 			animation: flip-x 1s infinite alternate steps(2, jump-none);
 		}
 
+.demo.slide.reveal[data-steps]:not([data-step]) details.notes {
+			display: none;
+		}
+
 .demo.slide.reveal[data-steps][data-step="1"] {
 		--division: 50
 	}
@@ -684,6 +688,18 @@ span.poop {
 	}
 }
 
+.slide:not([data-visit="2"]) [data-visit="2"] {
+	display: none;
+}
+
+#homework-bar-chart {
+	display: grid;
+	grid-template-columns: auto 1fr
+}
+
+#homework-bar-chart h1 {
+		grid-column-end: span 2;
+	}
 
 #purple-shadow .block {
 	width: 9.3em;
