@@ -13,7 +13,8 @@
 <link href="../talks/shared/browser-support.css" rel="stylesheet" />
 </head>
 <body class="language-css"
-	data-markdown-selectors="details.notes, .md, .takeaway.slide > h1"
+	data-markdown-elements="details.notes, .md, .takeaway.slide > h1"
+	data-balance-elements=".slide > h1:only-child, .takeaway.slide > h1"
 	data-load-plugins="docs">
 
 <header id="intro" class="slide dont-resize" data-source="flickr.com/photos/billward/16601966117">
@@ -1192,70 +1193,76 @@
 		</textarea>
 	</article>
 
-	<article class="slide color-reveal" id="invalid-values">
-		<div class="delayed-children">
-			<br>
-			<div style="background: orange;">--accent-color:;</div>
-			<br>
-			<div style="background: orange;">--accent-color: ;</div>
-		</div>
-
-		<pre style="margin-top: 2em; overflow: visible"><code>
-			background: red;
-			background: var(--accent-color, orange);
-		</code></pre>
+	<article class="slide allow-attendee" id="homework-bar-chart">
+			<h1>Homework!</h1>
+			<style data-slide>
+				@import url("css/bar-chart.css");
+			</style>
+			<div class="bar-chart">
+				<div style="--p: 95%">A</div>
+				<div style="--p: 100%">B</div>
+				<div style="--p: 95%">C</div>
+				<div style="--p: 38%">D</div>
+				<div style="--p: 84.21%">E</div>
+				<div style="--p: 49%">F</div>
+			</div>
+			<div xdata-visit="2" class="md">
+				1. **Base**: Fill in the CSS missing to make this bar chart work
+				and utilize its `--p` variables for the percentages.
+				You will find Flexbox helpful for the layout.
+				2. **Going further:** Here are a few improvements you could make:
+				    1. Introduce properties to further customize the chart. Some ideas:
+				        * `--bar-color`
+				        * `--bar-width`
+				        * `--bar-spacing`
+				        * `--bands`
+				    1. Introduce a `vertical` class that would turn it into a vertical bar chart.
+				    Can we turn this into a custom property (e.g. `--orientation`)?
+			</div>
 	</article>
 
-	<article class="slide color-reveal" id="invalid-values">
-		<div class="delayed-children">
-			<br>
-			<div style="background: linear-gradient(white, transparent) orange;">--accent-color:;</div>
-			<br>
-			<div style="background: linear-gradient(white, transparent);">--accent-color: ;</div>
-		</div>
-
-		<pre style="margin-top: 2em; overflow: visible"><code>
-			background: red;
-			background: linear-gradient(white, transparent)
-			            var(--accent-color, orange);
-		</code></pre>
-		<details class="notes">
-			While in our previous example it looked like the empty value and
-			a value consisting entirely of whitespace would produce the same result,
-			that is not always the case.
-
-			Whitespace is a perfectly valid value for a custom property,
-			but depending on how it's used, it may make the resulting declaration invalid
-			(as in the previous case, `background: ;` is invalid), triggering IACVT.
-			In fact, whitespace is very useful for optionally enabling parts of a value
-			as we will see later.
-		</details>
-	</article>
-
-	<article class="slide" data-steps="1">
-		<style data-slide>
-			article.slide[data-step] {
-				background: yellowgreen;
+	<article class="isolated demo slide" id="bar-chart">
+		<textarea class="language-css">
+			:root {
+				background: hsl(200, 15%, 20%);
 			}
 
-			article.slide[data-step] pre {
-				filter: invert(100%);
-				mix-blend-mode: multiply;
+			.bar-chart {
+				font-size: 60%;
+				background: linear-gradient(to bottom, hsla(0,0%,100%,.1) 50%, transparent 0) top / 100% 20%;
+				border: 2px solid white;
+				border-top: 0;
+				border-right: 0;
+				width: fit-content;
+				height: calc(100vmin - 12em);
+				margin: 2em auto;
 			}
-		</style>
-		<h1>What color is this?</h1>
-		<pre><code>
-			--accent-color: yellowgreen;
-			--accent-color:;
-			background: var(--accent-color, orange);
-		</code></pre>
-		<details class="notes">
-			The empty value is always invalid. In fact it's **the only value that is
-			invalid at parse time**, and not at computed value time.
-			Thus, declarations that set custom properties to the empty value will
-			be discarded by the cascade, and not trigger IACVT.
-		</details>
+
+			.bar-chart > div {
+				background: deeppink;
+				box-sizing: border-box;
+				padding: .3em 0;
+				margin: 0 .9em;
+				font-weight: bold;
+				letter-spacing: -.04em;
+				word-wrap: break-word;
+				line-height: 1;
+				color: white;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="bar-chart">
+				<div style="--p: 95%">A</div>
+				<div style="--p: 100%">B</div>
+				<div style="--p: 95%">C</div>
+				<div style="--p: 38%">D</div>
+				<div style="--p: 84.21%">E</div>
+				<div style="--p: 49%">F</div>
+			</div>
+		</textarea>
 	</article>
+
+	<!-- <article class="slide" data-insert="#homework-bar-chart"></article> -->
 
 	<article class="isolated demo slide" id="inheritance" style="--division: 55">
 		<textarea class="language-css">
@@ -1272,6 +1279,10 @@
 				background: var(--primary-color);
 			}
 
+			article.alt {
+				--primary-color: var(--secondary-color);
+			}
+
 			article h2 {
 				background: var(--primary-color);
 				color: white;
@@ -1283,10 +1294,6 @@
 
 			article .content {
 				background: hsl(0 0% 100% / .8);
-			}
-
-			article.alt {
-				--primary-color: var(--secondary-color);
 			}
 		</textarea>
 		<style class="demo" data-slide>
@@ -1493,10 +1500,10 @@
 		</details>
 	</article>
 
-	<article class="isolated demo slide">
+	<article class="isolated demo slide" style="--division: 60">
 		<textarea class="language-css">
 			p {
-				--font-size: clamp(20px, var(--font-size), 40px);
+				--font-size: clamp(20px, var(--font-size, 1rem), 40px);
 				font-size: var(--font-size);
 			}
 
@@ -1524,87 +1531,236 @@
 	<article class="takeaway slide">
 		<h1>Use fake "private" variables to enforce constraints and avoid cycles</h1>
 	</article>
-</section>
 
-<article class="slide allow-attendee" id="homework-bar-chart">
-		<h1>Homework!</h1>
-		<style data-slide>
-			@import url("css/bar-chart.css")
+	<article class="browser-support slide">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th><img src="img/chrome-logo.svg" alt="Chrome"></th>
+					<th><img src="img/firefox-logo.svg" alt="Firefox"></th>
+					<th><img src="img/edge-logo.svg" alt="Edge"></th>
+					<th><img src="img/safari-logo.png" alt="Safari"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th><a href="hhttps://caniuse.com/css-math-functions">min() and max()</a></th>
+					<td>79</td>
+					<td>75</td>
+					<td>79</td>
+					<td>11.1</td>
+				</tr>
+				<tr>
+					<th><a href="hhttps://caniuse.com/css-math-functions">clamp()</a></th>
+					<td>79</td>
+					<td>75</td>
+					<td>79</td>
+					<td>13.1</td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+
+	<article class="slide" data-type="Practice time!">
+		<h1>Flexible pie chart</h1>
+		<iframe class="browser" height="100%" style="width: 100%;" scrolling="no"
+		src="https://codepen.io/leaverou/embed/preview/c701c26e89a4e964e14e4b2ca0a6845a?height=265&theme-id=dark&default-tab=html,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+			</iframe>
+	</article>
+
+	<article class="slide allow-attendee" data-type="Practice time!">
+		<h1>Flexible pie chart</h1>
+		<iframe class="browser" height="100%" style="width: 100%;" scrolling="no"
+		src="https://codepen.io/leaverou/embed/preview/c701c26e89a4e964e14e4b2ca0a6845a?height=265&theme-id=dark&default-tab=html,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+			</iframe>
+		<p><a href="https://codepen.io/leaverou/pen/c19d45c29a103d9324e1f8ab5fbb16d1">Open in new tab</a></p>
+	</article>
+
+	<article class="slide color-reveal" id="invalid-values">
+		<div class="delayed-children">
+			<br>
+			<div style="background: orange;">--accent-color:;</div>
+			<br>
+			<div style="background: orange;">--accent-color: ;</div>
+		</div>
+
+		<pre style="margin-top: 2em; overflow: visible"><code>
+			background: red;
+			background: var(--accent-color, orange);
+		</code></pre>
+	</article>
+
+	<article class="slide color-reveal" id="invalid-values">
+		<div class="delayed-children">
+			<br>
+			<div style="background: linear-gradient(white, transparent) orange;">--accent-color:;</div>
+			<br>
+			<div style="background: linear-gradient(white, transparent);">--accent-color: ;</div>
+		</div>
+
+		<pre style="margin-top: 2em; overflow: visible"><code>
+			background: red;
+			background: linear-gradient(white, transparent)
+			            var(--accent-color, orange);
+		</code></pre>
+		<details class="notes">
+			While in our previous example it looked like the empty value and
+			a value consisting entirely of whitespace would produce the same result,
+			that is not always the case.
+
+			Whitespace is a perfectly valid value for a custom property,
+			but depending on how it's used, it may make the resulting declaration invalid
+			(as in the previous case, `background: ;` is invalid), triggering IACVT.
+			In fact, whitespace is very useful for optionally enabling parts of a value
+			as we will see later.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Whitespace is perfectly valid, and useful in turning parts of a value off</h1>
+	</article>
+
+	<article class="isolated demo slide" id="box-shadow" style="--font-size-multiplier: .8; --division: 60;">
+		<textarea class="language-css">
+			* {
+				--box-shadow-x: initial;
+				--box-shadow-y: initial;
+				--box-shadow-blur: initial;
+				--box-shadow-spread: initial;
+				--box-shadow-color: initial;
+				--box-shadow-inset: initial;
+
+				box-shadow: var(--box-shadow-x, 0)
+				            var(--box-shadow-y, 0)
+				            var(--box-shadow-blur)
+				            var(--box-shadow-spread, 0)
+				            var(--box-shadow-color, currentColor)
+				            var(--box-shadow-inset, );
+			}
+
+			img {
+				--size: 25vw;
+				width: var(--size);
+				height: var(--size);
+				object-fit: cover;
+
+				transition: .3s;
+				--box-shadow-y: .05em;
+				--box-shadow-blur: .1em;
+				--box-shadow-color: rgb(0 0 0 / .1);
+			}
+
+			img:hover {
+				--box-shadow-blur: .2;
+			}
+		</textarea>
+		<style class="demo" data-slide>
+			img {
+				margin: .2em;
+				padding: .2em;
+				background: white;
+			}
 		</style>
-		<div class="bar-chart">
-			<div style="--p: 95%">A</div>
-			<div style="--p: 100%">B</div>
-			<div style="--p: 95%">C</div>
-			<div style="--p: 38%">D</div>
-			<div style="--p: 84.21%">E</div>
-			<div style="--p: 49%">F</div>
-		</div>
-		<div data-visit="2" class="md">
-			1. **Base**: Fill in the CSS missing to make this bar chart work
-			and utilize its `--p` variables for the percentages.
-			You will find Flexbox helpful for the layout.
-			2. **Going further:** Here are a few improvements you could make:
-			    1. Introduce properties to further customize the chart. Some ideas:
-			        * `--bar-color`
-			        * `--bar-width`
-			        * `--bar-spacing`
-			        * `--background-increments`
-			    1. Introduce a `vertical` class that would turn it into a vertical bar chart.
-			    Can we turn this into a custom property (e.g. `--orientation`)?
-		</div>
-</article>
+		<textarea class="language-html">
+			<img src="img/cat1.jpg" alt="">
+			<img src="img/cat2.jpg" alt="">
+			<img src="img/cat3.jpg" alt="">
+			<img src="img/cat4.jpg" alt="">
+			<img src="img/cat5.jpg" alt="">
+			<img src="img/cat6.jpg" alt="">
+			<img src="img/cat7.jpg" alt="">
+			<img src="img/cat8.jpg" alt="">
+			<img src="img/cat9.jpg" alt="">
+			<img src="img/cat10.jpg" alt="">
+		</textarea>
+	</article>
 
-<article class="isolated demo slide" id="bar-chart">
-	<textarea class="language-css">
-		:root {
-			background: hsl(200, 15%, 20%);
-		}
+	<article class="takeaway slide">
+		<h1>Whitespace is useful as a fallback too</h1>
+	</article>
 
-		.bar-chart {
-			font-size: 60%;
-			background: linear-gradient(to bottom, hsla(0,0%,100%,.1) 50%, transparent 0) top / 100% 20%;
-			border: 2px solid white;
-			border-top: 0;
-			border-right: 0;
-			width: fit-content;
-			height: calc(100vmin - 12em);
-			margin: 2em auto;
-		}
+	<article class="isolated demo slide" id="space-toggle" style="--division: 65; --font-size-multiplier: .8">
+		<textarea class="language-css">
+			button {
+				border: 1px solid transparent;
+				background: hsl(200 100% 50%);
+			}
 
-		.bar-chart > div {
-			background: deeppink;
-			box-sizing: border-box;
-			padding: .3em 0;
-			margin: 0 .9em;
-			font-weight: bold;
-			letter-spacing: -.04em;
-			word-wrap: break-word;
-			line-height: 1;
-			color: white;
-		}
-	</textarea>
-	<textarea class="language-html">
-		<div class="bar-chart">
-			<div style="--p: 95%">A</div>
-			<div style="--p: 100%">B</div>
-			<div style="--p: 95%">C</div>
-			<div style="--p: 38%">D</div>
-			<div style="--p: 84.21%">E</div>
-			<div style="--p: 49%">F</div>
-		</div>
-	</textarea>
-</article>
+			button.glossy {
+				background-image: linear-gradient(hsl(0 0% 100% / .3), transparent);
+				border-color: rgb(0 0 0 / .1);
+				box-shadow: 0 1px hsl(0 0% 100% / .8) inset,
+				            0 .1em .1em -.1em rgb(0 0 0 / .2);
+				text-shadow: 0 -1px 1px rgb(0 0 0 / .3);
+			}
 
-<article class="slide" data-insert="#homework-bar-chart"></article>
+			button:hover {
+				background-color: hsl(200 100% 40%);
+			}
 
-<footer class="slide" id="day-end">
-	<h1>Thank you!</h1>
-	<p>See you tomorrow! 👋🏼</p>
-</footer>
+			button.glossy:active {
+				box-shadow: 0 1px .2em black inset;
+			}
+		</textarea>
+		<style data-slide class="demo">
+			button {
+				padding: .6em 1em;
+				border-radius: .2em;
+				color: white;
+				font: 600 100%/1 sans-serif;
+				cursor: pointer;
+			}
+		</style>
+		<textarea class="language-html">
+			<button>Flat</button>
+			<button class="glossy">Glossy</button>
+		</textarea>
+		<details class="notes">
+			Whitespace is far more useful than meets the eye.
+			Here we have a button with a glossy variation.
+			However, this means that to make a button glossy,
+			we need to change the HTML, which isn't always feasible.
+			What if we could use a `--is-glossy` property to control whether
+			our button is glossy?
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Turn off multiple different parts of custom properties in one go with whitespace
+			<div class="note">(Space Toggle)</div>
+		</h1>
+	</article>
+
+	<article class="slide" data-steps="1">
+		<style data-slide>
+			article.slide[data-step] {
+				background: yellowgreen;
+			}
+
+			article.slide[data-step] pre {
+				filter: invert(100%);
+				mix-blend-mode: multiply;
+			}
+		</style>
+		<h1>What color is this?</h1>
+		<pre><code>
+			--accent-color: yellowgreen;
+			--accent-color:;
+			background: var(--accent-color, orange);
+		</code></pre>
+		<details class="notes">
+			The empty value is always invalid. In fact it's **the only value that is
+			invalid at parse time**, and not at computed value time.
+			Thus, declarations that set custom properties to the empty value will
+			be discarded by the cascade, and not trigger IACVT.
+		</details>
+	</article>
+</section>
 
 <section id="types">
 	<header class="slide">
-		<h1>Datatypes <span class="amp">&</span> Conversions</h1>
+		<h1>Numbers <span class="amp">&</span> Lengths</h1>
 	</header>
 
 	<article class="isolated demo slide" id="viewport">
@@ -1632,6 +1788,9 @@
 			it's a reasonable thought to try and abstract that into a variable.
 			However, simple concatenation like in Sass
 			does not work to get a `&lt;length>` out of that.
+
+			----------
+
 			We can still convert, but we need to use `calc()`.
 
 			Yes, `calc()` is a little verbose.
@@ -1645,6 +1804,15 @@
 			Why doesn't it work? How can we fix that?
 		</details>
 	</article>
+
+	<article class="takeaway slide">
+		<h1>Variable values are token lists</h1>
+		<div class="md">
+			If you write `var(--p)vw`, the browser understands `50 vw`, not `50vw`
+		</div>
+	</article>
+
+	<article class="slide" data-insert="#viewport"></article>
 
 	<article class="slide">
 		<table>
@@ -1661,6 +1829,10 @@
 
 	<article class="takeaway slide">
 		<h1>Use variables for pure data, not CSS values</h1>
+		<details class="notes">
+			This is a good practice regardless of the conversion issues,
+			as it ensures better separation of concerns.
+		</details>
 	</article>
 
 	<article class="slide" data-insert="#viewport"></article>
@@ -1709,52 +1881,340 @@
 		<details class="notes">
 			Unfortunately, there is no way currently to convert a (non-integer)
 			number to a string in CSS. Or a string to a number.
+
 			If you know in advance how much precision you will need, it
 			may be worth it to specify variables multiplied by a power of 10,
 			but this is not always applicable.
+			Also usually you want to display the actual number, not a multiple!
+
+			Note that multiplying your variables in CSS won't work:
+			Once CSS sees a non integer, it treats any calculation involving it
+			as a non-integer.
 		</details>
+	</article>
+
+	<article class="isolated horizontal demo slide" id="viewport">
+		<textarea class="language-css">
+			* {
+				width: var(--width);
+				height: calc(var(--width) / var(--aspect-ratio));
+			}
+
+			.widescreen {
+				--aspect-ratio: 16 / 9;
+				--width: 16em;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="widescreen">I have a fixed aspect ratio</div>
+		</textarea>
+		<style class="demo" data-slide>
+			.widescreen {
+				box-sizing: border-box;
+				padding: 1em;
+				margin: 1em;
+				background: hsl(220 10% 50%);
+				color: white;
+			}
+		</style>
+		<details class="notes css">
+			Here we were trying to emulate the new `aspect-ratio` property
+			since it's not supported everywhere yet.
+			However, it doesn’t seem to work. Can you tell why?
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Always put parentheses around `var()` in `calc()`</h1>
 	</article>
 
 	<article class="isolated demo slide" style="--division: 60">
 		<textarea class="language-css">
-			:root {
-				font-size: 12pt;
-				--large: calc(1em + 1vh);
+			.container {
+				font-size: calc(2rem + 1vmin);
 			}
 
-			header {
-				font-size: 36pt;
+			.bigger {
+				font-size: 250%;
 			}
 
-			header p {
-				font-size: var(--large);
+			.bigger p {
+				font-size: 40%;
 			}
 		</textarea>
 		<textarea class="language-html">
-			<header>
-				<h1>Heading</h1>
-				<p>Some heading text</p>
-			</header>
-			<p>Body text</p>
+			<div class="container">
+				<p>Base text</p>
+
+				<div class="bigger">
+					This text is bigger
+
+					<p>This text should be
+						the same size as the base</p>
+				</div>
+			</div>
 		</textarea>
 		<style data-slide class="demo">
 
 		</style>
 		<details class="notes">
+			Here we have a child element that needs to reset its font size back to
+			the grandparent size, whatever that is.
+			In this case we know how to reset it, but this solution is fragile.
+			Can we use a variable set to `1em` on the parent? Let's see what happens.
+
 			The computed value of unregistered properties is the specified value
 			with any variables substituted.
 			This means that any relative units, such as `em` are resolved at the point of usage,
 			not the point of definition.
-			Registering the property changes this.
+			Registering the property changes this,
+			which means you can use it to grab relative values on any ancestor!
 
-			However, that doesn't seem to work with `currentColor`
+			However, that doesn't seem to work with `currentColor`,
+			which is resolved at used value time.
 		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>
+			Relative values inherit as syntax tokens
+			*unless* the property is registered
+		</h1>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>
+			Registering a property as `&lt;length>` allows us to pass down
+			ancestor font sizes!
+		</h1>
+	</article>
+
+	<article class="isolated demo slide" id="math-conditional" style="--division: 55">
+		<textarea class="language-css">
+			article {
+				background: hsl(250 30% 40%);
+			}
+
+			article.dark {
+				background: hsl(250 30% 60%);
+			}
+
+			article h2 {
+				color: white;
+			}
+
+			article.dark h2 {
+				color: black;
+			}
+
+			article .content {
+				background: hsl(0 0% 100% / .8);
+			}
+
+			article.dark .content {
+				background: hsl(0 0% 100% / .2);
+				color: white;
+			}
+		</textarea>
+		<style class="demo" data-slide>
+			body {
+				font-size: 100%;
+				line-height: 1.5;
+			}
+
+			article {
+				border-radius: .3rem;
+				overflow: hidden;
+				margin: 1em 0;
+			}
+
+			article h2 {
+				padding: .3rem .5rem;
+				margin: 0;
+			}
+
+			article .content {
+				padding: .1em .5rem;
+			}
+		</style>
+		<textarea class="language-html">
+			<h1>Lea Verou's blog</h1>
+
+			<article>
+				<h2>Blog Post 1</h2>
+				<div class="content">
+					<p>Blog post 1 content</p>
+				</div>
+			</article>
+
+			<article class="dark">
+				<h2>Blog Post 2</h2>
+				<div class="content">
+					<p>Blog post 2 content</p>
+				</div>
+			</article>
+		</textarea>
+		<details class="notes">
+			Here we have a dark variation with many overrides,
+			which requires a class change.
+			Can we use a single `--is-dark` variable for this?
+		</details>
+	</article>
+
+	<article class="slide takeaway">
+		<h1>You can use 0/1 toggles for any numeric value</h1>
 	</article>
 </section>
 
 <section>
 	<header class="slide">
-		<h1>Images</h1>
+		<h1 style="--emoji: '🌈'">Colors</h1>
+	</header>
+
+	<article class="isolated demo slide" id="color-variations" style="--division: 55">
+		<textarea class="language-css">
+			:root {
+				--primary-color: hsl(250 30% 40%);
+				--secondary-color: hsl(190 40% 40%);
+			}
+
+			h1 {
+				color: var(--primary-color);
+			}
+
+			article {
+				background: var(--primary-color);
+			}
+
+			article h2 {
+				background: var(--primary-color);
+				color: white;
+			}
+
+			article a {
+				color: var(--secondary-color);
+				filter: brightness(50%);
+			}
+
+			article .content {
+				background: hsl(0 0% 100% / .8);
+			}
+		</textarea>
+		<style class="demo" data-slide>
+			body {
+				font-size: 100%;
+				line-height: 1.5;
+			}
+
+			article {
+				border-radius: .3rem;
+				overflow: hidden;
+				margin: 1em 0;
+			}
+
+			article h2 {
+				padding: .3rem .5rem;
+				margin: 0;
+			}
+
+			article a {
+				font-weight: bold;
+			}
+
+			article .content {
+				padding: .1em .5rem;
+			}
+		</style>
+		<textarea class="language-html">
+			<h1>Lea Verou's blog</h1>
+
+			<article>
+				<h2>Blog Post 1</h2>
+				<div class="content">
+					<p>Blog post 1 content with <a href="https://lea.verou.me">link</a></p>
+				</div>
+			</article>
+
+			<article class="alt">
+				<h2>Blog Post 2</h2>
+				<div class="content">
+					<p>Blog post 2 content with <a href="https://lea.verou.me">link</a></p>
+				</div>
+			</article>
+		</textarea>
+		<details class="notes">
+			Here we are using a variety of hacks to create color variations:
+			`filter: brightness()` or semi-transparent white overlays.
+
+			[Soon](https://drafts.csswg.org/css-color-5) we will be able to manipulate colors directly,
+			but currently this is only supported in Safari (and very partially Firefox).
+
+			What can we do meanwhile? Define more granular custom properties, what else? 😁
+
+			Let's first go the more verbose but clear way: defining individual properties
+			for each component.
+			Be careful of inheritance caveats!
+
+			--------------
+
+			Can we eliminate verbosity?
+			We can store the hue and saturation in the same property
+			(remember they can store multiple tokens!).
+
+			We can also store lighter and darker variations and use those throughout.
+
+			---------------
+
+			What happens if we want to make the link color lighter on hover?
+			With this approach, we'd need to redefine the entire color.
+			Let's look at a slightly different approach.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>We can specify each color component via separate variables and do math with it
+			<div class="note">(but it's verbose AF)</div>
+		</h1>
+	</article>
+
+	<article class="slide" data-insert="#color-variations"></article>
+
+	<article class="takeaway slide">
+		<h1>We can store multiple color components in the same variable</h1>
+	</article>
+
+	<article class="slide" data-insert="#color-variations"></article>
+
+	<article class="slide">
+		<h1>Color manipulation, today</h1>
+
+		<div class="md balance-lines">
+			- Separate `--primary-color-*` properties
+			- Hue and saturation can be stored in the same property
+			- Precomputed variations: `--primary-color-lighter`, `--primary-color-darker` etc
+			- `--background-color-*` and `--text-color-*` Properties
+		</div>
+		<p class="delayed note">All of the above can coexist!</p>
+	</article>
+
+	<article class="slide" data-insert="#color-variations"></article>
+
+	<article class="slide">
+		<h1 style="--emoji: '🌈'">The future is colorful</h1>
+
+		<div class="md balance-lines">
+			- Custom properties that store only colors
+			- Functions to manipulate colors
+			- `color-mix(var(--color) 80%, white)`
+			- Relative syntax: `hsl(from var(--color) h s 80%)`
+			- Better color spaces for adjustment: `lch(from var(--color) 80% c h)`
+		</div>
+	</article>
+</section>
+
+<section>
+	<header class="slide">
+		<h1 style="--emoji: '🖼'">Images</h1>
 	</header>
 
 	<article class="horizontal demo slide" id="url" style="--division: 50">
@@ -1831,6 +2291,7 @@
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
 					<text y=".9em" font-size="20">❄️</text>\
 				</svg>');
+				--background: linear-gradient(black, navy);
 				background: var(--snow) 0 0 / 5em;
 			}
 		</textarea>
@@ -1920,6 +2381,79 @@
 		</h1>
 	</article>
 </section>
+
+<article class="isolated demo slide" id="homework-buttons">
+	<textarea class="language-css">
+		button {
+			padding: .6em 1em;
+			margin: .1em;
+			border: .1em solid transparent;
+			border-radius: .2em;
+			color: white;
+			font: 600 100%/1 sans-serif;
+			cursor: pointer;
+		}
+
+		button:not(.primary) {
+			border-color: currentColor;
+			color: hsl(200 100% 50%);
+			background: transparent;
+		}
+
+		button.primary,
+		button:not(.primary):hover {
+			background-color: hsl(200 100% 50%);
+		}
+
+		button.primary:hover {
+			background-color: hsl(200 100% 40%);
+		}
+
+		button.danger:not(.primary) {
+			color: hsl(0, 70%, 50%);
+		}
+
+		button.danger.primary,
+		button.danger:hover {
+			background: hsl(0, 70%, 50%);
+		}
+
+		button.danger.primary:hover {
+			background: hsl(0, 70%, 40%);
+		}
+
+		button.primary.primary,
+		button:hover:hover {
+			border-color: transparent;
+			color: white;
+		}
+	</textarea>
+	<textarea class="language-html">
+		<p>Plain buttons:</p>
+		<button class="primary">Submit</button>
+		<button>Back</button>
+		<p>Danger buttons:</p>
+		<button class="primary danger">Delete</button>
+		<button class="danger">Cancel</button>
+	</textarea>
+	<details class="notes">
+		Here we have a set of buttons with two orthogonal variations,
+		as is pretty common in many design systems and frameworks (these were inspired by Bootstrap).
+
+		Notice that there is a lot of repetition.
+		Your homework for next week is to refactor this CSS to reduce repetition,
+		improve maintainability,
+		and make it possible to apply these variations without modifying the HTML.
+
+		If you want to go even further, you could explore adding other potential variations,
+		you could look [here](https://getbootstrap.com/docs/4.0/components/buttons/) for inspiration.
+	</details>
+</article>
+
+<footer class="slide" id="day-end">
+	<h1>Thank you!</h1>
+	<p>See you next week! 👋🏼</p>
+</footer>
 
 <section id="animations">
 	<header class="slide">
@@ -2059,44 +2593,6 @@
 		<div class="delayed note">(like function currying, in programmerese)</div></h1>
 	</article>
 
-	<article class="demo slide" id="box-shadow" style="--font-size-multiplier: .8; --division: 70;">
-		<p class="hint">No inherit from box-shadow, invalid at computed value time</p>
-		<textarea class="language-css">
-			* {
-				--box-shadow-x: initial;
-				--box-shadow-y: initial;
-				--box-shadow-blur: initial;
-				--box-shadow-spread: initial;
-				--box-shadow-color: initial;
-				--box-shadow-inset: initial;
-
-				box-shadow: var(--box-shadow-x, 0)
-				            var(--box-shadow-y, 0)
-				            var(--box-shadow-blur)
-				            var(--box-shadow-spread, 0)
-				            var(--box-shadow-color, currentColor)
-				            var(--box-shadow-inset, );
-			}
-
-			.block1 {
-
-			}
-		</textarea>
-		<textarea class="language-html">
-			<div class="blocks">
-				<div class="block1">
-					<div></div>
-				</div>
-				<div class="block2">
-					<div></div>
-				</div>
-			</div>
-		</textarea>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>CSS Variables enable you to <br>create custom longhands</h1>
-	</article>
 
 	<article class="demo slide" id="prepend">
 		<p class="hint">inline style too</p>

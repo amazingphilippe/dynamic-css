@@ -1,9 +1,6 @@
 var $ = Bliss, $$ = Bliss.$;
 
-
 $$(".takeaway.slide").forEach((slide, i) => slide.style.setProperty("--takeaway", i+1));
-
-$$(".slide > h1:only-child").forEach(h1 => h1.classList.add("balance-lines"));
 
 // Make external links open in a new tab
 setTimeout(() => {

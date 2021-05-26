@@ -90,7 +90,22 @@
 	}
 }
 
+h1[style*="--emoji"] {
+	&::before,
+	&::after {
+		content: var(--emoji);
+		display: inline-block;
+	}
 
+	&::before {
+		margin-right: .2em;
+	}
+
+	&::after {
+		margin-left: .2em;
+		transform: scaleX(-1);
+	}
+}
 
 kbd {
 	position: absolute;

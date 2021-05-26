@@ -90,7 +90,20 @@
 		text-shadow: none;
 	}
 
+h1[style*="--emoji"]::before,
+	h1[style*="--emoji"]::after {
+		content: var(--emoji);
+		display: inline-block;
+	}
 
+h1[style*="--emoji"]::before {
+		margin-right: .2em;
+	}
+
+h1[style*="--emoji"]::after {
+		margin-left: .2em;
+		transform: scaleX(-1);
+	}
 
 kbd {
 	position: absolute;
