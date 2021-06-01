@@ -1777,13 +1777,13 @@
 				padding: calc(.6em + var(--gutter) * 2);
 			}
 
-			section.wide3 {
+			section:nth-of-type(3n + 4) {
 				grid-column-end: span 3;
 				background-color: #f06;
 				color: hsl(0 0% 100% /.6);
 			}
 
-			section.wide2 {
+			section:nth-last-of-type(2) {
 				grid-column-end: span 2;
 				background-color: orange;
 			}
@@ -1805,7 +1805,7 @@
 				<p>His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream.</p>
 			</section>
 
-			<section class="wide3">
+			<section>
 				<p>His room, a proper human room although a little too small, lay peacefully between its four familiar walls.</p>
 				<p>A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>
 				<p>It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.</p>
@@ -1813,10 +1813,8 @@
 
 			</section>
 
-			<section class="wide2">
+			<section>
 				<p>"How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where he was.</p>
-
-
 			</section>
 			<section>
 				<p>He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before.</p>
@@ -1851,6 +1849,10 @@
 
 			Lastly, a third strategy to keep everything together is to
 			use different properties for each breakpoint, e.g. `--font-size-large`
+
+			Optional homework: Our design works with the `--columns` property being
+			`1` or `3`, but breaks at `2` (unless we are willing to shift sections upwards).
+			How can we make the layout work with `--columns: 2` as well?
 		</details>
 	</article>
 
@@ -3063,6 +3065,79 @@
 		</h1>
 	</article>
 </section>
+
+<article class="isolated demo slide" id="homework-buttons">
+	<textarea class="language-css">
+		button {
+			padding: .6em 1em;
+			margin: .1em;
+			border: .1em solid transparent;
+			border-radius: .2em;
+			color: white;
+			font: 600 100%/1 sans-serif;
+			cursor: pointer;
+		}
+
+		button:not(.primary) {
+			border-color: currentColor;
+			color: hsl(200 100% 50%);
+			background: transparent;
+		}
+
+		button.primary,
+		button:not(.primary):hover {
+			background-color: hsl(200 100% 50%);
+		}
+
+		button.primary:hover {
+			background-color: hsl(200 100% 40%);
+		}
+
+		button.danger:not(.primary) {
+			color: hsl(0, 70%, 50%);
+		}
+
+		button.danger.primary,
+		button.danger:hover {
+			background: hsl(0, 70%, 50%);
+		}
+
+		button.danger.primary:hover {
+			background: hsl(0, 70%, 40%);
+		}
+
+		button.primary.primary,
+		button:hover:hover {
+			border-color: transparent;
+			color: white;
+		}
+	</textarea>
+	<textarea class="language-html">
+		<p>Plain buttons:</p>
+		<button class="primary">Submit</button>
+		<button>Back</button>
+		<p>Danger buttons:</p>
+		<button class="primary danger">Delete</button>
+		<button class="danger">Cancel</button>
+	</textarea>
+	<details class="notes">
+		Here we have a set of buttons with two orthogonal variations,
+		as is pretty common in many design systems and frameworks (these were inspired by Bootstrap).
+
+		Q1: Notice that there is a lot of repetition.
+		Your homework for next week is to refactor this CSS to reduce repetition,
+		improve maintainability,
+		and make it easier to create more variations.
+		([Solution](https://codepen.io/leaverou/pen/f84043e1c5fcc0e58e15db1cbe0674be?editors=1100))
+
+		Q2: Going further, can we toggle these variations by setting an
+		`--is-dangerous` and/or `--is-primary` declaration only?
+
+		If you want to go even further, you could explore adding other potential variations,
+		you could look [here](https://getbootstrap.com/docs/4.0/components/buttons/) for inspiration.
+	</details>
+</article>
+
 <!-- End Numbers & lengths -->
 
 <section>
@@ -3419,77 +3494,6 @@
 	</article>
 </section>
 
-<article class="isolated demo slide" id="homework-buttons">
-	<textarea class="language-css">
-		button {
-			padding: .6em 1em;
-			margin: .1em;
-			border: .1em solid transparent;
-			border-radius: .2em;
-			color: white;
-			font: 600 100%/1 sans-serif;
-			cursor: pointer;
-		}
-
-		button:not(.primary) {
-			border-color: currentColor;
-			color: hsl(200 100% 50%);
-			background: transparent;
-		}
-
-		button.primary,
-		button:not(.primary):hover {
-			background-color: hsl(200 100% 50%);
-		}
-
-		button.primary:hover {
-			background-color: hsl(200 100% 40%);
-		}
-
-		button.danger:not(.primary) {
-			color: hsl(0, 70%, 50%);
-		}
-
-		button.danger.primary,
-		button.danger:hover {
-			background: hsl(0, 70%, 50%);
-		}
-
-		button.danger.primary:hover {
-			background: hsl(0, 70%, 40%);
-		}
-
-		button.primary.primary,
-		button:hover:hover {
-			border-color: transparent;
-			color: white;
-		}
-	</textarea>
-	<textarea class="language-html">
-		<p>Plain buttons:</p>
-		<button class="primary">Submit</button>
-		<button>Back</button>
-		<p>Danger buttons:</p>
-		<button class="primary danger">Delete</button>
-		<button class="danger">Cancel</button>
-	</textarea>
-	<details class="notes">
-		Here we have a set of buttons with two orthogonal variations,
-		as is pretty common in many design systems and frameworks (these were inspired by Bootstrap).
-
-		Q1: Notice that there is a lot of repetition.
-		Your homework for next week is to refactor this CSS to reduce repetition,
-		improve maintainability,
-		and make it easier to create more variations.
-		([Solution](https://codepen.io/leaverou/pen/f84043e1c5fcc0e58e15db1cbe0674be?editors=1100))
-
-		Q2: Going further, can we toggle these variations by setting an
-		`--is-dangerous` and/or `--is-primary` declaration only?
-
-		If you want to go even further, you could explore adding other potential variations,
-		you could look [here](https://getbootstrap.com/docs/4.0/components/buttons/) for inspiration.
-	</details>
-</article>
 
 <!-- <footer class="slide" id="day-end">
 	<h1>Thank you!</h1>
@@ -3500,33 +3504,6 @@
 
 
 
-<!--
-<article class="slide" id="specs">
-	<a href="https://w3.org/TR/css-variables" class="w3c" target="_blank">w3.org/TR/css-variables</a>
-	<a href="https://drafts.csswg.org/css-variables" class="w3c ed" target="_blank">drafts.csswg.org/css-variables</a>
-</article> -->
-
-<!-- <section>
-	<header class="future slide">
-		<h1>🔮 Future 🔮</h1>
-	</header>
-
-	<article class="demo slide">
-		<textarea class="language-css">
-		:root {
-			--bg: {
-				background: yellowgreen;
-			}
-		}
-
-		.block {
-			background: red;
-			@apply --bg;
-		}
-		</textarea>
-		<div class="block">Native mixins are coming!</div>
-	</article>
-</section> -->
 
 <footer class="dark slide dont-resize">
 	<img src="img/mark.svg" class="logo" />
