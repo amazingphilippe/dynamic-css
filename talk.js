@@ -24,6 +24,25 @@ $$(".demo.slide.reveal").forEach(slide => {
 	});
 });
 
+$$(".math").forEach(math => {
+	math.classList.add("delayed-children");
+
+	for (let li of math.children) {
+		li.innerHTML = li.innerHTML.replace(/\b[a-z]+\b/g, "<var>$&</var>");
+	}
+
+});
+
+$$("header.slide[style*='--icon']").forEach(slide => {
+	let icon = slide.style.getPropertyValue("--icon").trim();
+	let style = "font-size: 30px;";
+	let styleFlipped = "transform: scaleX(-1); transform-origin: center; transform-box: fill-box;"
+
+	slide.style.setProperty("--icon-svg", `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text style="${style}" x="20" y="50">${icon}</text></svg>')`)
+	slide.style.setProperty("--icon-svg-flipped", `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text style="${style} ${styleFlipped}" x="20" y="50">${icon}</text></svg>')`)
+
+});
+
 (async () => {
 
 await Inspire.importsLoaded;

@@ -377,34 +377,6 @@ span.poop {
 			font-size: 60%;
 		}
 
-#responsive .demo-target {
-	display: flex;
-	flex-flow: row wrap;
-	align-items: stretch;
-	padding: 1em;
-}
-
-	#responsive section {
-		color: rgba(0,0,0,.5);
-		background: linear-gradient(currentColor 50%, transparent 0) 0 0 / 100% 10% content-box content-box, silver;
-		background-repeat: round;
-		padding: .6em;
-		box-sizing: border-box;
-		mix-blend-mode: multiply;
-		flex: 25%;
-	}
-
-	#responsive section.wide3 {
-		flex: 100%;
-		background-color: #f06;
-		color: hsla(0,0%,100%,.6);
-	}
-
-	#responsive section.wide2 {
-		flex: 60%;
-		background-color: orange;
-	}
-
 .talking.housewife.slide {
 	display: block;
 	background: #978 url(../img/housewife.png) no-repeat bottom right / 50vmin auto;
@@ -620,12 +592,20 @@ span.poop {
 			display: none;
 		}
 
+.demo.slide.reveal[data-steps]:not([data-step]).code {
+			--division: 0;
+		}
+
 .demo.slide.reveal[data-steps][data-step="1"] {
-		--division: 50
+		/* --division: var(--division-end, 50); */
 	}
 
 .demo.slide.reveal[data-steps][data-step="1"] .next-item::before {
 			content: "➡";
+		}
+
+.demo.slide.reveal[data-steps][data-step="1"].isolated .next-item {
+			display: none;
 		}
 
 .demo.slide.reveal[data-steps] .next-item {
@@ -669,11 +649,85 @@ span.poop {
 		grid-column-end: span 2;
 	}
 
-#purple-shadow .block {
-	width: 9.3em;
-	font-size: 120%;
-	color: rebeccapurple;
+#token-examples code {
+		padding: .1em .5em;
+		border-radius: .2em;
+		background: rgb(0 0 0 / .5);
+		font-size: 150%;
+	}
+
+.valid-quiz.slide pre.delayed {
+		position: relative;
+		padding: .4em .8em;
+		border: .2em solid var(--color);
+		border-radius: .3em;
+		opacity: 1;
+		overflow: visible;
+		font-family: var(--font-heading);
+		font-weight: bold;
+
+		--color: gray;
+		--label: "?"
+	}
+
+.valid-quiz.slide pre.delayed.current {
+			--color: var(--color-green);
+			--label: "✓"
+		}
+
+.valid-quiz.slide pre.delayed.current.invalid {
+				--color: hsl(0 80% 50%);
+				--label: "✖";
+			}
+
+.valid-quiz.slide pre.delayed::before {
+			content: var(--label);
+			position: absolute;
+			top: -.8em;
+			right: -.8em;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 1.5em; height: 1.5em;
+			box-sizing: border-box;
+			border-radius: 50%;
+			transform: rotate(10deg);
+			background: var(--color);
+			color: white;
+			text-align: center;
+		}
+
+var {
+	font-family: Cambria Math, Cambria, serif;
 }
+
+.math {
+	font-weight: 400;
+	list-style-type: none
+}
+
+.math > li {
+		display: block;
+	}
+
+.math > li:nth-of-type(n + 2)::before {
+		content: " ⇒ ";
+		color: var(--accent2);
+	}
+
+.math {
+
+	/* Not first, not last */
+}
+
+.math.compact li:nth-child(n + 2):nth-last-child(n + 2) {
+		display: inline-block;
+	}
+
+.codepen.slide iframe {
+		width: 100%;
+		height: 100%;
+	}
 
 #scrolling .demo-target {
 	padding: 0 3rem 1rem;
