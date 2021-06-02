@@ -2737,8 +2737,8 @@
 
 	<article class="slide" data-insert="#svg-eyes"></article>
 
-	<article class="slide allow-attendee" data-type="Math time!">
-		<h1>0-1 Range mapping</h1>
+	<article class="slide allow-attendee" data-type="Math time!" id="range-mapping">
+		<h1>0 to 1 Range mapping</h1>
 		<ul>
 			<li>
 				For every range, there is a
@@ -2768,8 +2768,8 @@
 
 	<article class="slide" data-insert="#svg-eyes"></article>
 
-	<article class="slide allow-attendee" data-type="Math time!">
-		<h1>-1-0-1 Range mapping</h1>
+	<article class="slide allow-attendee" data-type="Math time!" id="ranges-with-midpoint">
+		<h1>-1 to 0 to 1 Range mapping</h1>
 		<ul>
 			<li>
 				Same logic:
@@ -3006,7 +3006,7 @@
 		<h1>Wrap `var()` in `calc()` in `()` if it can contain calculations</h1>
 	</article>
 
-	<article class="isolated demo slide" style="--division: 60">
+	<!-- <article class="isolated demo slide" style="--division: 60">
 		<textarea class="language-css">
 			.container {
 				font-size: calc(2rem + 1vmin);
@@ -3052,7 +3052,7 @@
 			However, that doesn't seem to work with `currentColor`,
 			which is resolved at used value time.
 		</details>
-	</article>
+	</article> -->
 
 	<article class="isolated demo slide" style="--division: 60" id="speech">
 		<textarea class="language-css">
@@ -3252,6 +3252,10 @@
 		</textarea>
 	</article>
 
+	<article class="takeaway slide">
+		<h1>Custom properties allow us to keep everything in one rule</h1>
+	</article>
+
 	<article class="slide" data-insert="#viewport"></article>
 
 	<article class="takeaway slide">
@@ -3414,7 +3418,7 @@
 				flex-flow: column;
 				align-items: center;
 				justify-content: space-between;
-				height: var(--p);
+				height: calc(var(--p) * 1%);
 			}
 
 			@property --integer {
@@ -3426,17 +3430,17 @@
 			.bar-chart > div::before {
 				--integer: calc(var(--p));
 				counter-reset: p var(--integer);
-				content: var(--integer) "%";
+				content: counter(p) "%";
 			}
 		</textarea>
 		<textarea class="language-html">
 			<div class="bar-chart">
-				<div style="--p: 95%">A</div>
-				<div style="--p: 100%">B</div>
-				<div style="--p: 95%">C</div>
-				<div style="--p: -38%">D</div>
-				<div style="--p: 84.21%">E</div>
-				<div style="--p: 49%">F</div>
+				<div style="--p: 95">A</div>
+				<div style="--p: 100">B</div>
+				<div style="--p: 95">C</div>
+				<div style="--p: -38">D</div>
+				<div style="--p: 84.21">E</div>
+				<div style="--p: 49">F</div>
 			</div>
 		</textarea>
 		<style data-slide media="not all" class="demo">
