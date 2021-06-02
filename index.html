@@ -13,8 +13,8 @@
 <link href="../talks/shared/browser-support.css" rel="stylesheet" />
 </head>
 <body class="language-css"
-	data-markdown-elements="details.notes, .md, .takeaway.slide > h1"
-	data-balance-elements=".slide > h1:only-child, .takeaway.slide > h1"
+	data-markdown-elements="details.notes, .md, .takeaway.slide > h1, .credit"
+	data-balance-elements=".slide > h1:only-child, .takeaway.slide > h1, .speech.slide > h1"
 	data-load-plugins="docs">
 
 <header id="intro" class="slide dont-resize" data-source="flickr.com/photos/billward/16601966117">
@@ -2559,7 +2559,9 @@
 	</article>
 
 	<article class="takeaway slide">
-		<h1>CSS Variables enable you to <br>set multiple properties at once</h1>
+		<h1>CSS Variables enable you to <br>set multiple properties at once
+			<div class="note">but they do not interpoalte!</div>
+		</h1>
 	</article>
 
 	<article class="codepen slide" id="staggered">
@@ -2576,7 +2578,7 @@
 		</details>
 	</article>
 
-	<article class="takeway slide">
+	<article class="takeaway slide">
 		<h1>A generic `--index` can be used for many effects, including staggered animations</h1>
 	</article>
 </section>
@@ -3037,6 +3039,7 @@
 			Here we have a child element that needs to reset its font size back to
 			the grandparent size, whatever that is.
 			In this case we know how to reset it, but this solution is fragile.
+			In other cases we can't do this at all, e.g. if the parent font size is set to `0`.
 			Can we use a variable set to `1em` on the parent? Let's see what happens.
 
 			The computed value of unregistered properties is the specified value
@@ -3047,6 +3050,69 @@
 			which means you can use it to grab relative values on any ancestor!
 
 			However, that doesn't seem to work with `currentColor`,
+			which is resolved at used value time.
+		</details>
+	</article>
+
+	<article class="isolated demo slide" style="--division: 60" id="speech">
+		<textarea class="language-css">
+			.speech {
+				position: relative;
+				background: hsl(220 10% 85%);
+			}
+
+			/* Speech bubble pointer */
+			.speech::before {
+				content: "";
+				position: absolute;
+				top: 100%; right: 1.5em;
+				width: 1em; height: 1em;
+				clip-path: polygon(0 0, 100% 100%, 80% 0);
+				background: inherit;
+			}
+
+			.speech::after {
+				content: var(--character, '🙂');
+				position: absolute;
+				top: calc(100% + .5em);
+				right: 0;
+				font-size: 200%;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="container">
+				<blockquote class="speech" style="--character: '😈'">
+					But what if — just hear me out — what if you
+					<em>registered</em> your custom property?
+				</blockquote>
+			</div>
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			.speech {
+				padding: .5em;
+				border-radius: .3em;
+				max-width: 30ch;
+			}
+		</style>
+		<details class="notes">
+			Here we have a child element (our generated content)
+			that needs to size its offset based on the parent font size.
+			However, just using the `em` unit doesn’t help: it refers to its own font size.
+
+			In this case we know how to reset it, but this solution is fragile.
+			In other cases we can't do this at all, e.g. if the current font size is set to `0`.
+			Can we use a variable set to `1em` on the parent? Let's see what happens.
+
+			The computed value of unregistered properties is the specified value
+			with any variables substituted.
+			This means that any relative units, such as `em` are resolved at the point of usage,
+			not the point of definition.
+			Registering the property changes this,
+			which means you can use it to grab relative values on any ancestor!
+			[Here is the solution](https://codepen.io/leaverou/pen/XWMZewB?editors=1100)
+			to this exercise.
+
+			Note that this approach doesn't work with `currentColor`,
 			which is resolved at used value time.
 		</details>
 	</article>
@@ -3065,8 +3131,9 @@
 		</h1>
 	</article>
 </section>
+<!-- End Numbers & lengths -->
 
-<article class="isolated demo slide" id="homework-buttons">
+<!-- <article class="isolated demo slide" id="homework-buttons">
 	<textarea class="language-css">
 		button {
 			padding: .6em 1em;
@@ -3136,14 +3203,54 @@
 		If you want to go even further, you could explore adding other potential variations,
 		you could look [here](https://getbootstrap.com/docs/4.0/components/buttons/) for inspiration.
 	</details>
-</article>
+</article> -->
 
-<!-- End Numbers & lengths -->
+
 
 <section>
 	<header class="slide" style="--icon: 🎻; xbackground-color: var(--accent3)">
 		<h1>Strings</h1>
 	</header>
+
+	<article class="isolated demo slide" id="prepend">
+		<p class="hint">inline style too</p>
+		<textarea class="language-css">
+			@property --prepend {
+				syntax: "<string> | none";
+				initial-value: none;
+				inherits: false;
+			}
+
+			::before {
+				content: var(--prepend);
+			}
+
+			.currency {
+				font-weight: bold;
+				color: hsl(220 10% 30%)
+			}
+
+			.currency.usd {
+				--prepend: "$";
+			}
+
+			a {
+				--prepend: "🐦";
+				color: hsl(210 10% 30%);
+				text-decoration: none;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<p>
+				If childcare costs <span class="currency usd">18</span>/hour,
+				you pay <span class="currency usd">144</span>/day,
+				just to be able to work.
+			</p>
+			<p>
+				Find me on <a href="https://twitter.com">Twitter</a>.
+			</p>
+		</textarea>
+	</article>
 
 	<article class="slide" data-insert="#viewport"></article>
 
@@ -3154,7 +3261,7 @@
 		</details>
 	</article>
 
-	<article class="isolated demo slide" id="bar-chart">
+	<article class="isolated demo slide" id="bar-chart-percentage">
 		<textarea class="language-css">
 			.bar-chart > div {
 				align-items: flex-end;
@@ -3188,20 +3295,37 @@
 		</details>
 	</article>
 
+	<article class="left speech slide" style="--character: '😞'">
+		<h1>The counter trick only works with integers. Sorry!</h1>
+	</article>
+
+	<article class="devil speech slide">
+		<h1>But what if we convert the number to an integer?</h1>
+	</article>
+
+	<article class="slide" data-insert="#bar-chart-percentage"></article>
+
 	<article class="takeaway slide">
-		<h1>The counter trick only works with integers. Sorry! 😞</h1>
+		<h1>Convert a number to an integer by assigning it to a property registered as `"&lt;integer>"` inside `calc()`</h1>
+	</article>
+
+	<article class="slide">
+		<pre><code>
+			/* Round: */
+			--integer: calc(var(--number));
+
+			/* Floor: */
+			--integer: calc(var(--number) - 0.5);
+
+			/* Ceil: */
+			--integer: calc(var(--number) + 0.5);
+		</code></pre>
+		<p class="credit">Credit to [Ana Tudor](https://twitter.com/anatudor/status/1399849494628425734) for discovering this trick.</p>
 		<details class="notes">
-			Unfortunately, there is no way currently to convert a (non-integer)
-			number to a string in CSS. Or a string to a number.
-
-			If you know in advance how much precision you will need, it
-			may be worth it to specify variables multiplied by a power of 10,
-			but this is not always applicable.
-			Also usually you want to display the actual number, not a multiple!
-
-			Note that multiplying your variables in CSS won't work:
-			Once CSS sees a non integer, it treats any calculation involving it
-			as a non-integer.
+			[CSS Values 4](https://www.w3.org/TR/css-values-4/) includes a
+			[`round()` function](https://www.w3.org/TR/css-values-4/#round-func) for this,
+			that can also do lengths etc and rounds by arbitrary steps,
+			but it is not currently implemented anywhere.
 		</details>
 	</article>
 
@@ -3209,7 +3333,7 @@
 		<iframe src="https://codepen.io/leaverou/embed/preview/f2b11ed8445c2502d03bbb8f624e05c8?height=265&theme-id=dark&default-tab=html,result&editable=true" loading="lazy"></iframe>
 	</article>
 
-	<article class="isolated demo slide" style="--division: 60">
+	<article class="isolated demo slide" id="play-buttons" style="--division: 60">
 		<textarea class="language-css">
 			button.play {
 				--PLAY-SYMBOL: conic-gradient(at right, transparent 67%, currentColor 0 83%, transparent 0) 58% 50% / 1.1em 1.5em;
@@ -3247,46 +3371,150 @@
 			<button title="Play" class="play initial"> </button>
 			<button title="Loading…" class="play downloading"> </button>
 			<button title="Pause" class="play playing"> </button>
+
+			<script>
+			let delay = ms => new Promise(r => setTimeout(r, ms));
+
+			document.addEventListener("click", async e => {
+				let el = e.target;
+				if (el.matches("button.play.initial")) {
+					el.className = "play downloading";
+
+					for (let i=0; i<100; i++) {
+						await delay(Math.random() * 200);
+						el.style.setProperty("--p", i);
+					}
+
+					el.className = "play playing";
+					element.style.setProperty("--p", "");
+				}
+			});
+			</script>
 		</textarea>
 	</article>
 
 	<article class="codepen slide">
-		<iframe scrolling="no" title="Play button" src="https://codepen.io/leaverou/embed/preview/f2b11ed8445c2502d03bbb8f624e05c8?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
+		<iframe src="https://codepen.io/leaverou/embed/preview/f2b11ed8445c2502d03bbb8f624e05c8?height=265&theme-id=dark&default-tab=html,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 	</article>
 
 	<article class="codepen slide allow-attendee">
 		<iframe src="https://codepen.io/jh3y/embed/preview/jOVmJBL?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 	</article>
+</section>
+<!-- End Strings -->
 
-	<article class="isolated demo slide" id="prepend">
-		<p class="hint">inline style too</p>
+<section>
+	<header class="slide" style="--icon: 🧮; background-color: var(--accent3)">
+		<h1>Advanced Math</h1>
+	</header>
+
+	<article class="isolated demo slide" id="bar-chart-negative">
 		<textarea class="language-css">
-			@property --prepend {
-				syntax: "<string>";
-				initial-value: "";
+			.bar-chart > div {
+				flex-flow: column;
+				align-items: center;
+				justify-content: space-between;
+				height: var(--p);
+			}
+
+			@property --integer {
+				syntax: "<integer>";
+				initial-value: 0;
 				inherits: false;
 			}
 
-			::before {
-				content: var(--prepend);
-			}
-
-			.currency {
-				font-weight: bold;
-				color: hsl(220 10% 30%)
-			}
-
-			.currency.usd {
-				--prepend: "$";
+			.bar-chart > div::before {
+				--integer: calc(var(--p));
+				counter-reset: p var(--integer);
+				content: var(--integer) "%";
 			}
 		</textarea>
 		<textarea class="language-html">
-			<p>
-				If childcare costs <span class="currency usd">18</span>/hour,
-				you pay <span class="currency usd">144</span>/day,
-				just to be able to work.
-			</p>
+			<div class="bar-chart">
+				<div style="--p: 95%">A</div>
+				<div style="--p: 100%">B</div>
+				<div style="--p: 95%">C</div>
+				<div style="--p: -38%">D</div>
+				<div style="--p: 84.21%">E</div>
+				<div style="--p: 49%">F</div>
+			</div>
 		</textarea>
+		<style data-slide media="not all" class="demo">
+			@import url("css/bar-chart.css");
+			:root {
+				background: hsl(200, 15%, 20%);
+			}
+		</style>
+		<details class="notes">
+			What if we have negative percentages too?
+
+			[Solution](https://codepen.io/leaverou/pen/407ba68995c917a8fbca3edc712dca71?editors=1100)
+
+			------------
+
+			Let's refactor the fragile selector out by using our 0/1 toggle trick.
+
+			First, we need to create the toggle, i.e. a variable that is `0` when we have a positive number
+			and `1` when we have a negative number.
+			First, we divide the number by its absolute value to get its *sign*, i.e.
+			a number that is `-1` for negative numbers and `1` for positive ones.
+			Then, we can do `max(-1 * var(--p-sign), 0)` to get our toggle.
+
+			Now that we have a toggle, we can easily apply it to `top`, since it's numeric.
+			But what to do with `flex-flow`?
+			The easiest route is to just find an alternate way to do this.
+			We can use the `order` property, which *is* numeric!
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>The absolute value of `--p` is `max(var(--p), -1 * var(--p))`</h1>
+		<p class="credit">
+			Credit to [James0x57](https://twitter.com/James0x57/status/1399450888582860801)
+			and [Ana Tudor](https://twitter.com/anatudor/status/1399840176298471427)
+			for this trick
+		</p>
+		<details class="notes">
+			So why does this work?
+			The absolute value of a number <var>p</var> is either <var>p</var>
+			or <var>-p</var>, whichever is positive.
+			However, the one that's positive, is also larger, so `max(p, -p)`
+			will return that.
+
+			[CSS Values 4](https://www.w3.org/TR/css-values-4/) includes an
+			[`abs()` function](https://www.w3.org/TR/css-values-4/#sign-funcs) for this,
+			but it is not currently implemented anywhere.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>We can use `[style*="--p: "]` selectors to match on custom property presence and/or values
+			<div class="delayed note">But it’s extremely fragile</div>
+		</h1>
+		<details class="notes">
+			Note that this is essentially a hack and breaks very easily,
+			creating both false positives and false negatives:
+			- Whitespace between the colon and the value affects it
+			- It can match anywhere in the inline style, including URLs, strings etc
+
+			Use it only for markup you control completely.
+			So how can we refactor it out here?
+		</details>
+	</article>
+
+	<article class="slide" data-insert="#bar-chart-negative"></article>
+
+	<article class="takeaway slide">
+		<h1>The sign of `--p` is <code style="white-space:nowrap">calc(var(--p) / var(--p-abs))</code></h1>
+		<p class="credit">
+			Credit to [Ana Tudor](https://twitter.com/anatudor/status/1399840176298471427)
+			for this trick
+		</p>
+		<details class="notes">
+			[CSS Values 4](https://www.w3.org/TR/css-values-4/) includes a
+			[`sign()` function](https://www.w3.org/TR/css-values-4/#sign-funcs) for this,
+			but it is not currently implemented anywhere.
+		</details>
 	</article>
 </section>
 

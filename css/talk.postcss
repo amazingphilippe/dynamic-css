@@ -359,14 +359,10 @@ span.poop {
 	}
 
 .takeaway.slide {
-
-}
-
-	.takeaway.slide h1 {
+	& h1 {
 		font-weight: 100;
-	}
 
-		.takeaway.slide h1::before {
+		&::before {
 			counter-reset: takeaway var(--takeaway);
 			content: "Takeaway #" counter(takeaway);
 			display: block;
@@ -378,6 +374,8 @@ span.poop {
 			text-transform: uppercase;
 			font-size: 60%;
 		}
+	}
+}
 
 .talking.housewife.slide {
 	display: block;
@@ -732,6 +730,80 @@ var {
 	& iframe {
 		width: 100%;
 		height: 100%;
+	}
+}
+
+.credit {
+	position: absolute;
+	bottom: 1em;
+	margin-top: auto;
+	padding: .5em;
+	border-top: 1px solid var(--accent1);
+	font-weight: bold;
+	font-size: 50%;
+}
+
+@property --length {
+	syntax: "<length>";
+	initial-value: 0px;
+	inherits: true;
+}
+
+.speech.slide {
+	& h1 {
+		position: relative;
+		padding: .3em .3em;
+		border-radius: .3em;
+		background: hsl(0 0% 100% / .7);
+		letter-spacing: -.04em;
+		color: black;
+		mix-blend-mode: screen;
+		--length: 1em;
+
+		/* Speech bubble pointer */
+		&::before {
+			content: "";
+			position: absolute;
+			top: 100%;
+			right: 1em;
+			height: 1em;
+			width: 1em;
+			clip-path: polygon(0 0, 100% 100%, 80% 0);
+			background: inherit;
+		}
+
+		&::after {
+			content: var(--character);
+			position: absolute;
+			top: calc(100% + var(--length));
+			right: 0;
+			font-size: 200%;
+		}
+	}
+
+	&.left {
+		& h1 {
+			&::before {
+				right: auto;
+				left: 1em;
+				transform: scaleX(-1);
+			}
+
+			&::after {
+				right: auto;
+				left: 0;
+			}
+		}
+	}
+
+	&.devil {
+		& h1::after {
+			content: "😈";
+			/* Most impls produce a purple devil,
+			this will make it more reddish.
+			Microsoft has a red devil, so it will shift it to yellow. */
+			filter: hue-rotate(40deg);
+		}
 	}
 }
 
