@@ -3,25 +3,28 @@
 <head>
 
 <meta charset="utf-8" />
-<title>CSS Variables: var(--subtitle);</title>
+<title>Dynamic CSS Masterclass: JS</title>
 <link href="../../inspire.js/inspire.css" rel="stylesheet" />
 <link href="../../inspire.js/theme.css" rel="stylesheet" />
 <link href="../talks/shared/intro-outro.css" rel="stylesheet" />
-<link href="prism.css" rel="stylesheet" />
-<link href="theme.css" rel="stylesheet" />
-<link href="talk.css" rel="stylesheet" />
+<link href="css/prism.css" rel="stylesheet" />
+<link href="css/theme.css" rel="stylesheet" />
+<link href="css/talk.css" rel="stylesheet" />
 <link href="../talks/shared/browser-support.css" rel="stylesheet" />
 </head>
-<body class="language-css" data-markdown-selectors="details.notes>div .md">
+<body class="language-javascript"
+	data-markdown-elements="details.notes, .md, .takeaway.slide > h1, .credit"
+	data-balance-elements=".slide > h1:only-child, .takeaway.slide > h1, .speech.slide > h1"
+	data-load-plugins="docs">
 
-<header id="intro" class="slide dont-resize" data-source="flickr.com/photos/billward/16601966117">
+<header id="intro" class="slide dont-resize">
 	<h1>Dynamic CSS Masterclass</h1>
-	<h2>Day ?: JS</h2>
+	<h2>Day 5: JS</h2>
 	<p class="attribution">By <a href="http://lea.verou.me">Lea Verou</a> (<a href="http://twitter.com/leaverou">@LeaVerou</a>)</p>
 </header>
 
-<section id="cssvars-js">
-	<article class="slide language-javascript" style="align-items: flex-start; padding: 3em">
+<article class="slide allow-attendee">
+	<div>
 		<pre><code>
 			// Get variable from inline style
 			element.style.getPropertyValue("--foo");
@@ -34,43 +37,49 @@
 			// Set variable on inline style
 			element.style.setProperty("--foo", 38 + 4);
 		</code></pre>
-	</article>
+	</div>
+</article>
 
-	<article class="slide language-javascript">
-		<pre><code>
-			var root = document.documentElement;
+<section>
+	<header class="slide" style="--icon: 🐭; background-color: var(--accent2);">
+		<h1>Mouse position</h1>
+	</header>
 
-			document.addEventListener("mousemove", evt => {
-				let x = evt.clientX / innerWidth;
-				let y = evt.clientY / innerHeight;
-
-				root.style.setProperty("--mouse-x", x);
-				root.style.setProperty("--mouse-y", y);
-			});
-		</code></pre>
-	</article>
-
-	<article class="slide language-javascript">
+	<!-- <article class="slide language-javascript">
 		<p><a href="https://mavo.io"><img src="../html-reimagined/img/logo.svg" alt="Mavo" style="height: 4em"></a></p>
 		<pre><code class="language-markup">&lt;html mv-app
       style="--mouse-x: [$mouse.x / innerWidth];
 	          --mouse-y: [$mouse.y / innerHeight];"></code></pre>
-	</article>
+	</article> -->
 
-	<article class="horizontal demo slide" id="mouse">
+	<article class="isolated horizontal demo slide" id="mouse">
 		<textarea class="language-css">
-			#mouse.slide {
+			:root {
 				background-image: radial-gradient(
 					at 50% 50%,
 					transparent, black);
+				min-height: 100vh;
 			}
+		</textarea>
+		<textarea class="language-js">
+			let root = document.documentElement;
+
+			document.addEventListener("pointermove", evt => {
+				/*
+				evt.clientX and evt.clientY are the mouse coordinates
+				innerWidth and innerHeight give you viewport dimensions
+				*/
+
+				root.style.setProperty("--mouse-x", 0);
+				root.style.setProperty("--mouse-y", 0);
+			});
 		</textarea>
 	</article>
 
-	<article class="horizontal demo slide" id="svg-eyes">
+	<article class="isolated horizontal demo slide" id="svg-eyes">
 		<textarea class="language-css">
 			.iris {
-				cx: 50px;
+				cx: calc(25px * var(--look, 0) + 50px);
 			}
 		</textarea>
 		<textarea class="language-html">
@@ -84,11 +93,210 @@
 				<use class="iris" href="#iris" x="148" />
 			</svg>
 		</textarea>
+		<textarea class="language-js">
+			let root = document.documentElement;
+
+			document.addEventListener("pointermove", evt => {
+				root.style.setProperty("--mouse-x", evt.clientX);
+				root.style.setProperty("--mouse-y", evt.clientY);
+			});
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			:root {
+				background: hsl(20, 40%, 70%);
+			}
+
+			svg {
+				width: 90vw;
+			}
+
+			#eye-white {
+				fill: white;
+			}
+
+			.iris {
+				stroke: hsl(200, 50%, 50%);
+				stroke-width: 14;
+				fill: black;
+			}
+
+			.second-eye {
+				x: 150px;
+			}
+		</style>
+		<details class="notes">
+			If we set `--mouse-x` and `--mouse-y` based on pixels,
+			what happens here? How can we set `--look` based on that?
+
+			Setting things based on pixels makes them less reusable.
+			What if we instead set `--mouse-x` and `--mouse-y`
+			based on percentage of screen?
+
+			--------
+
+			Then we can still get a length by multiplying with `100vw`
+			and `100vh` respectively, but we can also just use
+			the percentage directly.
+		</details>
+	</article>
+
+	<article class="slide allow-attendee">
+		<h1>Reusable pointer coordinates</h1>
+		<pre><code>
+			let root = document.documentElement;
+
+			document.addEventListener("pointermove", evt => {
+				let x = evt.clientX / innerWidth;
+				let y = evt.clientY / innerHeight;
+
+				root.style.setProperty("--mouse-x", x);
+				root.style.setProperty("--mouse-y", y);
+			});
+		</code></pre>
 	</article>
 
 	<article class="slide" data-insert="svg-eyes"></article>
 
-	<article class="language-javascript slide">
+	<article class="takeaway slide">
+		<h1>Prefer abstract 0-1 percentages than absolute pixel lengths</h1>
+	</article>
+
+	<article class="slide language-css">
+		<div>
+			<p>0-1 can be converted to a length:</p>
+			<pre><code>calc(var(--mouse-x) * 100vw)</code></pre>
+
+			<p>…but the reverse isn’t possible</p>
+		</div>
+	</article>
+
+	<article class="question slide">
+		<h1>What about local coordinates?</h1>
+	</article>
+
+	<article class="slide allow-attendee">
+		<h1>Getting local pointer coordinates</h1>
+
+		<pre><code>
+			let rect = evt.target.getBoundingClientRect();
+			let top = evt.clientY - rect.top;
+			let left = evt.clientX - rect.left;
+			<span class="delayed">let x = left / rect.width;
+			let y = top / rect.height;
+
+			evt.target.style.setProperty("--mouse-local-x", x);
+			evt.target.style.setProperty("--mouse-local-y", y);</span>
+		</code></pre>
+	</article>
+
+	<!--
+	<article class="isolated demo slide">
+		<textarea class="language-css">
+
+		</textarea>
+		<textarea class="language-html">
+
+		</textarea>
+		<textarea class="language-js">
+
+		</textarea>
+		<style data-slide media="not all" class="demo">
+
+		</style>
+		<details class="notes">
+
+		</details>
+	</article>
+	-->
+
+	<article class="isolated horizontal demo slide no-base-css" id="mouse-local">
+		<textarea class="language-css">
+			button {
+				background-color: rebeccapurple;
+			}
+
+			button:active {
+				background-image: radial-gradient(
+					circle at calc(100% * var(--mouse-local-x)) calc(100% * var(--mouse-local-y)),
+					hsl(0 100% 100% / .4), transparent
+				);
+			}
+		</textarea>
+		<textarea class="language-html">
+			<button>Hello</button>
+		</textarea>
+		<textarea class="language-js">
+			document.addEventListener("pointerdown", evt => {
+				let target = evt.target;
+				let rect = target.getBoundingClientRect();
+				let x = (evt.clientX - rect.left) / rect.width;
+				let y = (evt.clientY - rect.top) / rect.height;
+
+				target.style.setProperty("--mouse-local-x", x);
+				target.style.setProperty("--mouse-local-y", y);
+			});
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			button {
+				padding: .5em .8em;
+				border-radius: .2em;
+				border: 0;
+				font: 200%/1 Helvetica Neue, Segoe UI, sans-serif;
+				color: white;
+			}
+		</style>
+		<details class="notes">
+			Here we are generically setting local pointer coordinates on an element.
+			Let's change the background gradient to draw a circle.
+			Note that we did not need to change anything in the JS.
+
+			Let's now change the code to draw this effect as the pointer moves over the element
+			([solution](https://codepen.io/leaverou/pen/56f9b2ff238636c5117d87436fb55c9b)).
+		</details>
+	</article>
+
+	<article class="md slide">
+		# A note on performance
+
+
+		- Event delegation (monitoring events on `document`)
+		gives you maximum flexibility and maintainability, but can be slower
+		- Scoping to specific (few) elements can be more performant, but is a tighter coupling of CSS and JS
+		- For anything other than `*move`, err on flexibility
+		- For `*move`, it depends. I'd err on flexibility, measure, adjust if needed.
+
+		<details class="notes">
+			See also [this article](https://nolanlawson.com/2019/08/11/high-performance-input-handling-on-the-web/).
+		</details>
+	</article>
+
+	<article class="codepen slide" id="ripple-effect">
+		<iframe src="https://codepen.io/leaverou/embed/preview/acb3c50c99c89ed9aec9f141c6b1653a?height=265&theme-id=dark&default-tab=html,result&editable=true" loading="lazy"></iframe>
+	</article>
+
+	<article class="slide allow-attendee">
+		<h1>More 0-1 Range Mapping</h1>
+
+		<p>Remember <code>calc((max - min) * var(--p) + min)</code>?
+
+		<ol class="math">
+			<li>(max - min) &times; p + min</li>
+			<li>max &times; p - min &times; p + min</li>
+			<li>max &times; p + (1 - p) &times; min</li>
+		</ol>
+
+		<p>What does <code>calc(var(--p) * max + (1 - var(--p) * min))</code> remind you?</p>
+	</article>
+
+	<article class="slide" data-insert="#mouse-local"></article>
+</section>
+
+<section>
+	<header class="slide" style="--icon: 👗; background-color: var(--accent3)">
+		<h1>Forms</h1>
+	</header>
+
+	<article class="slide allow-attendee">
 		<div><pre><code>
 			for (input of document.querySelectorAll("input")) {
 				input.style.setProperty("--value", input.value);
@@ -96,48 +304,88 @@
 		</code></pre>
 		<pre class="delayed"><code>
 			document.addEventListener("input", evt => {
-				var input = evt.target;
+				let input = evt.target;
 				input.style.setProperty("--value", input.value);
 			});
 		</code></pre></div>
 	</article>
 
-	<article class="horizontal demo slide" id="slider">
-		<p class="hint">Show value indicator</p>
+	<article class="horizontal isolated demo slide" id="slider">
 		<textarea class="language-css">
 			input {
 				appearance: none;
-				background: linear-gradient(to right, #f06 50%, white 0);
+				background: linear-gradient(to right, #f06 50%, hsl(220 10% 90%) 0);
 			}
+		</textarea>
+		<textarea class="language-js">
+			for (input of document.querySelectorAll("input")) {
+				input.style.setProperty("--value", input.value);
+			}
+			document.addEventListener("input", evt => {
+				let input = evt.target;
+				input.style.setProperty("--value", input.value);
+			});
 		</textarea>
 		<style class="demo" data-slide>
 			input {
 				width: 300px;
 				-webkit-appearance: none;
 				transform: scale(3);
-				transform-origin: top;
+				transform-origin: top left;
 				border-radius: .1em;
 			}
 		</style>
 		<textarea class="language-html"><input type="range" /></textarea>
 	</article>
+</section>
 
-	<article class="horizontal demo typing slide" id="typing" style="--division: 70">
-		<p class="typing" contentEditable>CSS variables are awesome</p>
+<section>
+	<header class="slide" style="--icon: 💬">
+		<h1>Content-dependent effects</h1>
+	</header>
+
+	<article class="horizontal isolated demo no-base-css slide" id="typing">
 		<textarea class="language-css">
 			@keyframes typing { from { width: 0; } }
 			@keyframes caret { 50% { border-color: transparent; } }
 
-			p.typing {
+			.typing {
 				width: 25ch;
 				border-right: 2px solid;
 				overflow: hidden;
 				animation: caret .5s step-end infinite alternate;
 			}
 		</textarea>
+		<textarea class="language-html">
+			<h1 class="typing" contentEditable>CSS variables are awesome</h1>
+		</textarea>
+		<textarea class="language-js">
+
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			:root {
+				background: hsl(200, 10%, 25%);
+			}
+
+			.typing {
+				white-space: nowrap;
+				font: bold 400% Consolas, Monaco, monospace;
+				color: white;
+			}
+		</style>
+		<details class="notes">
+			Let’s try to recreate a common "typewriter" effect for this heading.
+			Our width is set in `ch` units. `1ch` is the width of the `0` glyph.
+			That is not super useful in general, but in monospace fonts,
+			that gives us the width of *every* character.
+
+			So, we have managed to recreate the effect, but we had to hardcode the length of the heading.
+			CSS variables can help us make this more widely useful.
+		</details>
 	</article>
 
-	<article class="language-javascript slide">
+	<article class="slide allow-attendee">
+		<h1>Passing element content length</h1>
 		<pre><code>
 			for (let element of document.querySelectorAll(".typing")) {
 				let length = element.textContent.length;
@@ -148,40 +396,128 @@
 
 	<article class="slide" data-insert="typing"></article>
 
-	<article class="horizontal demo typing slide" id="typing2">
-		<p class="typing" contentEditable>CSS variables are awesome</p>
+	<article class="question slide">
+		<h1>What happens if content can change after load?</h1>
+	</article>
+
+	<article class="horizontal isolated demo no-base-css slide" id="typing">
 		<textarea class="language-css">
 			@keyframes typing { from { width: 0; } }
 			@keyframes caret { 50% { border-color: transparent; } }
 
-			p.typing {
-				width: calc(var(--length) * 1ch);
+			.typing {
+				width: calc(1ch * var(--length));
 				border-right: 2px solid;
 				overflow: hidden;
-				animation: typing calc(var(--length) * .3s) steps(var(--length)),
-				           caret .5s step-end infinite alternate;
+				animation: caret .5s step-end infinite alternate,
+				           typing calc(.3s * var(--length)) steps(var(--length));
 			}
 		</textarea>
+		<textarea class="language-html">
+			<h1 class="typing" contentEditable>CSS variables are awesome</h1>
+		</textarea>
+		<textarea class="language-js">
+			for (let element of document.querySelectorAll(".typing")) {
+				let length = element.textContent.length;
+				element.style.setProperty("--length", length);
+			}
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			:root {
+				background: hsl(200, 10%, 25%);
+			}
+
+			.typing {
+				white-space: nowrap;
+				font: bold 400% Consolas, Monaco, monospace;
+				color: white;
+			}
+		</style>
+		<details class="notes">
+			Let’s try to recreate a common "typewriter" effect for this heading.
+			Our width is set in `ch` units. `1ch` is the width of the `0` glyph.
+			That is not super useful in general, but in monospace fonts,
+			that gives us the width of *every* character.
+
+			So, we have managed to recreate the effect, but we had to hardcode the length of the heading.
+			CSS variables can help us make this more widely useful.
+		</details>
 	</article>
 
-	<article class="slide">
-		<pre><code class="language-javascript">
-			for (let el of document.querySelectorAll(".scrolling")) {
-				el.addEventListener("scroll", evt => {
-					let maxScroll = el.scrollHeight - el.offsetHeight;
-					let scroll = el.scrollTop / maxScroll;
-					el.style.setProperty("--scroll", scroll);
-				});
+	<article class="slide allow-attendee">
+		<h1>Mutation Observers to the rescue!</h1>
+
+		<pre><code>
+			let observer = new MutationObserver(records => {
+				for (let r of records) {
+					let element = r.target;
+					<span class="delayed">if (element.nodeType === Node.TEXT_NODE) {
+						element = element.parentNode;
+					}</span>
+					let length = element.textContent.length;
+					element.style.setProperty("--length", length);
+				}
+			});
+		</code></pre>
+	</article>
+	<article class="slide allow-attendee">
+		<h1>Mutation Observers to the rescue!</h1>
+
+		<pre><code>
+			for (let element of document.querySelectorAll(".typing")) {
+				let length = element.textContent.length;
+				element.style.setProperty("--length", length);
+				<span class="delayed">observer.observe(element, {
+					characterData: true,
+					childNodes: true,
+					subtree: true
+				});</span>
 			}
 		</code></pre>
 	</article>
+</section>
 
-	<article class="horizontal demo slide" id="scrolling">
+<section>
+	<header class="slide" style="--icon: 📜">
+		<h1>Scrolling</h1>
+	</header>
+
+	<article class="slide allow-attendee">
+		<pre><code>
+			document.addEventListener("scroll", evt => {
+				let el = evt.target;
+				<span class="delayed">let maxScroll = el.scrollHeight - el.offsetHeight;</span>
+				let scroll = el.scrollTop <span class="delayed">/ maxScroll;</span>
+				el.style.setProperty("--scroll", scroll);
+			}, {capture: true});
+		</code></pre>
+	</article>
+
+	<article class="horizontal isolated demo slide" id="scrolling">
 		<textarea class="language-css">
 			.scrolling {
 				background-image: linear-gradient(to right,
-					white 20%, transparent 0)
+					hsl(220 10% 90%) 20%, transparent 0)
 			}
+		</textarea>
+		<style data-slide class="demo">
+			.scrolling {
+				overflow: auto;
+				max-height: 50vh;
+				border: .2em solid white;
+				background: hsla(0,0%,100%,.2) no-repeat;
+				text-align: left;
+				padding: .5em 1em;
+				font: 100% Baskerville, Palatino, Georgia, serif;
+			}
+		</style>
+		<textarea class="language-js">
+			document.addEventListener("scroll", evt => {
+				let el = evt.target;
+				let maxScroll = el.scrollHeight - el.offsetHeight;
+				let scroll = el.scrollTop / maxScroll;
+				el.style.setProperty("--scroll", scroll);
+			}, {capture: true});
 		</textarea>
 		<textarea class="language-html">
 			<div class="scrolling">
@@ -195,37 +531,275 @@
 		</textarea>
 	</article>
 
-	<article class="takeaway slide">
-		<h1>CSS Variables are a revolution for <br>separation of style and behavior</h1>
+	<article class="md slide">
+		# A note on performance
+
+		- This has been fun, but event delegation on `scroll` is *usually* a Bad Idea™
+		- Trade in some flexibility for performance and scope it to specific elements
+
+		<details class="notes">
+			See also [this article](https://nolanlawson.com/2019/08/11/high-performance-input-handling-on-the-web/).
+		</details>
 	</article>
 </section>
 
-<article class="slide" id="specs">
-	<a href="https://w3.org/TR/css-variables" class="w3c" target="_blank">w3.org/TR/css-variables</a>
-	<a href="https://drafts.csswg.org/css-variables" class="w3c ed" target="_blank">drafts.csswg.org/css-variables</a>
+<article class="takeaway slide">
+	<h1>CSS Variables are a revolution for <br>separation of style and behavior</h1>
 </article>
 
-<!-- <section>
-	<header class="future slide">
-		<h1>🔮 Future 🔮</h1>
+<section>
+	<header class="slide" style="--icon: 🎨; background-color: var(--accent4)">
+		<h1>Houdini Paint API</h1>
 	</header>
 
-	<article class="demo slide">
-		<textarea class="language-css">
-		:root {
-			--bg: {
-				background: yellowgreen;
-			}
-		}
-
-		.block {
-			background: red;
-			@apply --bg;
-		}
-		</textarea>
-		<div class="block">Native mixins are coming!</div>
+	<article class="question slide">
+		<h1>What is it for?</h1>
 	</article>
-</section> -->
+
+	<article class="takeaway slide">
+		<h1>The Paint API is for creating custom CSS `&lt;image>` values</h1>
+		<details class="notes">
+			Remember how once `conic-gradient()` was introduced, we had to wait
+			years until it got support across the board?
+			The idea of the Paint API is to provide a mechanism with which
+			developers can create their own dynamic graphics to use as CSS images
+			instead of waiting for browsers to support native syntax for them.
+		</details>
+	</article>
+
+	<article class="slide language-css">
+		<h1>The vision</h1>
+		<div>
+			<pre><code>
+				background: conic-gradient(white, black);
+			</code></pre>
+
+			<p class="md">👆🏼Proposed in 2011, took until 2020 for [full support](https://caniuse.com/css-conic-gradients)</p>
+			<pre><code>
+				background: paint(conic-gradient, white black);
+			</code></pre>
+			<p class="md">👆🏼JS implementation can be written & shared immediately</p>
+		</div>
+		<details class="notes">
+			- [Current browser support](https://caniuse.com/css-paint-api)
+			- [Polyfill](https://github.com/GoogleChromeLabs/css-paint-polyfill)
+		</details>
+	</article>
+
+	<article class="slide language-css">
+		<h1>With fallback</h1>
+
+		<pre><code>
+			article {
+				border: 2px solid rebeccapurple;
+			}
+
+			@supports (background: paint(foo)) {
+				article {
+					border-image: paint(fancy-border);
+				}
+			}
+		</code></pre>
+	</article>
+
+	<article class="slide">
+		<h1>How does it work?</h1>
+
+		<pre><code>
+			// Main JS:
+			CSS.paintWorklet.addModule("paint-conic-gradient.js");
+
+			// paint-conic-gradient.js:
+			registerPaint("conic-gradient", class {
+				static get inputArguments() { return ["&lt;color>+"]; }
+				paint(ctx, size, properties, args) {
+					// Draw conic gradient on ctx using Canvas methods
+					// args contains the paint() arguments (the colors)
+				}
+			});
+		</code></pre>
+		<details class="notes">
+			A [full conic gradient implementation with Paint API](https://css-houdini.rocks/conic-gradient/)
+		</details>
+	</article>
+
+	<article class="slide">
+		<h1>Self-contained Paint Worklet</h1>
+
+		<pre><code>
+			if (typeof PaintWorkletGlobalScope === "undefined") {
+				// We are not in a paint worklet, register our worklet
+				CSS.paintWorklet.addModule(import.meta.url);
+			}
+			else {
+				// We are in a paint worklet! Let’s paint! 🎨
+				registerPaint("conic-gradient", class {
+					static get inputArguments() { return ["&lt;color>+"]; }
+					paint(ctx, size, properties, args) {
+						// Draw conic gradient on ctx
+					}
+				});
+			}
+		</code></pre>
+	</article>
+
+	<article class="confused slide language-css">
+		<h1>The reality…</h1>
+
+		<div><pre><code>paint(conic-gradient, white, black)</code></pre> doesn't work. No arguments yet.</div>
+	</article>
+
+	<article class="slide language-css">
+		<h1>Custom properties as input</h1>
+
+		<div>
+			<p>Instead of:</p>
+			<pre><code>
+				background: paint(conic-gradient, white black);
+			</code></pre>
+			<p>This works today:</p>
+			<pre><code>
+				--conic-gradient-colors: white black;
+				background: paint(conic-gradient);
+			</code></pre>
+		</div>
+	</article>
+
+	<article class="slide">
+		<pre><code>
+			CSS.registerProperty({
+				name: "--conic-gradient-colors",
+				syntax: "&lt;color>+",
+				initialValue: "transparent",
+				inherits: false
+			});
+			registerPaint("conic-gradient", class {
+				static get inputProperties() {
+					return ["--conic-gradient-colors"];
+				}
+				paint(ctx, size, properties) {
+					let colors = properties.get("--conic-gradient-colors");
+					// Draw conic gradient on ctx
+				}
+			});
+		</code></pre>
+	</article>
+
+	<article class="question slide">
+		<h1>Why is that a problem?</h1>
+	</article>
+
+	<article class="slide language-css">
+		<h1>How to rewrite this?</h1>
+		<pre><code>
+			background: paint(conic-gradient, white silver);
+			border-image: paint(conic-gradient, white black);
+			list-style-image: paint(conic-gradient, lime yellow);
+			mask-image: paint(conic-gradient, transparent black);
+		</code></pre>
+		<div class="delayed">
+			<p>Or even this…</p>
+			<pre><code>
+				background: paint(conic-gradient, white transparent),
+				            paint(conic-gradient, lime yellow);
+			</code></pre>
+		</div>
+		<details class="notes">
+			Admittedly, this is an extreme example to illustrate the problem.
+			While it is highly unlikely that you may want to use that many conic gradients
+			on a single element, it's far more likely with other types of paint worklets,
+			e.g. those drawing shapes.
+
+			As a side point, notice that these images are not just useful as backgrounds,
+			but there are many more image-accepting properties!
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Custom properties apply to the element,
+		arguments apply to the image</h1>
+	</article>
+
+	<article class="slide language-css">
+		<h1>What about this?</h1>
+
+		<pre><code>
+			@property --background-image {
+				syntax: "&lt;image> | none";
+				initial-value: none;
+				inherits: false;
+			}
+
+			.my-div {
+				--background-image: url(img/cat1.jpg);
+				--background-opacity: .5;
+				background: paint(background-opacity);
+			}
+		</code></pre>
+	</article>
+
+	<article class="confused slide">
+		<h1>Nope.</h1>
+		<p>Registering a custom property as <code>&lt;image></code><br> is not yet supported. 👎🏼</p>
+		<p class="md delayed">…although there are some [terrible hacks](https://css-houdini.rocks/background-properties)</p>
+		<details class="notes language-css">
+			This demo uses `list-style-image` (an image property that is not used)
+			to stuff a custom property in and actually get an image back
+			(i.e. a `CSSImageValue` in JS that can be painted on to canvas)
+		</details>
+	</article>
+
+	<header class="slide" style="--icon: 💩; background-color: var(--accent3)">
+		<h1>What about this?</h1>
+	</header>
+
+	<article class="slide language-css">
+		<h1>Idea: CSS API</h1>
+
+		<pre><code>
+			--background-icon: 💩;
+			background: paint(emoji-polka);
+		</code></pre>
+	</article>
+
+	<article class="slide">
+		<h1>Idea: JS implementation</h1>
+
+		<pre><code>
+			registerPaint("emoji-polka", class {
+				static get inputProperties() {
+					return ["--background-icon"];
+				}
+				paint(ctx, size, properties) {
+					let icon = properties.get("--background-icon");
+					ctx.fillText(icon, 0, 0);
+				}
+			});
+		</code></pre>
+
+		<details class="notes">
+			Obviously we'd eventually refine it to set the font size,
+			fine-tune the emoji position etc
+		</details>
+	</article>
+
+	<article class="confused slide">
+		<h1>Nope.</h1>
+		<p>No text rendering methods on <code>ctx</code> 👎🏼</p>
+	</article>
+
+	<article class="question slide">
+		<h1>So what can Paint API do today?</h1>
+	</article>
+
+	<article class="slide">
+		<h1 class="md">
+			[Lots of things!](https://houdini.how)<br>
+			[And more!](https://css-houdini.rocks)
+		</h1>
+	</article>
+</section>
+
 
 <footer class="dark slide dont-resize">
 	<img src="img/mark.svg" class="logo" />
@@ -246,7 +820,7 @@
 <script src="../talks/shared/js/prism.js"></script>
 <script src="../incrementable/incrementable.js"></script>
 <script src="../../inspire.js/inspire.js"></script>
-<script src="cssvars-js.js"></script>
+<!-- <script src="cssvars-js.js"></script> -->
 <script src="talk.js"></script>
 
 </body>

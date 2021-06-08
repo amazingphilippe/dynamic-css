@@ -1,9 +1,9 @@
-@font-face {
+/* @font-face {
 	font-family: 'Icons';
 	font-style: normal;
 	font-weight: 400;
 	src: url("../talks/shared/fonts/slide-icons.woff2") format('woff2');
-}
+} */
 
 * {
 	text-decoration-color: inherit;
@@ -36,6 +36,10 @@ a {
 
 strong, b {
 	font-weight: bold; /* FF is weird */
+}
+
+p + p {
+	margin-top: 0;
 }
 
 code, textarea, pre, div.editor {

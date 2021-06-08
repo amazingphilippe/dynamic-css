@@ -17,9 +17,9 @@
 	data-balance-elements=".slide > h1:only-child, .takeaway.slide > h1, .speech.slide > h1"
 	data-load-plugins="docs">
 
-<header id="intro" class="slide dont-resize" data-source="flickr.com/photos/billward/16601966117">
+<header id="intro" class="slide dont-resize">
 	<h1>Dynamic CSS Masterclass</h1>
-	<h2>Day 1: Foundation</h2>
+	<h2>Days 1-4</h2>
 	<p class="attribution">By <a href="http://lea.verou.me">Lea Verou</a> (<a href="http://twitter.com/leaverou">@LeaVerou</a>)</p>
 </header>
 
@@ -3375,8 +3375,8 @@
 			<button title="Play" class="play initial"> </button>
 			<button title="Loading…" class="play downloading"> </button>
 			<button title="Pause" class="play playing"> </button>
-
-			<script>
+		</textarea>
+		<textarea class="language-js">
 			let delay = ms => new Promise(r => setTimeout(r, ms));
 
 			document.addEventListener("click", async e => {
@@ -3384,7 +3384,7 @@
 				if (el.matches("button.play.initial")) {
 					el.className = "play downloading";
 
-					for (let i=0; i<100; i++) {
+					for (let i=0; i < 100; i++) {
 						await delay(Math.random() * 200);
 						el.style.setProperty("--p", i);
 					}
@@ -3393,7 +3393,6 @@
 					element.style.setProperty("--p", "");
 				}
 			});
-			</script>
 		</textarea>
 	</article>
 

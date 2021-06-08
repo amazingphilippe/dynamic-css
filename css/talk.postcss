@@ -282,22 +282,6 @@ span.poop {
 		           caret .9s step-start calc(var(--lengthD) * .2 / .9);
 	}
 
-
-.typing.demo.slide {
-	background: hsl(200, 10%, 25%);
-}
-
-	.typing.demo.slide .typing {
-		display: inline-block;
-		white-space: nowrap;
-		font: bold 200% var(--font-mono);
-		color: white;
-	}
-
-	.typing.demo.slide div.editor > textarea.editor {
-		max-height: 65vh;
-	}
-
 .background.slide {
 	background: center / cover;
 }
@@ -507,12 +491,14 @@ span.poop {
 	background: url(../img/confused.jpg) -25vw 100% / auto 100% no-repeat,
 	linear-gradient(#564232, #4C3629, #322319);
 
-	& h1 {
-		margin-bottom: auto;
+	& > :not(details.notes) {
 		margin-left: auto;
-		max-width: 18ch;
-		font-weight: 300;
+		max-width: 60vw;
 		text-align: right;
+	}
+
+	& h1 {
+		font-weight: 300;
 	}
 }
 
@@ -805,20 +791,6 @@ var {
 			filter: hue-rotate(40deg);
 		}
 	}
-}
-
-#scrolling .demo-target {
-	padding: 0 3rem 1rem;
-}
-
-.scrolling {
-	overflow: auto;
-	max-height: 50vh;
-	border: .2em solid white;
-	background: hsla(0,0%,100%,.2) no-repeat;
-	text-align: left;
-	padding: .5em 1em;
-	font: 100% Baskerville, Palatino, Georgia, serif;
 }
 
 #svg-eyes {
