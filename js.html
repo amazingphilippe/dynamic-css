@@ -285,7 +285,7 @@
 			<li>max &times; p + (1 - p) &times; min</li>
 		</ol>
 
-		<p>What does <code>calc(var(--p) * max + (1 - var(--p) * min))</code> remind you?</p>
+		<p>What does <code>calc(var(--p) * max + (1 - var(--p)) * min)</code> remind you?</p>
 	</article>
 
 	<article class="slide" data-insert="#mouse-local"></article>
@@ -594,7 +594,7 @@
 				border: 2px solid rebeccapurple;
 			}
 
-			@supports (background: paint(foo)) {
+			@supports (border-image: paint(foo)) {
 				article {
 					border-image: paint(fancy-border);
 				}
