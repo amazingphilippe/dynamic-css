@@ -1,0 +1,147 @@
+18:58:23 From Frances - Smashing Team to Everyone : Useful links for today:Live Transcript - https://thisten.co/xrsf4/o7CthSdc9TxtHmzic5YdsjY4AiMEnyCpgpzHkPP4Google Doc - http://www.smashed.by/dynamic-css
+18:58:40 From Daniel González to Everyone : Hello everyone!
+18:59:38 From Philipp Sterker to Everyone : Hello guys ✌️
+18:59:45 From Lea Verou to Everyone : Hello everyone!
+19:00:00 From Frances - Smashing Team to Everyone : Useful links for today:Live Transcript - https://thisten.co/xrsf4/o7CthSdc9TxtHmzic5YdsjY4AiMEnyCpgpzHkPP4Google Doc - http://www.smashed.by/dynamic-css
+19:00:18 From Annika Brinkmann to Everyone : Hi everybody!
+19:00:22 From Lea Verou to Everyone : Companion slide deck URL for today: https://projects.verou.me/dynamic-css/#svg-eyes
+19:00:41 From Dmitry Sharabin to Everyone : Hey everyone! 👋🏻
+19:01:17 From Daniel González to Everyone : In which slide we are starting today?
+19:01:39 From Lea Verou to Everyone : #svg-eyes
+19:01:56 From Frances - Smashing Team to Everyone : Useful links for today:Live Transcript - https://thisten.co/xrsf4/o7CthSdc9TxtHmzic5YdsjY4AiMEnyCpgpzHkPP4Google Doc - http://www.smashed.by/dynamic-cssCompanion slide deck URL for today: https://projects.verou.me/dynamic-css/#svg-eyes
+19:07:01 From Frances - Smashing Team to Everyone : For those just joining - Useful links for today:Live Transcript - https://thisten.co/xrsf4/o7CthSdc9TxtHmzic5YdsjY4AiMEnyCpgpzHkPP4Google Doc - http://www.smashed.by/dynamic-cssCompanion slide deck URL for today: https://projects.verou.me/dynamic-css/#svg-eyes
+19:19:55 From Lea Verou to Everyone : https://codepen.io/leaverou/pen/88ba47d1fdc4beda7679f6474ddc78f8?editors=1100
+19:28:42 From Marzena to Everyone : 0em
+19:28:46 From Dimitris Grammatikogiannis to Everyone : No em units
+19:31:39 From Carlos Morales to Everyone : sure!
+19:31:39 From Eric Kramp to Everyone : Sure!
+19:31:41 From Tunji Akanbi VCC to Everyone : yes
+19:32:31 From Lea Verou to Everyone : https://codepen.io/leaverou/pen/9ba1b5e2fb7fbb320c3ab244df7baf3d?editors=1100
+19:34:47 From Philipp Sterker to Everyone : Is the demo updated? Doesn’t look like it
+19:35:25 From Moritz Stoltenburg to Everyone : no, it's not updated
+19:39:41 From Eric Kramp to Everyone : Is there an alternate method for browsers that don’t support @property yet?
+19:40:31 From Dmitry Sharabin to Everyone : My fans gone crazy 😅
+19:47:23 From Daniel González to Everyone : Min max formula :)
+19:56:23 From Matilde Rosero to Everyone : Is there a way to emulate dark mode in firefox?
+19:56:38 From Eric Kramp to Everyone : I don’t see the workshop collection under your profile in codepen
+19:57:03 From Eric Kramp to Everyone : Got, thanks!
+19:57:15 From Carlos Morales to Everyone : Would it make sense to map that calc function to a sass function with a clearer name, something like booleanCheck or something like that?
+19:57:18 From Carlos Morales to Everyone : Yes, it's possible
+19:57:21 From Dan Poynor to Everyone : filter: invert(1)
+19:57:22 From Moritz Stoltenburg to Everyone : yes there is
+19:57:48 From Moritz Stoltenburg to Everyone : In FF there is a moon icon in the inspector tab
+19:57:57 From Matilde Rosero to Everyone : thanks
+19:58:01 From Moritz Stoltenburg to Everyone : for dark mode
+19:58:40 From Carlos Morales to Everyone : I meant just to generate the code, not to evaluate it 🤔
+19:59:10 From Carlos Morales to Everyone : My teammates would kill me if they saw that calc as it is
+19:59:13 From Carlos Morales to Everyone : :D
+19:59:38 From Carlos Morales to Everyone : Not readable
+19:59:45 From Carlos Morales to Everyone : And they're not experts
+19:59:51 From Philipp Sterker to Everyone : Yeah, agree, not everyone is on the same „level“
+19:59:53 From Carlos Morales to Everyone : So it would be hard to understand
+20:00:03 From Carlos Morales to Everyone : But the technique is awesome!
+20:00:45 From Carlos Morales to Everyone : My teammates have never used css vars at all, that's why :)
+20:02:03 From Carlos Morales to Everyone : I am planning to do so!! :D
+20:02:12 From Lea Verou to Everyone : yay
+20:02:13 From Carlos Morales to Everyone : It's evaluating the math?
+20:03:59 From Philipp Sterker to Everyone : Ah you just have to add the ()
+20:04:06 From Philipp Sterker to Everyone : So the token is read correctly?
+20:12:16 From Carlos Morales to Everyone : --base-size and multiple everything
+20:12:29 From Carlos Morales to Everyone : No units
+20:12:53 From Carlos Morales to Everyone : If you multiple a unitless var
+20:13:14 From Dimitris Grammatikogiannis to Everyone : Calculate the height in relation to font size
+20:14:01 From Philipp Sterker to Everyone : Use a unitless var and then multiply it with *1em for the pointer height maybe
+20:27:48 From Carlos Morales to Everyone : Is that or (|) just for strings?
+20:28:56 From Carlos Morales to Everyone : cooooooool!!! 
+20:29:38 From Dimitris Grammatikogiannis to Everyone : none
+20:32:13 From Philipp Sterker to Everyone : Because it’s not interpreted as string
+20:32:23 From David Roessli to Everyone : Needs to be registered as string
+20:32:29 From Sarah Märdian to Everyone : Quotes are missing
+20:32:56 From Carlos Morales to Everyone : The same as the () before?
+20:33:12 From Daniel González to Everyone : Register it as <number> | <string>? Is that valid?
+20:33:28 From Yannick Schall to Everyone : Css counters/
+20:35:08 From Daniel González to Everyone : I don’t understand what’s happening there with the CSS Counters… hehehe
+20:41:52 From Philipp Sterker to Everyone : Use calc()?
+20:41:53 From Dan Poynor to Everyone : use sass?
+20:41:55 From Marc Rinderknecht to Everyone : is there rounding in calc()
+20:42:25 From Moritz Stoltenburg to Everyone : is there modulo (%) in calc()?
+20:46:01 From Dan Poynor to Everyone : wow
+20:46:10 From Philipp Sterker to Everyone : Crazy
+20:49:48 From Lea Verou to Everyone : #play-buttons
+20:52:54 From Philipp Sterker to Everyone : I know where this I going 😇
+20:53:05 From David Roessli to Everyone : Power 2 + sq root
+20:55:20 From Daniel González to Everyone : Power 2 + sq root could be rewritten as: calc( (var(--p) * var(--p)) / var(--p))
+20:55:42 From Lea Verou to Everyone : p * p / p = p
+20:56:00 From Lea Verou to Everyone : max(p, -p)
+20:57:07 From Carlos Morales to Everyone : yes, clever
+20:58:42 From Marc Rinderknecht to Everyone : translateY
+20:59:07 From Matilde Rosero to Everyone : To the bar
+20:59:14 From Matilde Rosero to Everyone : oh
+21:01:28 From Sanne 't Hooft to Everyone : Column-reverse
+21:05:08 From Sarah Märdian to Everyone : calc(--p / --p-abs)
+21:05:41 From Sarah Märdian to Everyone : forgot the var() :)
+21:07:38 From Carlos Morales to Everyone : My brain hurts
+21:07:48 From Daniel González to Everyone : Yap, now it makes sense
+21:08:28 From Carlos Morales to Everyone : ok, I see :)
+21:08:30 From Moritz Stoltenburg to Everyone : *silently nodding*
+21:08:43 From Daniel González to Everyone : —is-positive: max(var(—p-sign), 0)
+21:08:47 From Daniel González to Everyone : Would work as well, right?
+21:11:36 From Carlos Morales to Everyone : order
+21:12:17 From Carlos Morales to Everyone : I can't hear anything, is it just me?
+21:12:47 From Dan Poynor to Everyone : I can hear
+21:12:53 From Carlos Morales to Everyone : Sorry, I'm back
+21:13:12 From Carlos Morales to Everyone : Weird issue at my side, I guess
+21:13:23 From Dennis McGhee to Everyone : `flex: column nowrap; flex-direction: var(—toggle, column-reverse);` might work but not very pretty
+21:14:47 From Sanne 't Hooft to Everyone : images
+21:14:50 From Dan Poynor to Everyone : imgs!
+21:14:51 From Beth Lei to Everyone : images
+21:14:51 From Sarah Märdian to Everyone : images
+21:14:53 From David Roessli to Everyone : Images
+21:14:55 From Dmitry Sharabin to Everyone : Images!
+21:14:58 From Dimitris Grammatikogiannis to Everyone : img
+21:15:04 From Carlos Morales to Everyone : I asked about performance yesterday
+21:15:11 From Carlos Morales to Everyone : 👼
+21:16:48 From Carlos Morales to Everyone : Ok, thanks!
+21:17:35 From Carlos Morales to Everyone : tokens?
+21:17:47 From Dimitris Grammatikogiannis to Everyone : Url is func
+21:17:55 From Carlos Morales to Everyone : you said the url function was different :D
+21:21:07 From Dmitry Sharabin to Everyone : Won’t @property with syntax: “<url>” solve the problem?
+21:24:32 From Moritz Stoltenburg to Everyone : a
+21:24:37 From Daniel González to Everyone : a.css
+21:24:45 From Dmitry Sharabin to Everyone : Depending on the order?
+21:24:48 From Matilde Rosero to Everyone : b
+21:24:54 From Philipp Sterker to Everyone : a
+21:24:57 From Dennis McGhee to Everyone : b
+21:25:03 From Beth Lei to Everyone : b
+21:25:05 From Dimitris Grammatikogiannis to Everyone : B urls are relative to css
+21:26:41 From Moritz Stoltenburg to Everyone : different things
+21:26:55 From Moritz Stoltenburg to Everyone : otherwise we would not talk about it ;-)
+21:26:56 From Daniel González to Everyone : As it is now registers, it resolves on a.css?
+21:27:02 From Dmitry Sharabin to Everyone : A (since it doesn’t inherit)
+21:27:05 From Dimitris Grammatikogiannis to Everyone : B again
+21:27:08 From Matilde Rosero to Everyone : A
+21:27:18 From Moritz Stoltenburg to Everyone : a
+21:28:24 From Daniel González to Everyone : At the moment @property is only working on Chrome, and Edge. Right?
+21:30:20 From Lea Verou to Everyone : #play-buttons
+21:30:32 From Tunji Akanbi VCC to Everyone : Will the slides be updated to reflect the take aways after each section?
+21:30:49 From Philipp Sterker to Everyone : I will nobdy ever tell me again „CSS is easy, it’s not real programming“ 😂
+21:30:50 From Tunji Akanbi VCC to Everyone : thanks
+21:32:11 From Tunji Akanbi VCC to Everyone : I’m fairly new to CSS properties, any recommendations on how to learn more?
+21:32:38 From Lea Verou to Everyone : https://css-tricks.com/a-complete-guide-to-custom-properties/
+21:33:19 From Tunji Akanbi VCC to Everyone : Wonderful, many thanks again
+21:35:04 From Lea Verou to Everyone : https://docs.google.com/forms/d/e/1FAIpQLSfWF5UI-YcZnR5IqQONc3e0woOIDrLO2RN-GMhrmk2DYGO2SA/viewform
+21:35:32 From David Roessli to Everyone : Thank you so much @LeaVerou for another inspiring session 🤩 - see you next week! Take care everyone!
+21:35:39 From Dan Poynor to Everyone : Yaya Houdini?
+21:35:40 From Carlos Morales to Everyone : Thanks a lot!!!
+21:35:42 From Matilde Rosero to Everyone : Thank you!
+21:35:43 From Philipp Sterker to Everyone : Thank you !!
+21:35:45 From Daniel González to Everyone : Thanks Lea! It was really insightful today :D!
+21:35:48 From Dan Poynor to Everyone : Thanks Lea!
+21:35:50 From Sarah Märdian to Everyone : Thank you, Lea!
+21:35:52 From Dimitris Grammatikogiannis to Everyone : Thank you
+21:35:55 From Annika Brinkmann to Everyone : trella! good night!
+21:35:59 From Daniel González to Everyone : Well, everyday… Hehehe
+21:36:01 From Moritz Stoltenburg to Everyone : bye
+21:36:03 From Dmitry Sharabin to Everyone : Thank you very much!
+21:36:08 From Beth Lei to Everyone : ty Lea!
+21:36:19 From Yannick Schall to Everyone : 👋 thanks

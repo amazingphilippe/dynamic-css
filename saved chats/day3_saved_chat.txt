@@ -1,0 +1,186 @@
+18:44:13 From Lola Ueda to Everyone : ✨🌼✨Welcome back everyone! 
+✨Day 3 of Lea Verou’s workshop! 
+“Dynamic CSS” Masterclass. 
+Here is the link to the Google Doc, all important links are there for you:
+https://docs.google.com/document/d/1yGj-wZcut8WzJPvUyCCc0Zz95S5UGIF8LM6jNOqXgHQ/edit 
+
+Here's the live transcript for today: 
+https://thisten.co/ort1f/rh9OeGqrImd9ZdIlmwcWYcBmpUf4H5kY2K73gWuP
+
+Slack channel: #dynamic-css
+18:46:38 From Lola Ueda to Everyone : https://open.spotify.com/playlist/68XGnFfWnkjwzDetEosmoq?si=7OjgDx9TR_Kpfonlxekx5g
+18:47:03 From Daniel González to Everyone : Hello!
+18:50:18 From David Roessli to Everyone : Hello everyone ☀️
+18:51:02 From Lola Ueda to Everyone : ✨🌼✨Welcome back everyone! 
+✨Day 3 of Lea Verou’s workshop! 
+“Dynamic CSS” Masterclass. 
+Here is the link to the Google Doc, all important links are there for you:
+https://docs.google.com/document/d/1yGj-wZcut8WzJPvUyCCc0Zz95S5UGIF8LM6jNOqXgHQ/edit 
+
+Here's the live transcript for today: 
+https://thisten.co/ort1f/rh9OeGqrImd9ZdIlmwcWYcBmpUf4H5kY2K73gWuP
+
+Slack channel: #dynamic-css
+18:59:19 From Dennis McGhee to Everyone : Me!
+18:59:21 From Geoff to Everyone : I am, California
+18:59:23 From John Williams to Everyone : I am in Virginia
+18:59:24 From Elif Bayrasli to Everyone : NYC!
+18:59:29 From Eric Kramp to Everyone : Yep, California
+18:59:30 From Mike San German to Everyone : Florida
+18:59:36 From Dennis McGhee to Everyone : Tennessee
+18:59:36 From Daniel González to Everyone : I’m from México… Not the US, but same timezone :)
+18:59:37 From Nao Suzuki to Everyone : I’m Japan.
+18:59:52 From Matilde Rosero to Everyone : I’m in Costa RIca
+19:00:41 From Lola Ueda to Everyone : ✨🌼✨Welcome back everyone! 
+✨Day 3 of Lea Verou’s workshop! 
+“Dynamic CSS” Masterclass. 
+Here is the link to the Google Doc, all important links are there for you:
+https://docs.google.com/document/d/1yGj-wZcut8WzJPvUyCCc0Zz95S5UGIF8LM6jNOqXgHQ/edit 
+
+Here's the live transcript for today: 
+https://thisten.co/ort1f/rh9OeGqrImd9ZdIlmwcWYcBmpUf4H5kY2K73gWuP
+
+Slack channel: #dynamic-css
+19:00:58 From Daniel González to Everyone : yellowgreen
+19:01:01 From Moritz Stoltenburg to Everyone : orange
+19:01:02 From John Williams to Everyone : yellowgreen
+19:01:06 From Marzena to Everyone : orange
+19:01:06 From Nao Suzuki to Everyone : orange
+19:01:07 From David Roessli to Everyone : orange
+19:01:07 From Dennis McGhee to Everyone : Orange
+19:01:10 From Matilde Rosero to Everyone : orange
+19:01:13 From Daniel Martínez to Everyone : Orange!
+19:01:14 From Eric Kramp to Everyone : orange
+19:01:18 From Geoff to Everyone : orange
+19:13:52 From Daniel González to Everyone : I already asked my question, thanks Lea :)
+19:20:48 From Sanne 't Hooft to Everyone : invalid
+19:20:49 From Daniel González to Everyone : valid
+19:20:49 From Moritz Stoltenburg to Everyone : valid
+19:20:51 From Dimitris Grammatikogiannis to Everyone : invalis
+19:20:53 From Eric Kramp to Everyone : valid
+19:20:57 From Carlos Morales to Everyone : valid
+19:20:57 From Mary Ditchen to Everyone : invalid
+19:20:57 From Geoff to Everyone : valid
+19:20:58 From joschaprobst to Everyone : valid
+19:21:01 From Matilde Rosero to Everyone : Valid
+19:21:02 From David Roessli to Everyone : valid
+19:21:05 From Dave Hood to Everyone : invalid
+19:21:06 From Nao Suzuki to Everyone : invalid
+19:21:07 From Fabrizio Palladino to Everyone : Invalid, extra parentheses?
+19:21:09 From Daniel González to Everyone : It’s a “Opening function” such as “rgba(“
+19:21:18 From Guillermo Rodas to Everyone : valid
+19:21:35 From Philipp Sterker to Everyone : invalid
+19:24:42 From Philipp Sterker to Everyone : Or a super big link 🙈
+19:25:27 From Dan Poynor to Everyone : valid?
+19:25:29 From Matilde Rosero to Everyone : valid
+19:25:30 From Nao Suzuki to Everyone : valid
+19:25:31 From Philipp Sterker to Everyone : valid
+19:25:32 From joschaprobst to Everyone : valid
+19:25:33 From Dave Hood to Everyone : invalid
+19:25:35 From John Williams to Everyone : valid
+19:25:35 From Daniel González to Everyone : Valid, we did something similar for the pie chart, right?
+19:25:36 From Peter Uy to Everyone : valid
+19:25:38 From Sanne 't Hooft to Everyone : invalid
+19:25:39 From Eric Kramp to Everyone : valid
+19:25:39 From Guillermo Rodas to Everyone : invalid
+19:25:40 From David Roessli to Everyone : Valid
+19:25:41 From Moritz Stoltenburg to Everyone : invalid
+19:25:42 From Marzena to Everyone : valid
+19:25:42 From Carlos Morales to Everyone : valid, but I guess there will be a catch
+19:26:34 From Dan Poynor to Everyone : valid
+19:26:35 From Matilde Rosero to Everyone : valid
+19:26:35 From Philipp Sterker to Everyone : valid
+19:26:36 From Moritz Stoltenburg to Everyone : invalid
+19:26:37 From joschaprobst to Everyone : valid
+19:26:38 From Guillermo Rodas to Everyone : valid
+19:26:38 From Carlos Morales to Everyone : valid
+19:26:39 From Peter Uy to Everyone : valid
+19:26:42 From Dave Hood to Everyone : invalid
+19:26:42 From Sanne 't Hooft to Everyone : valid
+19:26:45 From Nao Suzuki to Everyone : valid
+19:33:34 From Carlos Morales to Everyone : --color-danger ?
+19:34:55 From Annika Brinkmann to Everyone : or when red is the brand color ;)
+19:35:48 From Guillermo Rodas to Everyone : Have we talked about the homework already?
+19:36:47 From Carlos Morales to Everyone : no zoom
+19:36:50 From David Roessli to Everyone : No
+19:41:48 From Matilde Rosero to Everyone : This happened to me while doing the homework
+19:41:53 From Dan Poynor to Everyone : hmmm
+19:42:19 From Annika Brinkmann to Everyone : Runtime?
+19:42:36 From Philipp Sterker to Everyone : Does it cause a loop?
+19:42:37 From Agnieszka Piłasiewicz to Everyone : defined after used
+19:43:39 From Dimitris Grammatikogiannis to Everyone : After the css is being applied…
+19:43:40 From Philipp Sterker to Everyone : Is the „cascade“ of relevance here? So local vs "global"?
+19:44:11 From David Roessli to Everyone : Specificity?
+19:45:32 From Carlos Morales to Everyone : Again, please
+19:45:33 From John Williams to Everyone : I feel like I almost got it
+19:46:20 From Lea Verou to Everyone : So, we need to redefine —secondary-color inside the “article a” declaration?
+19:47:02 From Philipp Sterker to Everyone : oO
+19:47:09 From Philipp Sterker to Everyone : Hahahah whaaat
+19:47:17 From Dan Poynor to Everyone : curious
+19:47:35 From David Roessli to Everyone : Hahaha
+19:47:36 From Carlos Morales to Everyone : LOL
+19:47:41 From Philipp Sterker to Everyone : This is awesome
+19:47:57 From Carlos Morales to Everyone : And just because of your name he got the correct answer
+19:55:35 From Lea Verou to Everyone : https://codepen.io/leaverou/pen/KKWZJev?editors=1100
+19:58:42 From Daniel González to Everyone : I’m kinda lost
+20:02:23 From Dennis McGhee to Everyone : What do you think of doing a —lightness-scale like we did for font-size earlier?
+20:04:37 From Willa Jarnagin to Everyone : When using color ranges, do you worry about inadvertently dropping below the color contrast required for accessibility?
+20:06:15 From Philipp Sterker to Everyone : —l-80: 30% kinda feels like using —color-red: blue …
+20:10:00 From Philipp Sterker to Everyone : I like using some kind of „presets“ – like the lighter/darker, as it’s easier to work on in a team to keep things consistent 👍
+20:11:06 From Philipp Sterker to Everyone : Is HSL 100% compatible with RGB?? As in: we can convert any RGB color to HSL?
+20:11:47 From Philipp Sterker to Everyone : Thinking of how exact one could reproduce „brand colors“ etc. in HSL
+20:12:28 From Geoff to Everyone : https://convertacolor.com/
+20:13:42 From Carlos Morales to Everyone : Is there an alpha option in hsl? 
+20:13:43 From Philipp Sterker to Everyone : I see, it converts them to float numbers, such as hsl(13.4,81.7%,59.2%) – sexy :)
+20:13:48 From Matilde Rosero to Everyone : Me too, probably because I started out as a print designer, so even if it’s mixing light, it makes sense to me
+20:14:21 From Mary Ditchen to Everyone : https://tympanus.net/codrops/css_reference/hsl/
+20:14:57 From Carlos Morales to Everyone : Thanks Mary
+20:14:59 From Daniel González to Everyone : Thanks for the reference of HSL!
+20:15:11 From Matilde Rosero to Everyone : Also because I did color photography in a dark room
+20:15:11 From Mary Ditchen to Everyone : Once you can visualize the different points of the HSL color wheel, it gets a lot more intuitive. :)
+20:17:49 From Dan Poynor to Everyone : that’s interesting
+20:17:51 From Nao Suzuki to Everyone : Question:
+When do we use lch() in css setting?
+I think that hsl() meets in many case…
+20:18:50 From Philipp Sterker to Everyone : Whoah this is powerful
+20:19:57 From Philipp Sterker to Everyone : This is great, can’t wait.
+20:20:10 From Matilde Rosero to Everyone : Can we do a break?
+20:20:34 From Philipp Sterker to Everyone : How long do you think this would take for all browsers to catch up? :)
+20:20:44 From Geoff to Everyone : If you start with an RGB value and modify that value with one of the others, are you still stuck in the RGB gamut or does it go beyond?
+20:21:13 From Dennis McGhee to Everyone : I want color-mix yesterday
+20:31:44 From Dan Poynor to Everyone : yes
+20:32:13 From Dan Poynor to Everyone : I remember
+20:35:29 From Daniel González to Everyone : @property scale
+20:46:22 From Carlos Morales to Everyone : that's so cool!!!!!!!!!!
+20:47:37 From Dan Poynor to Everyone : very cool
+20:48:21 From Lea Verou to Everyone : projects.verou.me/dynamic-css/#slide48
+20:48:27 From Lea Verou to Everyone : https://projects.verou.me/dynamic-css/#slide48
+20:52:28 From Dan Poynor to Everyone : I not so quick
+20:55:40 From Philipp Sterker to Everyone : They’re up anyways due to zoom
+20:55:41 From Philipp Sterker to Everyone : ^^^
+20:59:56 From Carlos Morales to Everyone : I've read recommendations to try to only animate transforms or opacity because of performance and repaint. Do vars affect that? 🤔
+21:00:48 From Carlos Morales to Everyone : https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/ (just if it helps)
+21:03:07 From Philipp Sterker to Everyone : This is genius
+21:04:25 From Philipp Sterker to Everyone : 🌈
+21:04:35 From Carlos Morales to Everyone : WOW! 
+21:07:48 From Carlos Morales to Everyone : set 10 as default
+21:08:14 From Philipp Sterker to Everyone : Or we could make it repeat the pattern with „2n“ etc
+21:12:18 From Lea Verou to Everyone : https://codepen.io/leaverou/pen/f84043e1c5fcc0e58e15db1cbe0674be?editors=1100
+21:14:28 From Dmitry Sharabin to Lea Verou(Direct Message) : https://codepen.io/dmitrysharabin/pen/gOmoMPW
+21:15:54 From Carlos Morales to Everyone : Love those "initial = whatever" comments
+21:32:52 From Daniel González to Everyone : Thanks a lot Lea! Amazing class :)!
+21:32:56 From Willa Jarnagin to Everyone : Thank you!
+21:32:57 From Carlos Morales to Everyone : Thank you! Awesome lesson!
+21:32:58 From Dan Poynor to Everyone : Thank you!
+21:32:58 From Daniel González to Everyone : See you tomorrow!
+21:32:59 From Matilde Rosero to Everyone : Thank you!
+21:32:59 From Dennis McGhee to Everyone : Thank you Lea!
+21:33:03 From David Roessli to Everyone : Thank you! Brilliant :)
+21:33:03 From Dan Poynor to Everyone : Bye y’all
+21:33:03 From Philipp Sterker to Everyone : Thank you!
+21:33:07 From Dmitry Sharabin to Lea Verou(Direct Message) : Thanks!!!
+21:33:11 From Annika Brinkmann to Everyone : Thanks
+21:33:11 From Dimitris Grammatikogiannis to Everyone : Thank you
+21:33:16 From Tunji Akanbi VCC to Everyone : thanks
+21:33:21 From Mary Ditchen to Everyone : Thank you!
+21:33:40 From Dave Hood to Everyone : thank you
