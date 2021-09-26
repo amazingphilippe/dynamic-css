@@ -24,13 +24,15 @@ $$(".demo.slide.reveal").forEach(slide => {
 	});
 });
 
-$$(".math").forEach(math => {
-	math.classList.add("delayed-children");
+// $$("ol.math").forEach(math => math.classList.add("delayed-children"));
 
-	for (let li of math.children) {
-		li.innerHTML = li.innerHTML.replace(/\b[a-z]+\b/g, "<var>$&</var>");
-	}
-
+$$("ol.math > li, .math:not(ol)").forEach(eq => {
+	eq.innerHTML = eq.innerHTML
+			.replace(/\b(?!and|br)[a-z_]+\b/g, "<var>$&</var>")
+			.replace(/_([a-z]+)\b/g, "<sub>$1</sub>")
+			.replace(/=/g, "<span class=eq>=</span>")
+			.replace(/\s[×\-+\/]\s/g, " <span class=operator>$&</span> ")
+			;
 });
 
 $$("header.slide[style*='--icon']").forEach(slide => {
@@ -48,17 +50,17 @@ $$("header.slide[style*='--icon']").forEach(slide => {
 await Inspire.importsLoaded;
 
 // Reduced slide deck for attendees to follow along with certain activities
-if (Inspire.profile !== "speaker") {
-	let keep = `header, footer, .demo, .browser-support, .allow-attendee, [data-insert]`;
-	let remove = `.speaker-only, .demo.reveal`;
-	let slidesToRemove = $$(`.slide:not(${keep}), ${remove}`);
+// if (Inspire.profile !== "speaker") {
+// 	let keep = `header, footer, .demo, .browser-support, .allow-attendee, [data-insert]`;
+// 	let remove = `.speaker-only, .demo.reveal`;
+// 	let slidesToRemove = $$(`.slide:not(${keep}), ${remove}`);
 
-	slidesToRemove.forEach(slide => slide.remove());
+// 	slidesToRemove.forEach(slide => slide.remove());
 
-	// Remove empty sections
-	$$("header.slide:only-child").forEach(slide => slide.remove());
-}
+// 	// Remove empty sections
+// 	$$("header.slide:only-child").forEach(slide => slide.remove());
+// }
 
 })();
 
-$$("#day-end ~ section .slide, #day-end ~ .slide").forEach(s => s.remove());
+// $$("#day-end ~ section .slide, #day-end ~ .slide").forEach(s => s.remove());

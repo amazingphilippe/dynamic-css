@@ -18,10 +18,16 @@
 	data-load-plugins="docs">
 
 <header id="intro" class="slide dont-resize">
-	<h1>Dynamic CSS Masterclass</h1>
-	<h2>Days 1-5</h2>
+	<h1>Dynamic CSS</h1>
+	<h2>…with custom properties</h2>
 	<p class="attribution">By <a href="http://lea.verou.me">Lea Verou</a> (<a href="http://twitter.com/leaverou">@LeaVerou</a>)</p>
 </header>
+
+<article class="slide" id="lea-verou">
+	<h1>Lea Verou (@leaverou)</h1>
+
+
+</article>
 
 <article class="slide" id="preprocessors" data-steps="1">
 	<h1>Variables in <span class="swap" style="--content: 'Sass'; --content-1: 'Less'"></span></h1>
@@ -222,10 +228,11 @@
 			:root {
 				--primary-color: hsl(250 30% 40%);
 				--secondary-color: hsl(190 40% 40%);
+				--tinted-background: hsl(0 0% 100% / .8);
 			}
 
 			h1 {
-				color: var(--primary-color);
+				color: var(--secondary-color);
 			}
 
 			article {
@@ -238,10 +245,21 @@
 			}
 
 			article .content {
-				background: hsl(0 0% 100% / .8);
+				background: var(--tinted-background);
 			}
 		</textarea>
 		<!--
+		@media (prefers-color-scheme: dark) {
+			:root {
+				--tinted-background: hsl(0 0% 10% / .6);
+			}
+		}
+
+		body {
+			color-scheme: light dark;
+			background: canvas;
+			color: canvastext;
+		}
 		article.alt {
 			--primary-color: var(--secondary-color);
 		}
@@ -445,69 +463,105 @@
 
 			Also, Safari has [hinted](https://github.com/w3c/css-houdini-drafts/issues/940)
 			that they may implement `@property` *first* due to its improved performance.
+
+			The JS API is still useful for debugging,
+			because it actually prints out readable errors, while the CSS rule fails silently.
+		</details>
+	</article>
+
+	<article class="isolated horizontal demo slide">
+		<textarea class="language-html">
+			<sl-image-comparer>
+				<img slot="before" src="img/kittens-bw.jpg" alt="Grayscale version of kittens in a basket looking around.">
+				<img slot="after" src="img/kittens.jpg" alt="Color version of kittens in a basket looking around.">
+			</sl-image-comparer>
+
+			<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.51/dist/shoelace.js"></script>
+		</textarea>
+		<textarea class="language-css">
+			@import url("https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.51/dist/themes/light.css");
+
+			sl-image-comparer {
+				--divider-width: 3px;
+				--handle-size: 2em;
+			}
+		</textarea>
+		<details class="notes">
+			Since custom properties are inherited properties, they also inherit down Shadow DOM boundaries,
+			and they are not affected by any potential `all: unset` CSS resets.
+			Users of Web components cannot directly style them (that’s the whole point of encapsulation),
+			but custom properties can provide style hooks for customizing aspects of the component.
+
+			Photo by Jari Hytönen on Unsplash
+		</details>
+	</article>
+
+	<article class="isolated horizontal demo slide">
+		<textarea class="language-html">
+			<sl-image-comparer>
+				<img slot="before" src="img/kittens-bw.jpg" alt="Grayscale version of kittens in a basket looking around.">
+				<img slot="after" src="img/kittens.jpg" alt="Color version of kittens in a basket looking around.">
+			</sl-image-comparer>
+
+			<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.51/dist/shoelace.js"></script>
+		</textarea>
+		<textarea class="language-css">
+			@import url("https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.51/dist/themes/light.css");
+
+			sl-image-comparer::part(divider),
+			sl-image-comparer::part(handle) {
+				background: gold;
+			}
+		</textarea>
+		<details class="notes">
+			Even as consumers of components, we can use custom properties to create our own higher-level abstractions for styling components.
+			Let's take a look at this example.
+			We want to change the divider color, but the component does not expose a custom property for this.
+			Instead, it exposes two [parts](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) of the component: `divider` and `handle`.
+			We can define a custom property that allows us to set the color of both at once without having to drill down to the parts.
 		</details>
 	</article>
 
 	<article class="isolated demo slide" style="--division: 60">
-		<textarea class="language-css">
-			input[type=range] {
-				-webkit-appearance: none;
-			}
-
-			input[type=range]::-webkit-slider-runnable-track {
-				background: linear-gradient(to right, white, black);
-				height: 1em;
-			}
-
-			input[type=range]::-moz-range-track {
-				background: linear-gradient(to right, white, black);
-				height: 1em;
-			}
-
-			input[type=range]::-webkit-slider-thumb {
-				width: .5em; height: 1em;
-				-webkit-appearance: none;
-				border-radius: 2px;
-				border: 1px solid black;
-				box-shadow: 0 0 0 1px white;
-			}
-
-			input[type=range]::-moz-range-thumb {
-				width: .5em; height: 1em;
-				border-radius: 2px;
-				border: 1px solid black;
-				box-shadow: 0 0 0 1px white;
-			}
-		</textarea>
 		<textarea class="language-html">
-			<input type="range">
+			<progress value="30" max="100"></progress>
 		</textarea>
+		<textarea class="language-css">
+			progress {
+				-webkit-appearance: none;
+				background: hsl(220 10% 88%);
+			}
+
+			progress::-webkit-progress-value {
+				background: purple;
+			}
+
+			progress::-moz-progress-bar {
+				background: purple;
+			}
+		</textarea>
+
 		<style data-slide media="not all" class="demo">
 			html {
 				padding: 1em;
 			}
 
-			input[type=range] {
+			progress {
 				transform: scale(2);
 				transform-origin: 0 0;
 				width: 50%;
-				margin-bottom: 1em;
+				margin-bottom: 2em;
+			}
+
+			progress::-webkit-progress-bar {
+				background: transparent;
 			}
 		</style>
 		<details class="notes">
-			Sometimes, we have to get our hands dirty,
-			and use vendor prefixed pseudo-classes and pseudo-elements.
-			This is especially common when we need to style native elements.
-			Even if not ideal, it's still better for accessibility
-			than replicating the native elements with divs and JS.
+			The same technique allows us to define custom properties that style native components,
+			so we can avoid using messy prefixed pseudo-elements all over the place.
 
-			Custom properties inherit down Shadow DOM boundaries
-			so they can help us contain the ugliness in one place.
-			Let's define a `--track-background` property that we can set
-			on the `&lt;input>` itself, instead of having to use
-			pseudo-elements like `::-webkit-slider-runnable-track` and `::-moz-range-track` 🤢
-
-			This applies to both built-in components as well as Web Components.
+			Here we have a rather simple example of styling a <code class="element">progress</code> element.
 		</details>
 	</article>
 
@@ -529,41 +583,45 @@
 	</header>
 
 	<article class="isolated demo slide" id="gallery" style="--division: 55">
+		<textarea class="language-html">
+			<div class="fancy-photos">
+				<img src="img/cat1.jpg" alt="">
+				<img src="img/cat2.jpg" alt="">
+				<img src="img/cat3.jpg" alt="">
+				<img src="img/cat4.jpg" alt="">
+				<img src="img/cat5.jpg" alt="">
+				<img src="img/cat6.jpg" alt="">
+				<img src="img/cat7.jpg" alt="">
+				<img src="img/cat8.jpg" alt="">
+				<img src="img/cat9.jpg" alt="">
+				<img src="img/cat10.jpg" alt="">
+			</div>
+		</textarea>
 		<textarea class="language-css">
-			img {
-				--size: 20vw;
-				width: var(--size);
-				height: var(--size);
+			.fancy-photos img {
+
 				object-fit: cover;
 				transform: scale(var(--scale))
 				           rotate(var(--rotate));
 				transition: .3s;
 			}
 
-			img:hover {
+			.fancy-photos img:hover {
 				background: yellow;
 			}
 		</textarea>
 		<style class="demo" data-slide media="not all">
-			img {
+			.fancy-photos img {
+				--size: 20vw;
+				width: var(--size);
+				height: var(--size);
 				margin: .3em;
 				padding: .2em;
 				background: white;
 				box-shadow: 0 .05em .1em rgb(0 0 0 / .1);
 			}
 		</style>
-		<textarea class="language-html">
-			<img src="img/cat1.jpg" alt="">
-			<img src="img/cat2.jpg" alt="">
-			<img src="img/cat3.jpg" alt="">
-			<img src="img/cat4.jpg" alt="">
-			<img src="img/cat5.jpg" alt="">
-			<img src="img/cat6.jpg" alt="">
-			<img src="img/cat7.jpg" alt="">
-			<img src="img/cat8.jpg" alt="">
-			<img src="img/cat9.jpg" alt="">
-			<img src="img/cat10.jpg" alt="">
-		</textarea>
+
 		<!-- TODO translate to show it can have two tokens -->
 		<details class="notes">
 			* Often, we use custom properties as optional styling hooks that may or may not be used.
@@ -580,10 +638,12 @@
 			* We *could* set `--scale` and `--rotate` on `img` as well, and it would fix the demo,
 			but is not ideal because:
 			  - it breaks inheritance
-			  - in "real life" cases where our selectors are not as simple as `img` it forces our API consumers to battle specificity
+			  - It forces our API consumers to battle specificity
 			* Thankfully, the `var()` function allows for a fallback parameter too, which is perfect for this.
 			* Unlike just setting variables to values, the fallback parameter also allows us to provide
 			different fallbacks per usage, **for the same custom property**
+			* Note that an alternative to using these fallbacks is to register our properties and provide initial values.
+				- We cannot do both. Once we declare an initial value, the fallback is never triggered.
 		</details>
 	</article>
 
@@ -646,6 +706,12 @@
 				}
 			}
 		</textarea>
+		<style class="demo" data-slide media="not all">
+			body {
+				min-height: 100vh;
+				margin: 0;
+			}
+		</style>
 		<details class="notes">
 			For most cases, providing fallbacks via the cascade
 			works fine to provide a baseline accessible experience to the
@@ -703,7 +769,7 @@
 		</table>
 	</article>
 
-	<article class="slide takeaway">
+	<!-- <article class="slide takeaway">
 		<h1>Avoid using `@supports not` for a single test</h1>
 		<details class="notes">
 			Why? It only applies what's inside to browsers that
@@ -713,7 +779,7 @@
 			but when you're just testing if a given feature is supported,
 			go with a positive test and progressive enhancement.
 		</details>
-	</article>
+	</article> -->
 
 	<article class="slide" data-insert="#atsupports"></article>
 
@@ -731,7 +797,7 @@
 		</code></pre>
 	</article>
 
-	<article class="slide color-reveal">
+	<!-- <article class="slide color-reveal">
 		<div class="delayed-children">
 			<br>
 			<div style="background: orange">--accent-color: initial</div>
@@ -782,7 +848,7 @@
 		<h1>Out of all CSS wide keywords, only `initial` actually triggers the fallback
 			<div class="note">(and anything that resolves to it)</div>
 		</h1>
-	</article>
+	</article> -->
 
 	<article class="slide" id="multiple-default-values" data-steps="1">
 		<h1>Multiple fallbacks?</h1>
@@ -798,7 +864,7 @@
 		</details>
 	</article>
 
-	<article class="slide dont-resize" id="daisy-chain" data-source="Image source: https://www.flickr.com/photos/26235325@N05/5641177399">
+	<!-- <article class="slide dont-resize" id="daisy-chain" data-source="Image source: https://www.flickr.com/photos/26235325@N05/5641177399">
 		<pre><code>
 			var(--color1<span class="delayed">, var(--color2<span class="delayed">, var(--color3<span class="delayed" style="--length: 5">, gray</span>)</span>)</span>)
 		</code></pre>
@@ -806,9 +872,15 @@
 			A variable’s fallback can be another variable reference,
 			allowing us to have interactive defaults that can depend on other values.
 		</details>
-	</article>
+	</article> -->
 
 	<article class="slide" data-insert="#cut-corner"></article>
+
+	<article class="takeaway slide">
+		<h1>
+			Fallbacks can be dynamic, via `var()` references
+		</h1>
+	</article>
 
 	<article class="takeaway slide">
 		<h1>
@@ -912,7 +984,7 @@
 
 		<pre><code>
 		@property --color {
-			syntax: "<color>";
+			syntax: "&lt;color>";
 			initial-value: black;
 			inherits: true;
 		}
@@ -921,115 +993,13 @@
 		</code></pre>
 
 		<details class="notes">
-			In most cases, `@property offers a far better solution,
+			In most cases, `@property` offers a far better solution,
 			with the main drawback being its browser support.
 
 			However, do note that the other approaches
-			allow for different defaults per element,
+			allow for different defaults per use,
 			whereas an `@property` rule is global.
 		</details>
-	</article>
-
-	<article class="isolated demo slide" id="migraine" style="--division: 55">
-		<textarea class="language-css">
-			article {
-				/* To-do: Make color depend on intensity */
-				--color: hsl(0 70% 40%);
-				background: var(--color);
-			}
-
-			article h2 {
-				color: white;
-			}
-
-			article .content {
-				background: hsl(0 0% 100% / .8);
-			}
-		</textarea>
-		<style class="demo" data-slide media="not all">
-			body {
-				font-size: 100%;
-				line-height: 1.5;
-			}
-
-			article {
-				border-radius: .3rem;
-				overflow: hidden;
-				margin: 1em 0;
-			}
-
-			article h2 {
-				padding: .3rem .5rem;
-				margin: 0;
-			}
-
-			article .content {
-				padding: .1em .5rem;
-			}
-		</style>
-		<textarea class="language-html">
-			<h1>🤕 Migraine log</h1>
-
-			<article style="--intensity:1">
-				<h2>
-					<time datetime="2021-05-19T20:45">May 19th, 2021 at 20:45</time>
-					until <time datetime="2021-05-20T01:15">01:15</time>
-					<meter max="5" value="2"></meter>
-				</h2>
-				<div class="content">
-					<p>Started after dinner</p>
-				</div>
-			</article>
-
-			<article style="--intensity:3">
-				<h2>
-					<time datetime="2021-05-18T10:50">May 18th, 2021 at 10:50</time>
-					until <time datetime="2021-05-18T15:15">15:15</time>
-					<meter max="5" value="4"></meter>
-				</h2>
-				<div class="content">
-					<p>Upon waking up</p>
-				</div>
-			</article>
-
-			<article style="--intensity:;">
-				<h2>
-					<time datetime="2021-05-16T15:00">May 16th, 2021 at 15:00</time>
-					until <time datetime="2021-05-16T20:00">20:00</time>
-					<meter max="5"></meter>
-				</h2>
-				<div class="content">
-					<p>Headache for several hours, then turned to migraine</p>
-				</div>
-			</article>
-
-			<article style="--intensity:5;">
-				<h2>
-					<time datetime="2021-05-12T07:00">May 12th, 2021 at 07:00</time>
-					until <time datetime="2021-05-12T16:30">16:30</time>
-					<meter max="5" value="5"></meter>
-				</h2>
-				<div class="content">
-					<p>Long tail off</p>
-				</div>
-			</article>
-		</textarea>
-		<details class="notes">
-			Here we have some repeated HTML to display some data,
-			which could have been generated from a server-side templating script.
-			We are using an `--intensity` CSS variable to communicate the
-			migraine intensity to the CSS so it can be used for styling.
-			Let's try to modify the CSS so that stronger migraines are more red
-			and lighter ones are more yellow!
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>We can use variables to set color components to create dynamic palettes</h1>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>To provide a fallback for an entire calculation, use an intermediate variable</h1>
 	</article>
 
 	<article class="slide" data-insert="button"></article>
@@ -1194,31 +1164,18 @@
 	</article>
 
 	<article class="slide allow-attendee" id="homework-bar-chart">
-			<h1>Homework!</h1>
-			<style data-slide media="not all">
-				@import url("css/bar-chart.css");
-			</style>
-			<div class="bar-chart">
-				<div style="--p: 95%">A</div>
-				<div style="--p: 100%">B</div>
-				<div style="--p: 95%">C</div>
-				<div style="--p: 38%">D</div>
-				<div style="--p: 84.21%">E</div>
-				<div style="--p: 49%">F</div>
-			</div>
-			<div xdata-visit="2" class="md">
-				1. **Base**: Fill in the CSS missing to make this bar chart work
-				and utilize its `--p` variables for the percentages.
-				You will find Flexbox helpful for the layout.
-				2. **Going further:** Here are a few improvements you could make:
-				    1. Introduce properties to further customize the chart. Some ideas:
-				        * `--bar-color`
-				        * `--bar-width`
-				        * `--bar-spacing`
-				        * `--bands`
-				    1. Introduce a `vertical` class that would turn it into a vertical bar chart.
-				    Can we turn this into a custom property (e.g. `--orientation`)?
-			</div>
+		<h1 data-label="Exercise">Customizable bar chart component</h1>
+		<style data-slide media="not all">
+			@import url("css/bar-chart.css");
+		</style>
+		<div class="bar-chart">
+			<div style="--p: 95%">A</div>
+			<div style="--p: 100%">B</div>
+			<div style="--p: 95%">C</div>
+			<div style="--p: 38%">D</div>
+			<div style="--p: 84.21%">E</div>
+			<div style="--p: 49%">F</div>
+		</div>
 	</article>
 
 	<article class="isolated demo slide" id="bar-chart">
@@ -1228,6 +1185,8 @@
 			}
 
 			.bar-chart {
+				display: flex;
+				align-items: flex-end;
 				font-size: 60%;
 				background: linear-gradient(to bottom, hsla(0,0%,100%,.1) 50%, transparent 0) top / 100% 20%;
 				border: 2px solid white;
@@ -1239,6 +1198,10 @@
 			}
 
 			.bar-chart > div {
+				display: flex;
+				align-items: flex-end;
+				justify-content: center;
+				width: 2em;
 				background: deeppink;
 				box-sizing: border-box;
 				padding: .3em 0;
@@ -1260,6 +1223,16 @@
 				<div style="--p: 49%">F</div>
 			</div>
 		</textarea>
+		<details class="notes">
+			1. **Base**: Fill in the CSS missing to utilize the `--p` variables for the percentages.
+				You will find Flexbox helpful for the layout.
+				2. **Going further:** Here are a few improvements you could make:
+				    1. Introduce properties to further customize the chart. Some ideas:
+				        * `--bar-color`
+				        * `--bar-width`
+				        * `--bar-spacing`
+				        * `--bands`
+		</details>
 	</article>
 
 	<!-- <article class="slide" data-insert="#homework-bar-chart"></article> -->
@@ -1346,7 +1319,7 @@
 		<h1>Cycles make all variables in the cycle IACVT</h1>
 	</article>
 
-	<article class="slide" data-steps="2">
+	<!-- <article class="slide" data-steps="2">
 		<style data-slide media="not all">
 			article.slide[data-step] {
 				background: orange;
@@ -1372,7 +1345,7 @@
 			background: red;
 			background: var(--accent-color, orange);
 		</code></pre>
-	</article>
+	</article> -->
 
 	<article class="slide">
 		<h1>What CSS variables <em>can’t do</em></h1>
@@ -1500,7 +1473,7 @@
 		</details>
 	</article>
 
-	<article class="isolated demo slide" style="--division: 60">
+	<!-- <article class="isolated demo slide" style="--division: 60">
 		<textarea class="language-css">
 			p {
 				--font-size: clamp(20px, var(--font-size, 1rem), 40px);
@@ -1560,7 +1533,7 @@
 				</tr>
 			</tbody>
 		</table>
-	</article>
+	</article> -->
 
 	<article class="codepen slide" data-type="Practice time!">
 		<h1>Flexible pie chart</h1>
@@ -1678,7 +1651,52 @@
 		<h1>Whitespace is useful as a fallback too</h1>
 	</article>
 
-	<article class="isolated demo slide" id="space-toggle" style="--division: 65; --font-size-multiplier: .8">
+	<article class="isolated demo slide" id="space-toggle" style="--division: 65;">
+		<textarea class="language-html">
+			<button>Flat</button>
+			<button class="shiny">Shiny</button>
+		</textarea>
+		<textarea class="language-css">
+			button {
+				background: hsl(200 100% 50%);
+			}
+
+			button.shiny {
+				background-image: linear-gradient(
+					hsl(0 0% 100% / .3),
+					transparent
+				);
+			}
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			button {
+				border: none;
+				padding: .6em 1em;
+				border-radius: .2em;
+				color: white;
+				font: 600 100%/1 sans-serif;
+				cursor: pointer;
+			}
+		</style>
+
+		<details class="notes">
+			Whitespace is far more useful than meets the eye.
+			Here we have a button with a "shiny" variation that has a gradient.
+			However, this means that to make a button shiny,
+			we need to change the HTML, which isn't always feasible.
+			What if we could use a `--is-shiny` property to control whether
+			our button is shiny?
+
+			We can take advantage of the fact that whitespace is a valid value for every property,
+			and use whitespace to turn off parts of a value, and the `var()` fallback to specify what these parts are.
+			Then `initial` turns all these fallbacks on in one fell swoop.
+			We can even alias ` ` and `initial` to `--ON` and `--OFF` to make the code more readable.
+			This is called "space toggle". It's a hack, but sometimes it's the only way to do things.
+			Like this example? You can find a more elaborate one [here](https://lea.verou.me/2020/10/the-var-space-hack-to-toggle-multiple-values-with-one-custom-property/).
+		</details>
+	</article>
+
+	<!-- <article class="isolated demo slide" id="space-toggle" style="--division: 65; --font-size-multiplier: .8">
 		<textarea class="language-css">
 			button {
 				border: 1px solid transparent;
@@ -1722,7 +1740,7 @@
 			What if we could use a `--is-glossy` property to control whether
 			our button is glossy?
 		</details>
-	</article>
+	</article> -->
 
 	<article class="takeaway slide">
 		<h1>Turn off multiple different parts of custom properties in one go with whitespace
@@ -1730,7 +1748,7 @@
 		</h1>
 	</article>
 
-	<article class="slide" data-steps="1">
+	<!-- <article class="slide" data-steps="1">
 		<style data-slide media="not all">
 			article.slide[data-step] {
 				background: yellowgreen;
@@ -1753,7 +1771,7 @@
 			Thus, declarations that set custom properties to the empty value will
 			be discarded by the cascade, and not trigger IACVT.
 		</details>
-	</article>
+	</article> -->
 </section>
 
 <section>
@@ -1764,33 +1782,42 @@
 	<article class="isolated slide demo no-base-css" id="responsive" style="--font-size-multiplier: .8">
 		<textarea class="language-css">
 			body {
-				--gutter: .1em;
 				display: grid;
-				grid-template-columns: repeat(3, 1fr);
 				gap: .3em;
-				font: bold 100% Helvetica Neue, Segoe UI, sans-serif;
+				font-size: 90%;
 			}
 
 			section {
 				background: silver;
-				margin: var(--gutter);
-				padding: calc(.6em + var(--gutter) * 2);
+				padding: 1.2em;
 			}
 
 			section:nth-of-type(3n + 4) {
-				grid-column-end: span 3;
 				background-color: #f06;
 				color: hsl(0 0% 100% /.6);
 			}
 
 			section:nth-last-of-type(2) {
-				grid-column-end: span 2;
 				background-color: orange;
 			}
 
 			@media (min-width: 600px) {
 				body {
-					--gutter: .5em;
+					gap: .5em;
+					font-size: 110%;
+					grid-template-columns: repeat(3, 1fr);
+				}
+
+				section {
+					padding: 1.6em;
+				}
+
+				section:nth-of-type(3n + 4) {
+					grid-column-end: span 3;
+				}
+
+				section:nth-last-of-type(2) {
+					grid-column-end: span 2;
 				}
 			}
 		</textarea>
@@ -1823,6 +1850,8 @@
 		<style data-slide media="not all" class="demo">
 			body {
 				padding: 1em;
+				font-weight: bold;
+				font-family: Helvetica Neue, Segoe UI, sans-serif;
 			}
 
 			section {
@@ -1841,18 +1870,16 @@
 			This tremendously reduces the amount of overrides needed, making code
 			far more maintainable.
 
-			However, it does mean we need to hunt down in multiple places for the
-			value of each style. When the adjustment is relative, it means that
+			------------
+
+			However, it does mean we still need to hunt down in multiple places for the
+			value of each style. Another strategy to keep everything together is to
+			use different properties for each breakpoint, e.g. `--font-size-large`
+
+			When the adjustment is relative, it means that
 			we need to adjust both when the base value changes.
 			One way to avoid this is to define optional *scaling factors* in our MQs, and
 			use them defensively in our base CSS.
-
-			Lastly, a third strategy to keep everything together is to
-			use different properties for each breakpoint, e.g. `--font-size-large`
-
-			Optional homework: Our design works with the `--columns` property being
-			`1` or `3`, but breaks at `2` (unless we are willing to shift sections upwards).
-			How can we make the layout work with `--columns: 2` as well?
 		</details>
 	</article>
 
@@ -1867,17 +1894,10 @@
 		</code></pre>
 	</article>
 
+	<article class="slide" data-insert="#responsive"></article>
+
 	<article class="takeaway slide" id="responsive-takeaway">
 		<h1>RWD strategy 2</h1>
-
-		<p>Base CSS multiplies by optional scaling factor, MQs set said factor</p>
-
-		<pre><code>
-			font-size: calc(90% * var(--font-size-scale, 1));
-		</code></pre>
-	</article>
-	<article class="takeaway slide" id="responsive-takeaway">
-		<h1>RWD strategy 3</h1>
 
 		<p>Base CSS sets different custom properties for each breakpoint, MQs use them</p>
 
@@ -1885,21 +1905,36 @@
 			font-size: 90%;
 			--font-size-large: 110%;
 		</code></pre>
+	</article>
+
+	<article class="takeaway slide" id="responsive-takeaway">
+		<h1>RWD strategy 3</h1>
+
+		<p>Base CSS multiplies by optional scaling factor, MQs set said factor</p>
+
+		<pre><code>
+			font-size: calc(90% * var(--font-size-scale, 1));
+		</code></pre>
 
 		<details class="notes">
 			Want to dig in more?
 			[This article](https://css-tricks.com/responsive-designs-and-css-custom-properties-defining-variables-and-breakpoints/)
 			by Mikolaj Dobrucki is quite good.
+
+			Note that these techniques are useful every time you need to create variations of a design,
+			not just for RWD. E.g. multipliers can be useful when you have multiple instances of a component with different content,
+			and need to vary some of them. In fact, these slides use a similar technique to vary the font size of the live demos!
 		</details>
 	</article>
+
 </section>
 
 <section id="tokens">
-	<header class="slide" style="--icon: 🪙;">
+	<!-- <header class="slide" style="--icon: 🪙;">
 		<h1>Tokens</h1>
-	</header>
+	</header> -->
 
-	<article class="isolated demo slide" style="--division: 60">
+	<!-- <article class="isolated demo slide" style="--division: 60">
 		<textarea class="language-css">
 			button.play {
 				font-size: 200%;
@@ -1941,144 +1976,20 @@
 			Let's abstract the symbol drawing away from the rest of the styling.
 			What do you notice?
 		</details>
-	</article>
+	</article> -->
 
-	<article class="takeaway slide">
-		<h1>Variable values are token lists</h1>
-	</article>
 
-	<article class="slide dont-resize" id="token-examples">
-		<h1>What’s a token?</h1>
-
-		<div class="delayed-children">
-			<code title="Keywords">none</code>
-			<code title="Keywords">no-repeat</code>
-			<code title="Numbers">42.1</code>
-			<code title="Dimension tokens (number + unit)">12px</code>
-			<code title="Dimension tokens (number + unit)">360deg</code>
-			<code title="Percentages">5%</code>
-			<code title="Separators">,</code>
-			<code title="Separators">/</code>
-			<code title="A function name and opening paren">rgb(</code>
-			<code title="A function name and opening paren">image-set(</code>
-			<code title="A closing paren">)</code>
-			<code title="Hash token">#ff0066</code>
-			<code title="Hash token">#container</code>
-			<code title="Strings">"YOLO"</code>
-			<code title="Unquoted URLs">url(kitten.jpg)</code>
-			<code title="Whitespace" class="language-none">&nbsp;	&nbsp;	&nbsp; &nbsp; &nbsp;</code>
-		</div>
-		<details class="notes">
-			Want to know more? Here is [the source](https://drafts.csswg.org/css-syntax-3/#token-diagrams)!
-		</details>
-	</article>
-
-	<article class="slide valid-quiz">
-		<h1>Valid or invalid?</h1>
-
-		<pre class="delayed invalid"><code>
-			--type: linear-gradient(;
-			background: var(--type) white, black );
-		</code></pre>
-
-		<details class="notes">
-			Even though `linear-gradient(` is a single token, this will not work
-			because variable values [cannot contain mismatched parens or braces](https://drafts.csswg.org/css-variables/#syntax)
-		</details>
-	</article>
-
-	<article class="isolated demo slide">
-		<textarea class="language-css">
-			html {
-				--type: linear-gradient(;
-				background: var(--type) white, black );
-				color: red;
-			}
-		</textarea>
-		<textarea class="language-html">
-			<h1>Hello</h1>
-		</textarea>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>Variable values cannot contain unmatched `()`, `[]`, or `{}`
-			<div class="note delayed">and they severely break parsing!</div>
-		</h1>
-	</article>
-
-	<article class="slide valid-quiz">
-		<h1>Valid or invalid?</h1>
-
-		<pre class="delayed"><code>
-			--stops: white, black,;
-			background: linear-gradient( var(--stops) red);
-		</code></pre>
-
-		<details class="notes">
-			This works fine, because `,` is just another token
-		</details>
-	</article>
-	<article class="slide valid-quiz">
-		<h1>Valid or invalid?</h1>
-
-		<pre class="delayed"><code>
-			--to: to;
-			background: linear-gradient( var(--to) right, white, black );
-		</code></pre>
-
-		<details class="notes">
-			This works fine, because `to` is just another token
-		</details>
-	</article>
-
-	<article class="horizontal isolated demo slide" id="currying" style="--division: 70;">
-		<textarea class="language-css">
-			* {
-				--3d-with-shadow: initial;
-				text-shadow: 1px 1px hsl(0 0% 80%), 2px 2px hsl(0 0% 75%),
-				             3px 3px hsl(0 0% 70%), 4px 4px hsl(0 0% 65%),
-				             4px 4px var(--3d-with-shadow);
-			}
-
-			h1 {
-				color: hsl(0 0% 90%);
-				--3d-with-shadow: .1em rebeccapurple;
-			}
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			body {
-				min-height: 100vh;
-				display: flex;
-			}
-
-			h1 {
-				margin: auto;
-				font-size: 500%;
-			}
-		</style>
-		<textarea class="language-html">
-			<h1>Extruded text</h1>
-		</textarea>
-		<details class="notes">
-			A useful application of the fact that variable values can contain
-			multiple tokens, is in creating "single property mixins", i.e.
-			prefilling part of the value of a property.
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>CSS Variables let you create <br>single property mixins
-		<div class="delayed note">(like function currying, in programmerese)</div></h1>
-	</article>
 </section>
 
-<section>
+<section id="colors-section">
 	<!--
 	Dependencies: values are token lists
 	 -->
 	<header class="slide" style="--icon: 🌈; background-color: var(--accent2)">
 		<h1>Colors</h1>
 	</header>
+
+
 
 	<article class="isolated demo slide" id="color-aliases">
 		<textarea class="language-css">
@@ -2259,8 +2170,7 @@
 			--------------
 
 			Can we eliminate verbosity?
-			We can store the hue and saturation in the same property
-			(remember they can store multiple tokens!).
+			We can store the hue and saturation in the same property.
 
 			We can also store lighter and darker variations and use those throughout.
 
@@ -2270,11 +2180,11 @@
 			With this approach, we'd need to redefine the entire color.
 			Let's look at a slightly different approach.
 
-			-----------------
+			<!-- -----------------
 
 			We can even override some components in media queries
 			to create a rudimentary dark mode!
-			[Read more about this technique](https://lea.verou.me/2021/03/inverted-lightness-variables/)
+			[Read more about this technique](https://lea.verou.me/2021/03/inverted-lightness-variables/) -->
 		</details>
 	</article>
 
@@ -2300,7 +2210,7 @@
 		<h1>`--background-color-*` and `--text-color-*` for independent tweaking</h1>
 	</article>
 
-	<article class="slide" data-insert="#color-variations"></article>
+	<!-- <article class="slide" data-insert="#color-variations"></article>
 
 	<article class="takeaway slide">
 		<h1>`--l-*` lightness variables for a quick & dirty dark mode
@@ -2327,6 +2237,108 @@
 				}
 			</code></pre>
 		</div>
+	</article> -->
+
+	<article class="isolated demo slide" id="migraine" style="--division: 55">
+		<textarea class="language-css">
+			article {
+				/* To-do: Make color depend on intensity */
+				--color: hsl(0 70% 40%);
+				background: var(--color);
+			}
+
+			article h2 {
+				color: white;
+			}
+
+			article .content {
+				background: hsl(0 0% 100% / .8);
+			}
+		</textarea>
+		<style class="demo" data-slide media="not all">
+			body {
+				font-size: 100%;
+				line-height: 1.5;
+			}
+
+			article {
+				border-radius: .3rem;
+				overflow: hidden;
+				margin: 1em 0;
+			}
+
+			article h2 {
+				padding: .3rem .5rem;
+				margin: 0;
+			}
+
+			article .content {
+				padding: .1em .5rem;
+			}
+		</style>
+		<textarea class="language-html">
+			<h1>🤕 Migraine log</h1>
+
+			<article style="--intensity:1">
+				<h2>
+					<time datetime="2021-05-19T20:45">May 19th, 2021 at 20:45</time>
+					until <time datetime="2021-05-20T01:15">01:15</time>
+					<meter max="5" value="2"></meter>
+				</h2>
+				<div class="content">
+					<p>Started after dinner</p>
+				</div>
+			</article>
+
+			<article style="--intensity:3">
+				<h2>
+					<time datetime="2021-05-18T10:50">May 18th, 2021 at 10:50</time>
+					until <time datetime="2021-05-18T15:15">15:15</time>
+					<meter max="5" value="4"></meter>
+				</h2>
+				<div class="content">
+					<p>Upon waking up</p>
+				</div>
+			</article>
+
+			<article style="--intensity:;">
+				<h2>
+					<time datetime="2021-05-16T15:00">May 16th, 2021 at 15:00</time>
+					until <time datetime="2021-05-16T20:00">20:00</time>
+					<meter max="5"></meter>
+				</h2>
+				<div class="content">
+					<p>Headache for several hours, then turned to migraine</p>
+				</div>
+			</article>
+
+			<article style="--intensity:5;">
+				<h2>
+					<time datetime="2021-05-12T07:00">May 12th, 2021 at 07:00</time>
+					until <time datetime="2021-05-12T16:30">16:30</time>
+					<meter max="5" value="5"></meter>
+				</h2>
+				<div class="content">
+					<p>Long tail off</p>
+				</div>
+			</article>
+		</textarea>
+		<details class="notes">
+			Here we have some repeated HTML to display some data,
+			which could have been generated from a server-side templating script.
+			We are using an `--intensity` CSS variable to communicate the
+			migraine intensity to the CSS so it can be used for styling.
+			Let's try to modify the CSS so that stronger migraines are more red
+			and lighter ones are more yellow!
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>We can use variables to set color components to create dynamic palettes</h1>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>To provide a fallback for an entire calculation, use an intermediate variable</h1>
 	</article>
 
 	<article class="slide">
@@ -2495,7 +2507,7 @@
 		</details>
 	</article>
 
-	<article class="isolated demo slide" style="--division: 65">
+	<!-- <article class="isolated demo slide" style="--division: 65">
 		<textarea class="language-css">
 			:root {
 				background:repeating-conic-gradient(
@@ -2517,7 +2529,7 @@
 			Let's create a CSS animation to produce the same effect.
 			Which of the other custom properties might be fun to animate?
 		</details>
-	</article>
+	</article> -->
 
 	<article class="isolated horizontal demo slide" id="autoprefixing" style="--division: 60;">
 		<textarea class="language-css">
@@ -2560,7 +2572,7 @@
 
 	<article class="takeaway slide">
 		<h1>CSS Variables enable you to <br>set multiple properties at once
-			<div class="note">but they do not interpoalte!</div>
+			<div class="note">but they do not interpolate!</div>
 		</h1>
 	</article>
 
@@ -2638,9 +2650,137 @@
 		</div>
 	</article>
 
-	<article class="takeaway slide">
+	<!-- <article class="takeaway slide">
 		<h1>If you can't put spaces around `var()` without your code breaking,
 		your code is broken</h1>
+	</article> -->
+
+	<article class="takeaway slide">
+		<h1>Variable values are token lists</h1>
+	</article>
+
+	<article class="slide dont-resize" id="token-examples">
+		<h1>What’s a token?</h1>
+
+		<div class="delayed-children">
+			<code title="Keywords">none</code>
+			<code title="Keywords">no-repeat</code>
+			<code title="Numbers">42.1</code>
+			<code title="Dimension tokens (number + unit)">12px</code>
+			<code title="Dimension tokens (number + unit)">360deg</code>
+			<code title="Percentages">5%</code>
+			<code title="Separators">,</code>
+			<code title="Separators">/</code>
+			<code title="A function name and opening paren">rgb(</code>
+			<code title="A function name and opening paren">image-set(</code>
+			<code title="A closing paren">)</code>
+			<code title="Hash token">#ff0066</code>
+			<code title="Hash token">#container</code>
+			<code title="Strings">"YOLO"</code>
+			<code title="Unquoted URLs">url(kitten.jpg)</code>
+			<code title="Whitespace" class="language-none">&nbsp;	&nbsp;	&nbsp; &nbsp; &nbsp;</code>
+		</div>
+		<details class="notes">
+			Want to know more? Here is [the source](https://drafts.csswg.org/css-syntax-3/#token-diagrams)!
+		</details>
+	</article>
+
+	<article class="slide valid-quiz">
+		<h1>Valid or invalid?</h1>
+
+		<pre class="delayed invalid"><code>
+			--type: linear-gradient(;
+			background: var(--type) white, black );
+		</code></pre>
+
+		<details class="notes">
+			Even though `linear-gradient(` is a single token, this will not work
+			because variable values [cannot contain mismatched parens or braces](https://drafts.csswg.org/css-variables/#syntax)
+		</details>
+	</article>
+
+	<article class="isolated demo slide">
+		<textarea class="language-css">
+			html {
+				--type: linear-gradient(;
+				background: var(--type) white, black );
+				color: red;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<h1>Hello</h1>
+		</textarea>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Variable values cannot contain unmatched `()`, `[]`, or `{}`
+			<div class="note delayed">and they severely break parsing!</div>
+		</h1>
+	</article>
+
+	<article class="slide valid-quiz">
+		<h1>Valid or invalid?</h1>
+
+		<pre class="delayed"><code>
+			--stops: white, black,;
+			background: linear-gradient( var(--stops) red);
+		</code></pre>
+
+		<details class="notes">
+			This works fine, because `,` is just another token
+		</details>
+	</article>
+	<article class="slide valid-quiz">
+		<h1>Valid or invalid?</h1>
+
+		<pre class="delayed"><code>
+			--to: to;
+			background: linear-gradient( var(--to) right, white, black );
+		</code></pre>
+
+		<details class="notes">
+			This works fine, because `to` is just another token
+		</details>
+	</article>
+
+	<article class="horizontal isolated demo slide" id="currying" style="--division: 70;">
+		<textarea class="language-css">
+			* {
+				--3d-with-shadow: initial;
+				text-shadow: 1px 1px hsl(0 0% 80%), 2px 2px hsl(0 0% 75%),
+				             3px 3px hsl(0 0% 70%), 4px 4px hsl(0 0% 65%),
+				             4px 4px var(--3d-with-shadow);
+			}
+
+			h1 {
+				color: hsl(0 0% 90%);
+				--3d-with-shadow: .1em rebeccapurple;
+			}
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			body {
+				min-height: 100vh;
+				display: flex;
+			}
+
+			h1 {
+				margin: auto;
+				font-size: 500%;
+			}
+		</style>
+		<textarea class="language-html">
+			<h1>Extruded text</h1>
+		</textarea>
+		<details class="notes">
+			A useful application of the fact that variable values can contain
+			multiple tokens, is in creating "single property mixins", i.e.
+			prefilling part of the value of a property.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS Variables let you create <br>single property mixins
+		<div class="delayed note">(like function currying, in programmerese)</div></h1>
 	</article>
 
 	<article class="slide" data-insert="#viewport"></article>
@@ -2664,219 +2804,6 @@
 			This is a good practice regardless of the conversion issues,
 			as it ensures better separation of concerns.
 		</details>
-	</article>
-
-	<article class="isolated horizontal demo slide" id="svg-eyes">
-		<textarea class="language-css">
-			.iris {
-				cx: 50px;
-			}
-		</textarea>
-		<textarea class="language-html">
-			<svg viewBox="0 0 250 100">
-				<clipPath id="white-clip">
-					<path id="white-path" d="M1,50 a65,80 0 0,1 100,0 a80,80 0 0,1 -100,0 Z" />
-				</clipPath>
-				<use id="eye-white" href="#white-path" />
-				<use href="#eye-white" x="148" />
-				<circle id="iris" class="iris" cx="50" cy="45" r="18" clip-path="url(#white-clip)" />
-				<use class="iris" href="#iris" x="148" />
-			</svg>
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			:root {
-				background: hsl(20, 40%, 70%);
-			}
-
-			svg {
-				width: 90vw;
-			}
-
-			#eye-white {
-				fill: white;
-			}
-
-			.iris {
-				stroke: hsl(200, 50%, 50%);
-				stroke-width: 14;
-				fill: black;
-			}
-
-			.second-eye {
-				x: 150px;
-			}
-		</style>
-		<details class="notes">
-			Using variables for data also helps make code more readable.
-			It makes much more sense to change a `--look` variable from
-			`0` to `1` than from `25px` to `75px`,
-			and affords more flexibility for redesigns.
-			However, this means we need to map that number to the value we need
-			at the point of usage. How can we do that?
-
-			-----------
-
-			0 - 1 works better than ranges of lengths like `25px` to `75px`,
-			but it would be even easier to use if
-			we could use -1 for left, 0 for center, and 1 for right.
-			How can we map that range?
-
-			---------
-
-			Let's apply the expression we got!
-			And while we're at it, why don’t we animate this variable too?
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>
-			Yes, custom properties work in SVG too!
-			<div class="note">Caveat: but not in presentational attributes!</div>
-		</h1>
-	</article>
-
-	<article class="slide" data-insert="#svg-eyes"></article>
-
-	<article class="slide allow-attendee" data-type="Math time!" id="range-mapping">
-		<h1>0 to 1 Range mapping</h1>
-		<ul>
-			<li>
-				For every range, there is a
-				<code>calc(a * var(--p) + b)</code> expression
-				that will produce that range while <code>--p</code> ranges from <code>0</code> to <code>1</code>.
-				How can we find <code>a</code> and <code>b</code>?
-			</li>
-			<li class="delayed">Let <var>min</var> and <var>max</var> the min and max of the range.
-
-				<ol class="math">
-					<li>a &times; 0 + b = min</li>
-					<li>b = min</li>
-				</ol>
-			</li>
-			<li class="delayed">Now let’s find <var>a</var>:
-				<ol class="math">
-					<li>a &times; 1 + b = max</li>
-					<li>a &times; 1 + min = max</li>
-					<li>a = max - min</li>
-				</ol>
-			</li>
-			<li class="delayed">
-				Therefore, <code>calc((max - min) * var(--p) + min)</code> maps to that range
-			</li>
-		</ul>
-	</article>
-
-	<article class="slide" data-insert="#svg-eyes"></article>
-
-	<article class="slide allow-attendee" data-type="Math time!" id="ranges-with-midpoint">
-		<h1>-1 to 0 to 1 Range mapping</h1>
-		<ul>
-			<li>
-				Same logic:
-				<ol class="math">
-					<li>a × -1 + b = min</li>
-					<li>-a + b = min</li>
-					<li>b = min + a</li>
-				</ol>
-			</li>
-			<li class="delayed">Now let’s find <var>a</var>:
-				<ol class="math compact">
-					<li>a × 1 + b = max</li>
-					<li>a × 1 + min + a = max</li>
-					<li>a × 2 = max - min</li>
-					<li>a = (max - min) / 2</li>
-				</ol>
-			</li>
-			<li class="delayed">Now let’s find <var>b</var>:
-				<ol class="math compact">
-					<li>b = min + a</li>
-					<li>b = min + (max - min) / 2</li>
-					<li>b = min + max / 2 - min / 2</li>
-					<li>b = min / 2 + max / 2</li>
-					<li>b = (min + max) / 2</li>
-				</ol>
-			</li>
-			<li class="delayed">
-				Therefore, <code>calc((max - min) / 2 * var(--p) + (max + min) / 2)</code> maps to that range
-			</li>
-		</ul>
-	</article>
-
-	<article class="slide allow-attendee" data-type="Math time!">
-		<h1>
-			-1-0-1 Range mapping
-			<div class="note">Example for min = 25px and max = 75px</div>
-		</h1>
-
-		<ul>
-			<li>
-				<ol class="math">
-					<li>a = (max - min) / 2</li>
-					<li>a = (75px - 25px) / 2</li>
-					<li>a = 50px / 2</li>
-					<li>a = 25px</li>
-				</ol>
-			</li>
-			<li class="delayed">
-				<ol class="math">
-					<li>b = (min + max) / 2</li>
-					<li>b = (25px + 75px) / 2</li>
-					<li>b = 100px / 2</li>
-					<li>b = 50px</li>
-				</ol>
-			</li>
-			<li class="delayed">
-				Therefore, <code>calc(25px * var(--look) + 50px)</code>
-				is the expression we need
-			</li>
-		</ul>
-	</article>
-
-	<article class="slide" data-insert="#svg-eyes"></article>
-
-	<article class="isolated horizontal demo slide" >
-		<textarea class="language-css">
-			body {
-				background: radial-gradient(circle at 0% 20%, white, transparent 50vw) hsl(0 0% 47%);
-			}
-
-			h1 {
-				color: hsl(0 0% 50%);
-				text-shadow: 1em .3em .2em black;
-				font-size: 50vh;
-			}
-		</textarea>
-		<textarea class="language-html">
-			<h1>404</h1>
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			body {
-				margin: 0;
-				display: flex;
-				min-height: 100vh;
-			}
-
-			h1 {
-				margin: auto;
-			}
-		</style>
-		<details class="notes">
-			Using abstract 0 to 1 or -1 to 1 ranges can also be immensely useful
-			when we want the same variable to control multiple different things.
-			For example here, we want the gradient color stop to go from `0%` to `100%`
-			while the horizontal text shadow offset goes from `1em` to `-1em`.
-
-			Note that our <var>min</var> and <var>max</var> variables
-			do not necessarily satisfy <var>min</var> < <var>max</var>!
-		</details>
-	</article>
-
-	<article class="slide takeaway">
-		<h1>Range mapping allows the same variable to control multiple things</h1>
-	</article>
-
-	<article class="codepen slide">
-		<iframe src="https://codepen.io/jh3y/embed/preview/MWbvzKb?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 	</article>
 
 	<article class="isolated demo slide" id="math-conditional" style="--division: 55">
@@ -2971,7 +2898,267 @@
 			- [CSS Switch-Case Conditions](https://css-tricks.com/css-switch-case-conditions/) by Yair Even Or
 		</details>
 	</article>
-	<article class="isolated horizontal demo slide" id="viewport">
+
+	<article class="isolated horizontal demo slide" id="svg-eyes">
+		<textarea class="language-css">
+			.iris {
+				cx: 50px;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<svg viewBox="0 0 250 100">
+				<clipPath id="white-clip">
+					<path id="white-path" d="M1,50 a65,80 0 0,1 100,0 a80,80 0 0,1 -100,0 Z" />
+				</clipPath>
+				<use id="eye-white" href="#white-path" />
+				<use href="#eye-white" x="148" />
+				<circle id="iris" class="iris" cx="50" cy="45" r="18" clip-path="url(#white-clip)" />
+				<use class="iris" href="#iris" x="148" />
+			</svg>
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			:root {
+				background: hsl(20, 40%, 70%);
+			}
+
+			svg {
+				width: 90vw;
+			}
+
+			#eye-white {
+				fill: white;
+			}
+
+			.iris {
+				stroke: hsl(200, 50%, 50%);
+				stroke-width: 14;
+				fill: black;
+			}
+
+			.second-eye {
+				x: 150px;
+			}
+		</style>
+		<details class="notes">
+			Using variables for data also helps make code more readable.
+			It makes much more sense to change a `--look` variable from
+			`0` to `1` than from `25px` to `75px`,
+			and affords more flexibility for redesigns.
+			However, this means we need to map that number to the value we need
+			at the point of usage. How can we do that?
+		</details>
+	</article>
+
+	<!-- <article class="takeaway slide">
+		<h1>
+			Yes, custom properties work in SVG too!
+			<div class="note">Caveat: but not in presentational attributes!</div>
+		</h1>
+	</article> -->
+
+	<article class="slide takeaway">
+		<h1>0 - 1 Range mapping</h1>
+		<pre><code>
+			property: calc(
+				         var(--p)  * min +
+				calc(1 - var(--p)) * max
+			);
+		</code></pre>
+		<details class="notes">
+			The same formula as 0/1 toggles actually works for entire 0 - 1 ranges,
+			as it's actually just the linear interpolation formula.
+			Note that min and max here just represent the value you want to get
+			if `--p` is 0 and 1, respectively. It is not necessary that min &leq; max.
+		</details>
+	</article>
+
+	<!-- <article class="slide allow-attendee" data-type="Math time!" id="range-mapping">
+		<h1>0 to 1 Range mapping</h1>
+		<ul>
+			<li>
+				For every range, there is a
+				<code>calc(a * var(--p) + b)</code> expression
+				that will produce that range while <code>--p</code> ranges from <code>0</code> to <code>1</code>.
+				How can we find <code>a</code> and <code>b</code>?
+			</li>
+			<li class="delayed">Let <var>min</var> and <var>max</var> the min and max of the range.
+
+				<ol class="math">
+					<li>a &times; 0 + b = min</li>
+					<li>b = min</li>
+				</ol>
+			</li>
+			<li class="delayed">Now let’s find <var>a</var>:
+				<ol class="math">
+					<li>a &times; 1 + b = max</li>
+					<li>a &times; 1 + min = max</li>
+					<li>a = max - min</li>
+				</ol>
+			</li>
+			<li class="delayed">
+				Therefore, <code>calc((max - min) * var(--p) + min)</code> maps to that range
+			</li>
+		</ul>
+	</article> -->
+
+	<!-- <article class="slide allow-attendee" data-type="Math time!" id="ranges-with-midpoint">
+		<h1>-1 to 0 to 1 Range mapping</h1>
+		<ul>
+			<li>
+				Same logic:
+				<ol class="math">
+					<li>a × -1 + b = min</li>
+					<li>-a + b = min</li>
+					<li>b = min + a</li>
+				</ol>
+			</li>
+			<li class="delayed">Now let’s find <var>a</var>:
+				<ol class="math compact">
+					<li>a × 1 + b = max</li>
+					<li>a × 1 + min + a = max</li>
+					<li>a × 2 = max - min</li>
+					<li>a = (max - min) / 2</li>
+				</ol>
+			</li>
+			<li class="delayed">Now let’s find <var>b</var>:
+				<ol class="math compact">
+					<li>b = min + a</li>
+					<li>b = min + (max - min) / 2</li>
+					<li>b = min + max / 2 - min / 2</li>
+					<li>b = min / 2 + max / 2</li>
+					<li>b = (min + max) / 2</li>
+				</ol>
+			</li>
+			<li class="delayed">
+				Therefore, <code>calc((max - min) / 2 * var(--p) + (max + min) / 2)</code> maps to that range
+			</li>
+		</ul>
+	</article>
+
+	<article class="slide allow-attendee" data-type="Math time!">
+		<h1>
+			-1-0-1 Range mapping
+			<div class="note">Example for min = 25px and max = 75px</div>
+		</h1>
+
+		<ul>
+			<li>
+				<ol class="math">
+					<li>a = (max - min) / 2</li>
+					<li>a = (75px - 25px) / 2</li>
+					<li>a = 50px / 2</li>
+					<li>a = 25px</li>
+				</ol>
+			</li>
+			<li class="delayed">
+				<ol class="math">
+					<li>b = (min + max) / 2</li>
+					<li>b = (25px + 75px) / 2</li>
+					<li>b = 100px / 2</li>
+					<li>b = 50px</li>
+				</ol>
+			</li>
+			<li class="delayed">
+				Therefore, <code>calc(25px * var(--look) + 50px)</code>
+				is the expression we need
+			</li>
+		</ul>
+	</article>
+
+	<article class="slide" data-insert="#svg-eyes"></article> -->
+
+	<article class="isolated horizontal demo slide" id="shadow-range">
+		<textarea class="language-css">
+			body {
+				background: radial-gradient(circle at 0% 20%, white, transparent 50vw) hsl(0 0% 47%);
+			}
+
+			h1 {
+				color: hsl(0 0% 50%);
+				text-shadow: 1em .3em .2em black;
+				font-size: 50vh;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<h1>404</h1>
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			body {
+				margin: 0;
+				display: flex;
+				min-height: 100vh;
+			}
+
+			h1 {
+				margin: auto;
+			}
+		</style>
+		<details class="notes">
+			Using abstract 0 to 1 or -1 to 1 ranges can also be immensely useful
+			when we want the same variable to control multiple different things.
+			For example here, we want the gradient color stop to go from `0%` to `100%`
+			while the horizontal text shadow offset goes from `1em` to `-1em`.
+
+			Note that our <var>min</var> and <var>max</var> variables
+			do not necessarily satisfy <var>min</var> < <var>max</var>!
+		</details>
+	</article>
+
+	<article class="slide" id="general-linear-range-mapping">
+		<h1>General linear range mapping</h1>
+
+		<div>If our variable is x, we basically want to find <var>a</var> and <var>b</var> such that</div>
+		<div>
+			<span class="math">a × min_x + b = min_y</span> <em>(1)</em>
+			<br>
+			<span class="math">a × max_x + b = max_y</span> <em>(2)</em>
+		</div>
+
+		<div class="delayed">
+			We subtract <em>(2)</em> from <em>(1)</em> to find <var>a</var>:
+
+			<ol class="math">
+				<li>
+					a × (max_x - min_x) = max_y - min_y
+				</li>
+				<li>
+					a = (max_y - min_y) / (max_x - min_x)
+				</li>
+			</ol>
+		</div>
+
+		<div style="margin-top: 1em" class="delayed">
+			Then we substitute <var>a</var> into <em>(1)</em> to find <var>b</var>:
+			<ol class="math">
+				<li>b = min_y - a × min_x</li>
+				<li>
+					b = min_y - (max_y - min_y) / (max_x - min_x) × min_x
+				</li>
+			</ol>
+		</div>
+	</article>
+
+	<article class="codepen slide">
+		<iframe scrolling="no" title="" src="https://codepen.io/leaverou/embed/bGRmQKv?default-tab=result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+			See the Pen <a href="https://codepen.io/leaverou/pen/bGRmQKv">
+			</a> by Lea Verou (<a href="https://codepen.io/leaverou">@leaverou</a>)
+			on <a href="https://codepen.io">CodePen</a>.
+		  </iframe>
+	</article>
+
+	<article class="slide" data-insert="#migraine"></article>
+
+	<article class="slide takeaway">
+		<h1>Range mapping allows the same variable to control multiple things</h1>
+	</article>
+
+	<article class="codepen slide">
+		<iframe src="https://codepen.io/jh3y/embed/preview/MWbvzKb?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
+	</article>
+
+
+
+	<!-- <article class="isolated horizontal demo slide" id="viewport">
 		<textarea class="language-css">
 			* {
 				width: var(--width);
@@ -3004,7 +3191,7 @@
 
 	<article class="takeaway slide">
 		<h1>Wrap `var()` in `calc()` in `()` if it can contain calculations</h1>
-	</article>
+	</article> -->
 
 	<!-- <article class="isolated demo slide" style="--division: 60">
 		<textarea class="language-css">
@@ -3054,7 +3241,7 @@
 		</details>
 	</article> -->
 
-	<article class="isolated demo slide" style="--division: 60" id="speech">
+	<!-- <article class="isolated demo slide" style="--division: 60" id="speech">
 		<textarea class="language-css">
 			.speech {
 				position: relative;
@@ -3129,7 +3316,7 @@
 			Registering a property as `&lt;length>` allows us to pass down
 			ancestor font sizes!
 		</h1>
-	</article>
+	</article> -->
 </section>
 <!-- End Numbers & lengths -->
 
@@ -3213,6 +3400,28 @@
 	</header>
 
 	<article class="isolated demo slide" id="prepend">
+		<textarea class="language-html">
+			<h1 style="--emoji: 🌈">The future is colorful</h1>
+		</textarea>
+		<textarea class="language-css">
+			h1::before,
+			h1::after {
+				content: var(--emoji);
+				margin: 0 .2em;
+			}
+
+			h1::after {
+				transform: scaleX(-1);
+			}
+		</textarea>
+
+		<details class="notes">
+			Here we want to prepend and append an emoji after certain headings, so we tried using a custom property to specify what the emoji should be.
+			However, it doesn’t seem to be working. What did we do wrong?
+		</details>
+	</article>
+
+	<!-- <article class="isolated demo slide" id="prepend">
 		<p class="hint">inline style too</p>
 		<textarea class="language-css">
 			@property --prepend {
@@ -3250,10 +3459,10 @@
 				Find me on <a href="https://twitter.com">Twitter</a>.
 			</p>
 		</textarea>
-	</article>
+	</article> -->
 
 	<article class="takeaway slide">
-		<h1>Custom properties allow us to keep everything in one rule</h1>
+		<h1>If your custom property contains a string, don’t forget the quotes!</h1>
 	</article>
 
 	<article class="slide" data-insert="#viewport"></article>
@@ -3268,8 +3477,6 @@
 	<article class="isolated demo slide" id="bar-chart-percentage">
 		<textarea class="language-css">
 			.bar-chart > div {
-				align-items: flex-end;
-				justify-content: center;
 				height: var(--p);
 			}
 
@@ -3301,6 +3508,11 @@
 
 	<article class="left speech slide" style="--character: '😞'">
 		<h1>The counter trick only works with integers. Sorry!</h1>
+		<!-- <details class="notes">
+			But what if we could convert the number to an integer?
+			Ana Tudor has [discovered](https://twitter.com/anatudor/status/1399849494628425734)
+			a very clever way to do that.
+		</details> -->
 	</article>
 
 	<article class="devil speech slide">
@@ -3332,401 +3544,11 @@
 			but it is not currently implemented anywhere.
 		</details>
 	</article>
-
-	<article class="codepen slide" id="play-button">
-		<iframe src="https://codepen.io/leaverou/embed/preview/f2b11ed8445c2502d03bbb8f624e05c8?height=265&theme-id=dark&default-tab=html,result&editable=true" loading="lazy"></iframe>
-	</article>
-
-	<article class="isolated demo slide" id="play-buttons" style="--division: 60">
-		<textarea class="language-css">
-			button.play {
-				--PLAY-SYMBOL: conic-gradient(at right, transparent 67%, currentColor 0 83%, transparent 0) 58% 50% / 1.1em 1.5em;
-				--STOP-SYMBOL: linear-gradient(currentColor, currentColor) center / 1em 1em;
-
-				display: block;
-				font-size: 200%;
-				box-sizing: content-box;
-				padding: .2em;
-				width: 2em;
-				line-height: 1;
-				height: 2em;
-				margin: .2em;
-				color: slategray;
-				border: .2em solid;
-				border-radius: 50%;
-				background: var(--label, ) no-repeat;
-			}
-
-			button.initial {
-				--label: var(--PLAY-SYMBOL);
-			}
-
-			button.play.downloading::before {
-				content: "16%";
-				font-weight: bold;
-				letter-spacing: -.05em;
-			}
-
-			button.play.playing {
-				--label: var(--STOP-SYMBOL);
-			}
-		</textarea>
-		<textarea class="language-html">
-			<button title="Play" class="play initial"> </button>
-			<button title="Loading…" class="play downloading"> </button>
-			<button title="Pause" class="play playing"> </button>
-		</textarea>
-		<textarea class="language-js">
-			let delay = ms => new Promise(r => setTimeout(r, ms));
-
-			document.addEventListener("click", async e => {
-				let el = e.target;
-				if (el.matches("button.play.initial")) {
-					el.className = "play downloading";
-
-					for (let i=0; i < 100; i++) {
-						await delay(Math.random() * 200);
-						el.style.setProperty("--p", i);
-					}
-
-					el.className = "play playing";
-					element.style.setProperty("--p", "");
-				}
-			});
-		</textarea>
-	</article>
-
-	<article class="codepen slide">
-		<iframe src="https://codepen.io/leaverou/embed/preview/f2b11ed8445c2502d03bbb8f624e05c8?height=265&theme-id=dark&default-tab=html,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
-	</article>
-
-	<article class="codepen slide allow-attendee">
-		<iframe src="https://codepen.io/jh3y/embed/preview/jOVmJBL?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
-	</article>
 </section>
 <!-- End Strings -->
 
-<section>
-	<header class="slide" style="--icon: 🧮; background-color: var(--accent3)">
-		<h1>Advanced Math</h1>
-	</header>
-
-	<article class="isolated demo slide" id="bar-chart-negative">
-		<textarea class="language-css">
-			.bar-chart > div {
-				flex-flow: column;
-				align-items: center;
-				justify-content: space-between;
-				height: calc(var(--p) * 1%);
-			}
-
-			@property --integer {
-				syntax: "<integer>";
-				initial-value: 0;
-				inherits: false;
-			}
-
-			.bar-chart > div::before {
-				--integer: calc(var(--p));
-				counter-reset: p var(--integer);
-				content: counter(p) "%";
-			}
-		</textarea>
-		<textarea class="language-html">
-			<div class="bar-chart">
-				<div style="--p: 95">A</div>
-				<div style="--p: 100">B</div>
-				<div style="--p: 95">C</div>
-				<div style="--p: -38">D</div>
-				<div style="--p: 84.21">E</div>
-				<div style="--p: 49">F</div>
-			</div>
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			@import url("css/bar-chart.css");
-			:root {
-				background: hsl(200, 15%, 20%);
-			}
-		</style>
-		<details class="notes">
-			What if we have negative percentages too?
-
-			[Solution](https://codepen.io/leaverou/pen/407ba68995c917a8fbca3edc712dca71?editors=1100)
-
-			------------
-
-			Let's refactor the fragile selector out by using our 0/1 toggle trick.
-
-			First, we need to create the toggle, i.e. a variable that is `0` when we have a positive number
-			and `1` when we have a negative number.
-			First, we divide the number by its absolute value to get its *sign*, i.e.
-			a number that is `-1` for negative numbers and `1` for positive ones.
-			Then, we can do `max(-1 * var(--p-sign), 0)` to get our toggle.
-
-			Now that we have a toggle, we can easily apply it to `top`, since it's numeric.
-			But what to do with `flex-flow`?
-			The easiest route is to just find an alternate way to do this.
-			We can use the `order` property, which *is* numeric!
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>The absolute value of `--p` is `max(var(--p), -1 * var(--p))`</h1>
-		<p class="credit">
-			Credit to [James0x57](https://twitter.com/James0x57/status/1399450888582860801)
-			and [Ana Tudor](https://twitter.com/anatudor/status/1399840176298471427)
-			for this trick
-		</p>
-		<details class="notes">
-			So why does this work?
-			The absolute value of a number <var>p</var> is either <var>p</var>
-			or <var>-p</var>, whichever is positive.
-			However, the one that's positive, is also larger, so `max(p, -p)`
-			will return that.
-
-			[CSS Values 4](https://www.w3.org/TR/css-values-4/) includes an
-			[`abs()` function](https://www.w3.org/TR/css-values-4/#sign-funcs) for this,
-			but it is not currently implemented anywhere.
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>We can use `[style*="--p: "]` selectors to match on custom property presence and/or values
-			<div class="delayed note">But it’s extremely fragile</div>
-		</h1>
-		<details class="notes">
-			Note that this is essentially a hack and breaks very easily,
-			creating both false positives and false negatives:
-			- Whitespace between the colon and the value affects it
-			- It can match anywhere in the inline style, including URLs, strings etc
-
-			Use it only for markup you control completely.
-			So how can we refactor it out here?
-		</details>
-	</article>
-
-	<article class="slide" data-insert="#bar-chart-negative"></article>
-
-	<article class="takeaway slide">
-		<h1>The sign of `--p` is <code style="white-space:nowrap">calc(var(--p) / var(--p-abs))</code></h1>
-		<p class="credit">
-			Credit to [Ana Tudor](https://twitter.com/anatudor/status/1399840176298471427)
-			for this trick
-		</p>
-		<details class="notes">
-			[CSS Values 4](https://www.w3.org/TR/css-values-4/) includes a
-			[`sign()` function](https://www.w3.org/TR/css-values-4/#sign-funcs) for this,
-			but it is not currently implemented anywhere.
-		</details>
-	</article>
-</section>
-
-<section>
-	<!--
-	Dependencies: none really, but it would be *weird* if it comes before
-	colors or numbers
-	 -->
-	<header class="slide" style="--icon: 🖼;">
-		<h1>Images</h1>
-	</header>
-
-	<article class="horizontal demo slide" id="url" style="--division: 50">
-		<textarea class="language-css">
-			article {
-				background: url("img/cat1.jpg") center / cover;
-			}
-		</textarea>
-	</article>
-
-	<article class="slide" id="url-cases">
-		<table>
-			<tr>
-				<td><pre><code>
-					--img: "cat1.jpg";
-					background: url("img/" var(--img));
-				</code></pre></td>
-				<td style="color: red">CSS limitation</td>
-			</tr>
-			<tr class="delayed">
-				<td><pre><code>
-					--img: "img/cat1.jpg";
-					background: url(var(--img));
-				</code></pre></td>
-				<td style="color: red">CSS bug</td>
-			</tr>
-			<tr class="delayed">
-				<td><pre><code>
-					--img: url("img/cat1.jpg");
-					background: var(--img);
-				</code></pre></td>
-				<td style="color: yellowgreen">Works!</td>
-			</tr>
-		</table>
-		<details class="notes">
-			The first case doesn't work because CSS lacks string concatenation syntax.
-			You may be familiar with concatenating strings in the `content` property
-			by just placing them next to each other,
-			but that is syntax specific to that property,
-			not a CSS wide concatenation mechanism.
-			Note that there is [consensus to add such syntax in some form](https://github.com/w3c/csswg-drafts/issues/542),
-			though the exact details have not been worked out yet.
-
-			The second case doesn’t work due to a …bug in CSS itself.
-			When `url()` was introduced in CSS 1, it allowed both quoted and unquoted URLs.
-			However, this flexibility comes at a hefty price:
-			to parse `url()` tokens, if their parameter is not a quoted string,
-			everything within needs to be assumed to be a relative URL,
-			and that includes `var()` references!
-			In this case, the unquoted `(` inside `url()` will cause a parse error,
-			so the entire declaration is thrown out as invalid.
-			There is a new function that was recently introduced, [`src()`](https://drafts.csswg.org/css-values-4/#urls),
-			which will fix this by only allowing strings to specify the URL,
-			however there are no implementations yet.
-
-			Including the entire `url()` token in the variable works,
-			though as we will see in the next few slides, it's not without its warts.
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>
-			Custom properties can only contain entire `url()` tokens, not parts thereof
-			<div class="note">(for now)</div>
-		</h1>
-	</article>
-
-	<article class="horizontal isolated demo slide" id="letitsnow">
-		<textarea class="language-css">
-			:root {
-				--snow: url('data:image/svg+xml,\
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
-					<text y=".9em" font-size="20">❄️</text>\
-				</svg>');
-				--background: linear-gradient(black, navy);
-				background: var(--snow) 0 0 / 5em;
-			}
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			:root {
-				background: linear-gradient(hsl(200, 40%, 15%), hsl(200, 40%, 45%));
-				font-size: 250%;
-				height: 100vh;
-			}
-		</style>
-		<!--
-		@keyframes snow {
-			50% { background-position-x: 0; }
-			to { background-position-y: 5em, 3em, 10em }
-		}
-
-		:root {
-			--snow: url('data:image/svg+xml,\
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
-				<text y=".9em" font-size="20">❄️</text>\
-			</svg>');
-			background: var(--snow) 0 0 / 5em, var(--snow) 1em 0 / 3em, var(--snow) 2em 0 / 10em;
-			animation: snow 3s infinite linear;
-		}
-		-->
-		<details class="notes">
-			So how could entire `url()` tokens be useful to store in CSS variables?
-			One perhaps non-obvious example is SVG data URIs.
-			You can specify the SVG once, and then re-use it as many times as you need.
-			You could even build an icon library!
-			Note that while this is a case that preprocessor variables could handle just fine,
-			the CSS they would produce would be rife with duplication, and potentially huge,
-			whereas when using native CSS variables, the data URI is only specified once.
-		</details>
-	</article>
-
-	<article class="slide">
-		<h1>How do relative URLs resolve?</h1>
-		<pre><code>
-			/* a.css */
-			--img: url("a.png");
-
-			/* b.css */
-			background-image: var(--img);
-		</code></pre>
-
-		<p class="delayed">
-			<a href="https://codepen.io/leaverou/project/editor/DNepLE">Let’s check out what happens!</a>
-		</p>
-
-		<details class="notes">
-			If you’re interested in the reasoning behind the decision,
-			[csswg-drafts#757](https://github.com/w3c/csswg-drafts/issues/757)
-			is the thread to dig into!
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>Relative URLs in custom properties resolve at the point of usage</h1>
-	</article>
-
-	<article class="slide">
-		<h1>What about now?</h1>
-		<pre><code>
-			@property --img {
-				syntax: "&lt;url> | none";
-				initial-value: none;
-				inherits: false;
-			}
-
-			/* a.css */
-			--img: url("a.png");
-
-			/* b.css */
-			background-image: var(--img);
-		</code></pre>
-
-		<details class="notes">
-			This should resolve in `a.css`, however Chrome appears to be buggy with
-			`&lt;url>` registered properties right now.
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>Relative URLs in custom properties resolve at the point of usage
-			 ***unless* they are registered as `&lt;url>`**
-		</h1>
-	</article>
-
-	<article class="isolated demo slide" id="icon-links" style="--division: 60">
-		<textarea class="language-css">
-			a::before {
-				content: "";
-				background: var(--icon) bottom / contain no-repeat;
-				display: inline-block;
-				width: 1em;
-				height: .8em;
-				margin-right: .3em;
-			}
-
-			a[href^="https://twitter.com"]:before {
-				--icon: url("https://twitter.com/favicon.ico");
-			}
-
-			a[href^="https://github.com"]:before {
-				--icon: url("https://github.com/favicon.ico");
-			}
-
-			a[href*="https://smashingmagazine.com"]:before,
-			a[href*="https://smashingconf.com"]:before {
-				--icon: url("https://www.smashingmagazine.com/images/favicon/favicon.png");
-			}
-		</textarea>
-		<textarea class="language-html">
-			<p>Hi, I’m Lea.
-			I’m quite active on <a href="https://twitter.com/leaverou">Twitter</a>
-			and <a href="https://github.com/leaverou">GitHub</a>.
-			I hope you are enjoying <a href="https://smashingconf.com/online-workshops/workshops/lea-verou#/">this workshop</a>.
-		</textarea>
-	</article>
-</section>
-
-<section>
-	<header class="slide">
+<section class="language-javascript">
+	<header class="slide" style="--icon: ⚙️; background-color: var(--accent3)">
 		<h1>JS</h1>
 	</header>
 
@@ -3751,13 +3573,6 @@
 		<h1>Mouse position</h1>
 	</header> -->
 
-	<!-- <article class="slide language-javascript">
-		<p><a href="https://mavo.io"><img src="../html-reimagined/img/logo.svg" alt="Mavo" style="height: 4em"></a></p>
-		<pre><code class="language-markup">&lt;html mv-app
-		style="--mouse-x: [$mouse.x / innerWidth];
-				--mouse-y: [$mouse.y / innerHeight];"></code></pre>
-	</article> -->
-
 	<article class="isolated horizontal demo slide" id="mouse">
 		<textarea class="language-css">
 			:root {
@@ -3780,12 +3595,19 @@
 				root.style.setProperty("--mouse-y", 0);
 			});
 		</textarea>
+		<details class="notes">
+			Here we have a radial gradient background whose center is hardcoded to the center of the page.
+			However, we want it to follow the mouse, for a subtle (with suitable colors) spotlight effect.
+			With a little bit of JS, we can set `--mouse-x` and `--mouse-y` properties to communicate the mouse position to CSS.
+			This already gives us a big advantage over pre-custom property CSS, where we'd need to set the entire gradient
+			in JS, and tweak JS code every time we wanted to make a design change.
+		</details>
 	</article>
 
-	<article class="isolated horizontal demo slide" id="svg-eyes">
+	<article class="isolated horizontal demo slide" id="svg-eyes-2">
 		<textarea class="language-css">
 			.iris {
-				cx: calc(25px * var(--look, 0) + 50px);
+				cx: calc(50px * var(--look, 0) + 25px);
 			}
 		</textarea>
 		<textarea class="language-html">
@@ -3861,10 +3683,10 @@
 		</code></pre>
 	</article>
 
-	<article class="slide" data-insert="svg-eyes"></article>
+	<article class="slide" data-insert="svg-eyes-2"></article>
 
 	<article class="takeaway slide">
-		<h1>Prefer abstract 0-1 percentages than absolute pixel lengths</h1>
+		<h1>Prefer abstract 0 to 1 percentages than absolute pixel lengths</h1>
 	</article>
 
 	<article class="slide language-css">
@@ -3980,7 +3802,7 @@
 		<iframe src="https://codepen.io/leaverou/embed/preview/acb3c50c99c89ed9aec9f141c6b1653a?height=265&theme-id=dark&default-tab=html,result&editable=true" loading="lazy"></iframe>
 	</article>
 
-	<article class="slide allow-attendee">
+	<!-- <article class="slide allow-attendee">
 		<h1>More 0-1 Range Mapping</h1>
 
 		<p>Remember <code>calc((max - min) * var(--p) + min)</code>?
@@ -3994,7 +3816,7 @@
 		<p>What does <code>calc(var(--p) * max + (1 - var(--p)) * min)</code> remind you?</p>
 	</article>
 
-	<article class="slide" data-insert="#mouse-local"></article>
+	<article class="slide" data-insert="#mouse-local"></article> -->
 
 	<!-- <header class="slide" style="--icon: 👗; background-color: var(--accent3)">
 		<h1>Forms</h1>
@@ -4002,7 +3824,7 @@
 
 	<article class="slide allow-attendee">
 		<div><pre><code>
-			for (input of document.querySelectorAll("input")) {
+			for (let input of document.querySelectorAll("input")) {
 				input.style.setProperty("--value", input.value);
 			}
 		</code></pre>
@@ -4022,7 +3844,7 @@
 			}
 		</textarea>
 		<textarea class="language-js">
-			for (input of document.querySelectorAll("input")) {
+			for (let input of document.querySelectorAll("input")) {
 				input.style.setProperty("--value", input.value);
 			}
 			document.addEventListener("input", evt => {
@@ -4055,7 +3877,8 @@
 				width: 25ch;
 				border-right: 2px solid;
 				overflow: hidden;
-				animation: caret .5s step-end infinite alternate;
+				animation: typing calc(25 * .4s) steps(25),
+				           caret .5s step-end infinite alternate;
 			}
 		</textarea>
 		<textarea class="language-html">
@@ -4083,6 +3906,12 @@
 
 			So, we have managed to recreate the effect, but we had to hardcode the length of the heading.
 			CSS variables can help us make this more widely useful.
+
+			-----------
+
+			What happens if the text can change after initial load?
+			Either our code would need to take care of updating the `--length` variable,
+			or (to avoid such tight couplings) we can use [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
 		</details>
 	</article>
 
@@ -4098,7 +3927,7 @@
 
 	<article class="slide" data-insert="typing"></article>
 
-	<article class="question slide">
+	<!-- <article class="question slide">
 		<h1>What happens if content can change after load?</h1>
 	</article>
 
@@ -4176,7 +4005,7 @@
 				});</span>
 			}
 		</code></pre>
-	</article>
+	</article> -->
 
 	<!-- <header class="slide" style="--icon: 📜">
 		<h1>Scrolling</h1>
@@ -4246,7 +4075,7 @@
 		<h1>CSS Variables are a revolution for <br>separation of style and behavior</h1>
 	</article>
 
-	<section>
+	<!-- <section>
 		<header class="slide" style="--icon: 🎨; background-color: var(--accent4)">
 			<h1>Houdini Paint API</h1>
 		</header>
@@ -4507,7 +4336,7 @@
 				[And more!](https://css-houdini.rocks)
 			</h1>
 		</article>
-	</section>
+	</section> -->
 
 
 <!-- <footer class="slide" id="day-end">

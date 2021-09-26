@@ -344,20 +344,33 @@ span.poop {
 
 .takeaway.slide {
 	& h1 {
-		font-weight: 100;
+
 
 		&::before {
 			counter-reset: takeaway var(--takeaway);
 			content: "Takeaway #" counter(takeaway);
-			display: block;
-			width: fit-content;
-			padding: .2em .5em;
-			margin: 0 auto .5em;
-			background: orange;
-			font-weight: bold;
-			text-transform: uppercase;
-			font-size: 60%;
+
 		}
+	}
+}
+
+h1[data-label]::before {
+	content: attr(data-label);
+}
+
+.takeaway.slide h1,
+h1[data-label] {
+	font-weight: 100;
+
+	&::before {
+		display: block;
+		width: fit-content;
+		padding: .2em .5em;
+		margin: 0 auto .5em;
+		background: var(--label-color, orange);
+		font-weight: bold;
+		text-transform: uppercase;
+		font-size: 60%;
 	}
 }
 
@@ -628,15 +641,6 @@ span.poop {
 	display: none;
 }
 
-#homework-bar-chart {
-	display: grid;
-	grid-template-columns: auto 1fr;
-
-	& h1 {
-		grid-column-end: span 2;
-	}
-}
-
 #token-examples {
 	& code {
 		padding: .1em .5em;
@@ -701,14 +705,38 @@ var {
 		display: block;
 	}
 
-	& > li:nth-of-type(n + 2)::before {
+	& > li:nth-of-type(n + 2)::before,
+	&.cons::before {
 		content: " ⇒ ";
-		color: var(--accent2);
+		color: var(--accent4);
 	}
 
 	/* Not first, not last */
 	&.compact li:nth-child(n + 2):nth-last-child(n + 2) {
 		display: inline-block;
+	}
+
+	& .operator {
+		color: var(--accent3);
+	}
+
+	& .eq {
+		color: var(--accent2);
+	}
+}
+
+ol.math {
+	margin: 0;
+}
+
+#general-linear-range-mapping {
+	& em {
+		font-weight: bold;
+		opacity: .6;
+	}
+
+	& .delayed {
+		margin-top: 1em;
 	}
 }
 
@@ -793,28 +821,31 @@ var {
 	}
 }
 
-#svg-eyes {
+#svg-eyes,
+#svg-eyes-2 {
 	background: hsl(20, 40%, 70%);
 	--font-size-multiplier: .8;
-}
 
-	#svg-eyes svg {
+	& svg {
 		width: 90vw;
 	}
 
-	#svg-eyes #eye-white {
+	& #eye-white {
 		fill: white;
 	}
 
-	#svg-eyes #iris {
+	& #iris {
 		stroke: hsl(200, 50%, 50%);
 		stroke-width: 14;
 		fill: black;
 	}
 
-	#svg-eyes .second-eye {
+	& .second-eye {
 		x: 150px;
 	}
+}
+
+
 
 .note {
 	font-family: var(--font-handwritten);
