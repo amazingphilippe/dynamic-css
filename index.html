@@ -14,8 +14,7 @@
 </head>
 <body class="language-css"
 	data-markdown-elements="details.notes, .md, .takeaway.slide > h1, .credit"
-	data-balance-elements=".slide > h1:only-child, .takeaway.slide > h1, .speech.slide > h1"
-	data-load-plugins="docs">
+	data-balance-elements=".slide > h1:only-child, .takeaway.slide > h1, .speech.slide > h1">
 
 <header id="intro" class="slide dont-resize">
 	<h1>Dynamic CSS</h1>
@@ -24,9 +23,61 @@
 </header>
 
 <article class="slide" id="lea-verou">
-	<h1>Lea Verou (@leaverou)</h1>
+	<h1>Lea Verou
+		<a href="https://twitter.com">@leaverou</a>
+	</h1>
 
+	<img src="img/smiling-smaller.jpg" alt="">
 
+	<ul>
+		<li><strong>CSS WG</strong> Invited Expert since 2012</li>
+		<li><a href="https://lea.verou.me/publications/#specifications">Co-editor of 5 CSS specifications</a></li>
+		<li>Elected <strong>W3C TAG</strong> Member</li>
+		<li>Day job: Usable Programming @ <strong>MIT</strong> (research & teaching)</li>
+		<li>Started <a href="https://github.com/leaverou">dozens of open source projects</a>, some of them used on <a href="https://www.npmjs.com/package/prismjs">millions of websites</a></li>
+	</ul>
+</article>
+
+<article class="slide">
+	<h1 data-label="Welcome! 👋🏼" style="--label-color: var(--accent1)">Prerequisites</h1>
+
+	<ul>
+		<li>A solid understanding of modern CSS</li>
+		<li>Significant experience solving problems with CSS</li>
+		<li>A little bit of Sass (variables, @for loops)</li>
+		<li>A little bit of vanilla JS (events, basic DOM)</li>
+	</ul>
+</article>
+
+<article class="slide">
+	<h1>What are we going to learn?</h1>
+
+	<ul class="emoji-list">
+		<li style="list-style-type: '✅';">
+			How to use custom properties to…
+			<ul>
+				<li>…improve maintainability of our CSS</li>
+				<li>…create style hooks for customizable components</li>
+				<li>…create transitions and animations not feasible without JS</li>
+				<li>…cleanly separate style and behavior</li>
+			</ul>
+		</li>
+		<li style="list-style-type: '🤦🏽‍♀️';">Caveats, gotchas, and workarounds</li>
+	</ul>
+</article>
+
+<article class="slide">
+	<h1>What will you need?</h1>
+
+	<ul class="emoji-list">
+		<li style="list-style-image: url(img/chrome-logo.svg)">A recent Chrome</li>
+		<li style="list-style-type: '⌨️';">A functioning keyboard.</li>
+		<li style="list-style-type: '🤯'">Yup, that’s it!</li>
+	</ul>
+</article>
+
+<article class="confused slide">
+	<h1 class="balance-lines">A whole day discussing …CSS variables? Really?!</h1>
 </article>
 
 <article class="slide" id="preprocessors" data-steps="1">
@@ -66,6 +117,134 @@
 		And it works, for the most part.
 		But it's like hiring a Michelin star chef to fry eggs.
 		CSS Custom properties can do so much more!
+	</details>
+</article>
+
+<article class="isolated demo slide" id="cut-corner" style="--division: 65">
+	<textarea class="language-css">
+		.cut-corner {
+			padding: 1em;
+			clip-path: polygon(
+				calc(100% - var(--corner-size)) 0,
+				100% var(--corner-size),
+				100% 100%, 0 100%, 0 0
+			);
+		}
+
+		#a {
+			background: hotpink;
+			--corner-size: 1em;
+		}
+
+		#b {
+			background: skyblue;
+			--corner-size: 10px;
+		}
+	</textarea>
+	<textarea class="language-html">
+		<p class="cut-corner" id="a">CSS is awesome</p>
+		<p class="cut-corner" id="b">CSS is awesome</p>
+	</textarea>
+	<details class="notes">
+		CSS variables are scoped on elements, not curly bracket blocks,
+		taking full advantage of the browser’s DOM structure knowledge.
+
+		This means that we can set them and use them in entirely unrelated parts of
+		our CSS, and things just work beautifully.
+		Take a look at this example. How would you do it in Sass?
+
+		Try setting the corner size via an inline style.
+		That is definitely something you can't do with preprocessors!
+		You could also use any unit you want, even viewport units!
+
+		-------
+
+		*(We revisit this slide after discussing fallbacks)*
+
+		Note that these cutout corners can only be 45 degrees, we cannot have
+		different horizontal and vertical offsets.
+		How can we change this example so that we can also use
+		`--corner-size-x` and `--corner-size-y` (either both or just one)?
+
+		Does this work like a shorthand? If not, what's the difference?
+	</details>
+</article>
+
+<article class="takeaway slide">
+	<h1 class="no-md">
+		Sass variables are scoped on <em><code>{…}</code> blocks</em>,
+		CSS variables are scoped on <em>elements</em>
+		<div class="note">(lexical vs dynamic scope)</div>
+	</h1>
+</article>
+
+<article class="confused slide">
+	<h1 class="balance-lines">
+		<q>I thought we weren’t supposed to call them CSS variables?</q>
+	</h1>
+	<details class="notes bottom-right">
+		* Short answer: *it doesn't matter, use whatever term you want*
+		* [The spec itself](https://drafts.csswg.org/css-variables/) uses both.
+		* Yes, they are custom properties, but they can be used as reactive variables too.
+		Certain use cases naturally make more sense with one or the other term, others work with both.
+		* I will be using both terms throughout this workshop.
+		* Some people have suggested using the term "custom property" when setting (`--foo: ...`)
+		and "CSS variable" when getting (`var(--foo)`).
+		Feel free to adopt this if it resonates with you. Or don't. *It doesn't actually matter.*
+	</details>
+</article>
+
+<article class="question slide">
+	<h1>What’s up with :root?</h1>
+</article>
+
+<article class="slide">
+	<h1>Getting to the root of :root</h1>
+
+	<ul>
+		<li><code>:root</code> = the root element. <code>&lt;html></code> in HTML, <code>&lt;svg></code> in SVG etc</li>
+		<li>In HTML, <code>:root</code> = <code>html</code> but with higher specificity</li>
+		<li>Just a convention. Follow it or don’t.</li>
+	</ul>
+	<div style="display: flex; font-size: 70%;" class="delayed-children">
+		<pre><code>
+			/* This is fine */
+			:root {
+				--accent-color: #f06;
+				--font-body: FancyFont, serif;
+			}
+
+			html {
+				background: yellow;
+				min-height: 100vh;
+			}
+		</code></pre>
+		<pre style="margin: 0"><code>
+			/* This is also fine */
+			html {
+				--accent-color: #f06;
+				--font-body: FancyFont, serif;
+				background: yellow;
+				min-height: 100vh;
+			}
+		</code></pre>
+		<pre style="margin: 0"><code>
+			/* This is also fine */
+			:root {
+				--accent-color: #f06;
+				--font-body: FancyFont, serif;
+				background: yellow;
+				min-height: 100vh;
+			}
+		</code></pre>
+	</div>
+	<details class="notes">
+		In the past, one reason to prefer `:root` was also that there were scripts like [postcss-custom-properties](https://github.com/postcss/postcss-custom-properties)
+		that only preprocessed custom properties in `:root`.
+		However, these days this is no longer relevant,
+		not only because browser support for custom properties is great so the need to preprocess is pretty much gone,
+		but also because there are [PostCSS plugins](https://www.npmjs.com/package/postcss-css-variables) that do heavier transformations
+		and are not just restricted to `:root`.
 	</details>
 </article>
 
@@ -144,86 +323,12 @@
 	</details>
 </article>
 
-<article class="isolated demo slide" id="cut-corner" style="--division: 65">
-	<textarea class="language-css">
-		.cut-corner {
-			padding: 1em;
-			clip-path: polygon(
-				calc(100% - var(--corner-size)) 0,
-				100% var(--corner-size),
-				100% 100%, 0 100%, 0 0
-			);
-		}
-
-		#a {
-			background: hotpink;
-			--corner-size: 1em;
-		}
-
-		#b {
-			background: skyblue;
-			--corner-size: 10px;
-		}
-	</textarea>
-	<textarea class="language-html">
-		<p class="cut-corner" id="a">CSS is awesome</p>
-		<p class="cut-corner" id="b">CSS is awesome</p>
-	</textarea>
-	<details class="notes">
-		CSS variables are scoped on elements, not curly bracket blocks,
-		taking full advantage of the browser’s DOM structure knowledge.
-
-		This means that we can set them and use them in entirely unrelated parts of
-		our CSS, and things just work beautifully.
-		Take a look at this example. How would you do it in Sass?
-
-		Try setting the corner size via an inline style.
-		That is definitely something you can't do with preprocessors!
-		You could also use any unit you want, even viewport units!
-
-		-------
-
-		*(We revisit this slide after discussing fallbacks)*
-
-		Note that these cutout corners can only be 45 degrees, we cannot have
-		different horizontal and vertical offsets.
-		How can we change this example so that we can also use
-		`--corner-size-x` and `--corner-size-y` (either both or just one)?
-
-		Does this work like a shorthand? If not, what's the difference?
-	</details>
-</article>
-
-<article class="takeaway slide">
-	<h1 class="no-md">
-		Sass variables are scoped on <em><code>{…}</code> blocks</em>,
-		CSS variables are scoped on <em>elements</em>
-		<div class="note">(lexical vs dynamic scope)</div>
-	</h1>
-</article>
-
-<article class="confused slide">
-	<h1 class="balance-lines">
-		<q>I thought we weren’t supposed to call them CSS variables?</q>
-	</h1>
-	<details class="notes bottom-right">
-		* Short answer: *it doesn't matter, use whatever term you want*
-		* [The spec itself](https://drafts.csswg.org/css-variables/) uses both.
-		* Yes, they are custom properties, but they can be used as reactive variables too.
-		Certain use cases naturally make more sense with one or the other term, others work with both.
-		* I will be using both terms throughout this workshop.
-		* Some people have suggested using the term "custom property" when setting (`--foo: ...`)
-		and "CSS variable" when getting (`var(--foo)`).
-		Feel free to adopt this if it resonates with you. Or don't. *It doesn't actually matter.*
-	</details>
-</article>
-
 <section>
 	<header class="slide" id="inheritance-header" style="--icon: 💸; background-color: var(--accent2)">
 		<h1>Inheritance</h1>
 	</header>
 
-	<article class="isolated demo slide" id="inheritance" style="--division: 55">
+	<article class="isolated demo slide" id="inheritance" style="--division: 60">
 		<textarea class="language-css">
 			:root {
 				--primary-color: hsl(250 30% 40%);
@@ -239,9 +344,10 @@
 				background: var(--primary-color);
 			}
 
-			article h2 {
-				background: var(--primary-color);
-				color: white;
+			article h2 { color: white; }
+
+			article a {
+				color: var(--primary-color);
 			}
 
 			article .content {
@@ -281,6 +387,10 @@
 				margin: 0;
 			}
 
+			article a {
+				font-weight: bold;
+			}
+
 			article .content {
 				padding: .1em .5rem;
 			}
@@ -291,14 +401,14 @@
 			<article>
 				<h2>Blog Post 1</h2>
 				<div class="content">
-					<p>Blog post 1 content</p>
+					<p>Blog post 1 content with <a href="https://lea.verou.me">link</a></p>
 				</div>
 			</article>
 
 			<article class="alt">
 				<h2>Blog Post 2</h2>
 				<div class="content">
-					<p>Blog post 2 content</p>
+					<p>Blog post 2 content with <a href="https://lea.verou.me">link</a></p>
 				</div>
 			</article>
 		</textarea>
@@ -317,6 +427,7 @@
 			We can only overide a few variables in the media query and have all our styles adjust
 			instead of rewriting a bunch of rules.
 			Let's see how this works in practice with a dark mode version of this website.
+			[Codepen solution](https://codepen.io/leaverou/pen/deee6211f81af64b1a5ebb70f53e044e?editors=1100)
 
 			------
 
@@ -330,6 +441,27 @@
 	</article>
 
 	<article class="slide" data-insert="#inheritance"></article>
+
+	<article class="slide" data-type="Aside">
+		<div>
+			<p class="balance-lines">
+				If <code>color-scheme: light dark</code> is specified,<br>
+				<code>canvas</code> and <code>canvastext</code> act like this:</p>
+			<pre><code>
+				:root {
+					--canvas: white;
+					--canvastext: black;
+				}
+
+				@media (prefers-color-scheme: dark) {
+					:root {
+						--canvas: black;
+						--canvastext: white;
+					}
+				}
+			</code></pre>
+		</div>
+	</article>
 
 	<article class="question slide">
 		<h1>What if we don’t want inheritance?</h1>
@@ -366,6 +498,12 @@
 			`initial` is perfect for that: it resets the property to its initial value,
 			as if it had not been set at all, but still prevents it from inheriting.
 			We can always opt-in inheritance on a case-by-case basis by using the `inherit` keyword.
+
+			--------
+
+			There is a newer, more explicit way to disable inheritance: the [@property](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) rule.
+			It makes custom properties tremendously more powerful, and we will keep revisiting it
+			throughout this workshop.
 		</details>
 	</article>
 
@@ -375,36 +513,7 @@
 		</h1>
 	</article>
 
-	<article class="isolated demo slide" id="cut-corner">
-		<textarea class="language-css">
-			@property --corner-size {
-				syntax: "*";
-				inherits: false;
-			}
-
-			* {
-				clip-path: polygon(
-					calc(100% - var(--corner-size)) 0,
-					100% var(--corner-size),
-					100% 100%, 0 100%, 0 0
-				);
-			}
-
-			p {
-				padding: 1em;
-				background: skyblue;
-				--corner-size: 1em;
-			}
-		</textarea>
-		<textarea class="language-html">
-			<p>CSS is <mark>awesome</mark></p>
-		</textarea>
-		<details class="notes">
-			There is a newer, more explicit way to disable inheritance: the <code class="css">@property</code> rule.
-			It makes custom properties tremendously more powerful, and we will keep revisiting it
-			throughout this workshop.
-		</details>
-	</article>
+	<article class="slide" data-insert="#cut-corner-2"></article>
 
 	<article class="takeaway slide">
 		<h1>`@property` allows us to register our properties and control how they behave</h1>
@@ -519,6 +628,8 @@
 			We want to change the divider color, but the component does not expose a custom property for this.
 			Instead, it exposes two [parts](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) of the component: `divider` and `handle`.
 			We can define a custom property that allows us to set the color of both at once without having to drill down to the parts.
+
+			Note that this technique is not just limited to actual web components, it can be useful for any reusable blob of HTML & CSS (which is essentially what a component is).
 		</details>
 	</article>
 
@@ -561,14 +672,16 @@
 			The same technique allows us to define custom properties that style native components,
 			so we can avoid using messy prefixed pseudo-elements all over the place.
 
-			Here we have a rather simple example of styling a <code class="element">progress</code> element.
+			Here we have a rather simple example of styling a `&lt;progress>` element.
+			Every time we want to change the color of the progress bar, we have to override two separate rules.
+			Custom properties can help abstract away this ugliness.
 		</details>
 	</article>
 
 	<article class="takeaway slide">
 		<h1>
 			Custom properties inherit down Shadow&nbsp;DOM boundaries
-			<div class="note">(just like any inheritable property)</div>
+			<div class="note">(and are not reset by all: initial)</div>
 		</h1>
 		<details class="notes">
 			Unlike other inheritable properties however,
@@ -598,8 +711,16 @@
 			</div>
 		</textarea>
 		<textarea class="language-css">
-			.fancy-photos img {
+			.fancy-photos {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 3vw;
+			}
 
+			.fancy-photos img {
+				width: 100%;
+				box-sizing: border-box;
+				aspect-ratio: 1 / 1;
 				object-fit: cover;
 				transform: scale(var(--scale))
 				           rotate(var(--rotate));
@@ -611,14 +732,15 @@
 			}
 		</textarea>
 		<style class="demo" data-slide media="not all">
+			body {
+				margin: 4vw;
+			}
+
 			.fancy-photos img {
-				--size: 20vw;
-				width: var(--size);
-				height: var(--size);
-				margin: .3em;
-				padding: .2em;
+				margin: 1vw;
+				padding: 1vw;
 				background: white;
-				box-shadow: 0 .05em .1em rgb(0 0 0 / .1);
+				box-shadow: 0 .1vw .5vw rgb(0 0 0 / .3);
 			}
 		</style>
 
@@ -644,6 +766,7 @@
 			different fallbacks per usage, **for the same custom property**
 			* Note that an alternative to using these fallbacks is to register our properties and provide initial values.
 				- We cannot do both. Once we declare an initial value, the fallback is never triggered.
+			* [Codepen solution](https://codepen.io/leaverou/pen/1f5c9aa156dd2f1902b4932e95716b66?editors=1100)
 		</details>
 	</article>
 
@@ -658,6 +781,8 @@
 			<br>
 			<div style="background: orange">No --accent-color set</div>
 			<br>
+			<div style="background: orange">--accent-color: initial</div>
+			<br>
 			<div style="background: red">No CSS variables support</div>
 		</div>
 
@@ -665,6 +790,14 @@
 			background: red;
 			background: var(--accent-color, orange);
 		</code></pre>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>
+			The `var()` fallback is applied when there is no value, or when it resolves to `initial`
+			<div class="note">(and some other cases we'll see later)</div>
+		</h1>
+
 	</article>
 
 	<article class="takeaway slide">
@@ -736,7 +869,10 @@
 	</article>
 
 	<article class="slide takeaway">
-		<h1>Use `@supports` to provide more elaborate fallback styling</h1>
+		<h1>Use `@supports` to provide more elaborate fallback styling
+			<div class="note">And avoid @supports not (…)</div>
+		</h1>
+
 	</article>
 
 	<article class="browser-support slide">
@@ -785,6 +921,7 @@
 
 	<article class="slide takeaway">
 		<h1>There is currently no way to use `@supports` to detect `@property` support</h1>
+		<details class="notes">Why does this not work? We'll see in the next section, when we talk about parse time vs computed time values.</details>
 	</article>
 
 	<article class="slide">
@@ -1006,6 +1143,12 @@
 
 	<article class="takeaway slide" id="button-takeaway">
 		<h1>CSS Variables enable theming<br> independent of CSS structure</h1>
+		<details class="notes">
+			This is one of the most important takeaways from today.
+			When custom properties are used as styling hooks, a component can
+			change its internal CSS structure entirely, without anyone needing to change their
+			code that uses and customizes said component.
+		</details>
 	</article>
 </section>
 
@@ -1035,8 +1178,46 @@
 		</h1>
 	</article>
 
+	<article class="takeaway slide" data-type="Aside">
+		<h1>What is a Computed Value?</h1>
+
+		<ul class="delayed-children">
+			<li>
+				<strong>Parse time (specified values):</strong>
+				When the actual CSS code is read, parsed, and converted to a tree of objects (CSSOM). One and done operation.
+				<div class="note">E.g. this is when duplicate properties are removed, and the shorthand properties are expanded.</div>
+			</li>
+			<li>
+				<strong>Computed Values:</strong>
+				An intermediate runtime representation where most relative values are absolutized but not all.
+				<div class="note">E.g. this is when relative units are resolved to px</div>
+			</li>
+			<li>
+				<strong>Used values:</strong>
+				The final stage, when values are fully resolved to be used for painting.
+				<div class="note">E.g. this is when % widths are resolved to px</div>
+			</li>
+		</ul>
+		<details class="notes">
+			* The computed value is the value that is transferred from parent to child during inheritance.
+			For historical reasons, it is not necessarily the value returned by the `getComputedStyle()` function, which sometimes returns used values.
+			* In general, the computed value resolves the specified value as far as possible without laying out the document or performing other expensive or hard-to-parallelize operations,
+			such as resolving network requests or retrieving values other than from the element and its parent.
+			* Read more:
+				- [Computed Values](https://www.w3.org/TR/css-cascade-4/#computed)
+				- [Used Values](https://www.w3.org/TR/css-cascade-4/#used)
+		</details>
+	</article>
+
 	<article class="takeaway slide">
 		<h1 class="no-balance-lines">IACVT → `unset`</h1>
+		<details class="notes">
+			So what does IACVT mean in practice?
+			A property that is IACVT is treated as being set to [`unset`](https://developer.mozilla.org/en-US/docs/Web/CSS/unset).
+			If you haven't heard of it, `unset` is a very useful keyword that resolves to `initial` for non-inherited properties,
+			and `inherit` for inherited properties.
+			E.g. `* { all: unset; }` would be the most quick & dirty CSS reset 😉
+		</details>
 	</article>
 
 	<article class="slide color-reveal" id="invalid-values">
@@ -1124,7 +1305,7 @@
 
 			Unfortunately, that's not the case.
 			Registered properties only enforce their syntax at computed value time,
-			and become IAVCT if they do not match it.
+			and become IACVT if they do not match it.
 			The reason for this is that otherwise,
 			registering new properties (which could happen at any time),
 			would trigger a reparse of the entire stylesheet.
@@ -1136,6 +1317,10 @@
 			The syntax of registered properties is checked at computed value time,
 			not parse time
 		</h1>
+		<details class="notes">
+			This is why we cannot detect `@property` through `@supports`:
+			`@supports` checks for parse-time syntax.
+		</details>
 	</article>
 
 	<article class="question slide">
@@ -1187,6 +1372,8 @@
 			.bar-chart {
 				display: flex;
 				align-items: flex-end;
+				gap: 1.5em;
+				padding: 0 1.5em;
 				font-size: 60%;
 				background: linear-gradient(to bottom, hsla(0,0%,100%,.1) 50%, transparent 0) top / 100% 20%;
 				border: 2px solid white;
@@ -1205,7 +1392,6 @@
 				background: deeppink;
 				box-sizing: border-box;
 				padding: .3em 0;
-				margin: 0 .9em;
 				font-weight: bold;
 				letter-spacing: -.04em;
 				word-wrap: break-word;
@@ -1226,12 +1412,12 @@
 		<details class="notes">
 			1. **Base**: Fill in the CSS missing to utilize the `--p` variables for the percentages.
 				You will find Flexbox helpful for the layout.
-				2. **Going further:** Here are a few improvements you could make:
-				    1. Introduce properties to further customize the chart. Some ideas:
-				        * `--bar-color`
-				        * `--bar-width`
-				        * `--bar-spacing`
-				        * `--bands`
+			2. **Going further:** Introduce properties to further customize the chart. Some ideas:
+				* `--bar-color`
+				* `--bar-width`
+				* `--bar-spacing`
+				* `--band-count`
+			3. Question: Why use `--bar-color` or `--bar-width` when we could just override the corresponding properties?
 		</details>
 	</article>
 
@@ -1284,6 +1470,10 @@
 			article h2 {
 				padding: .3rem .5rem;
 				margin: 0;
+			}
+
+			article a {
+				font-weight: bold;
 			}
 
 			article .content {
@@ -1377,6 +1567,7 @@
 								--depth: 0;
 							}
 							:root > * {
+								/* ⚠️ Cycle! */
 								--depth: calc(var(--depth) + 1);
 							}
 						</code></pre>
@@ -1399,7 +1590,7 @@
 		</details>
 	</article>
 
-	<article class="future slide">
+	<!-- <article class="future slide">
 		<h1>Possible <a href="https://github.com/w3c/csswg-drafts/issues/2864#issuecomment-816280875">future</a>?</h1>
 
 		<pre><code>
@@ -1420,7 +1611,7 @@
 			It was [accepted by the CSS WG](https://github.com/w3c/csswg-drafts/issues/2864#issuecomment-816280875),
 			though note that any implementation is likely several years away.
 		</details>
-	</article>
+	</article> -->
 
 	<article class="slide">
 		<h1>Combining Sass and CSS variables</h1>
@@ -1535,25 +1726,44 @@
 		</table>
 	</article> -->
 
-	<article class="codepen slide" data-type="Practice time!">
+	<article class="speaker-only codepen slide" data-type="Practice time!">
 		<h1>Flexible pie chart</h1>
 		<iframe src="https://codepen.io/leaverou/embed/preview/c701c26e89a4e964e14e4b2ca0a6845a?height=265&theme-id=dark&default-tab=html,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
 			</iframe>
 	</article>
 
-	<article class="codepen slide allow-attendee" data-type="Practice time!">
+	<article class="codepen slide allow-attendee" id="flexible-pie-chart-exercise" data-type="Practice time!">
 		<h1>Flexible pie chart</h1>
-		<iframe src="https://codepen.io/leaverou/embed/preview/c701c26e89a4e964e14e4b2ca0a6845a?height=265&theme-id=dark&default-tab=html,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-			</iframe>
+		<iframe scrolling="no" title="Pie chart with up to N slices (start)" src="https://codepen.io/leaverou/embed/preview/c19d45c29a103d9324e1f8ab5fbb16d1?default-tab=result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 		<p><a href="https://codepen.io/leaverou/pen/c19d45c29a103d9324e1f8ab5fbb16d1">Open in new tab</a></p>
+		<details class="notes">
+			Here we have a hardcoded pie chart, which is not that useful.
+			We want to make it into a reusable pie chart component, allowing the values and colors to be customized via `--colorN` and `--valueN` variables,
+			with appropriate defaults so they don't all need to be set at once (if a color is not set, it should be `hsl(N * 25 80% 50%))` where N is the index of the slice).
+			How can we do that? [Codepen solution](https://codepen.io/leaverou/pen/036a5e69bf8c0929b182df5a6dbac6b8)
+
+			The pure CSS solution works, but is very repetitive. How can we use Sass (or any other preprocessor) to eliminate the repetition?
+			Useful links:
+			- [Sass variables](https://sass-lang.com/documentation/variables)
+			- [Sass interpolation](https://sass-lang.com/documentation/interpolation)
+			- [Sass @for loops](https://sass-lang.com/documentation/at-rules/control/for)
+			- [Codepen solution](https://codepen.io/leaverou/pen/c701c26e89a4e964e14e4b2ca0a6845a)
+		</details>
 	</article>
+
+</section>
+
+<section>
+	<header class="slide" style="--icon: 👽; --icon-2: 🪐; background-color: var(--color-aqua)">
+		<h1>Space Toggle</h1>
+	</header>
 
 	<article class="slide color-reveal" id="invalid-values">
 		<div class="delayed-children">
 			<br>
 			<div style="background: orange;">--accent-color:;</div>
 			<br>
-			<div style="background: orange;">--accent-color: ;</div>
+			<div style="background: transparent;">--accent-color: ;</div>
 		</div>
 
 		<pre style="margin-top: 2em; overflow: visible"><code>
@@ -1600,34 +1810,32 @@
 				--box-shadow-blur: initial;
 				--box-shadow-spread: initial;
 				--box-shadow-color: initial;
-				--box-shadow-inset: initial;
 
 				box-shadow: var(--box-shadow-x, 0)
 				            var(--box-shadow-y, 0)
 				            var(--box-shadow-blur)
 				            var(--box-shadow-spread, 0)
-				            var(--box-shadow-color, currentColor)
-				            var(--box-shadow-inset, );
+				            var(--box-shadow-color, currentColor);
 			}
 
+			img {
+				transition: .3s;
+				--box-shadow-y: .05em;
+				--box-shadow-blur: .1em;
+				--box-shadow-color: rgb(0 0 0 / .2);
+			}
+
+			img:hover {
+				--box-shadow-blur: .5em;
+				--box-shadow-y: .5em;
+			}
+		</textarea>
+		<style class="demo" data-slide media="not all">
 			img {
 				--size: 25vw;
 				width: var(--size);
 				height: var(--size);
 				object-fit: cover;
-
-				transition: .3s;
-				--box-shadow-y: .05em;
-				--box-shadow-blur: .1em;
-				--box-shadow-color: rgb(0 0 0 / .1);
-			}
-
-			img:hover {
-				--box-shadow-blur: .2;
-			}
-		</textarea>
-		<style class="demo" data-slide media="not all">
-			img {
 				margin: .2em;
 				padding: .2em;
 				background: white;
@@ -1645,6 +1853,12 @@
 			<img src="img/cat9.jpg" alt="">
 			<img src="img/cat10.jpg" alt="">
 		</textarea>
+		<details class="notes">
+			Here we have used a bunch of `--box-shadow-*` properties to emulate longhands for `box-shadow`.
+			They all have fallbacks except `--box-shadow-blur`, so that that property can be used to "activate" the shadow
+			(otherwise every single element would have a shadow).
+			Notice that this is missing a `--box-shadow-inset`. How can we add that? What fallback do we use?
+		</details>
 	</article>
 
 	<article class="takeaway slide">
@@ -2166,6 +2380,7 @@
 			Let's first go the more verbose but clear way: defining individual properties
 			for each component.
 			Be careful of inheritance caveats!
+			How can we ensure that the resulting color is still readable?
 
 			--------------
 
@@ -2179,6 +2394,8 @@
 			What happens if we want to make the link color lighter on hover?
 			With this approach, we'd need to redefine the entire color.
 			Let's look at a slightly different approach.
+			Instead of specifying the link lightness inline, we could assign it to a variable as well, a local one.
+			Then on hover, we can just override the variable.
 
 			<!-- -----------------
 
@@ -2218,26 +2435,7 @@
 		</h1>
 	</article>
 
-	<article class="slide" data-type="Aside">
-		<div>
-			<p class="balance-lines">
-				If <code>color-scheme: light dark</code> is specified,<br>
-				<code>canvas</code> and <code>canvastext</code> act like this:</p>
-			<pre><code>
-				:root {
-					--canvas: white;
-					--canvastext: black;
-				}
-
-				@media (prefers-color-scheme: dark) {
-					:root {
-						--canvas: black;
-						--canvastext: white;
-					}
-				}
-			</code></pre>
-		</div>
-	</article> -->
+	 -->
 
 	<article class="isolated demo slide" id="migraine" style="--division: 55">
 		<textarea class="language-css">
@@ -2330,6 +2528,10 @@
 			migraine intensity to the CSS so it can be used for styling.
 			Let's try to modify the CSS so that stronger migraines are more red
 			and lighter ones are more yellow!
+
+			We want `--intensity: 0` to correspond to a hue of `50` (warm yellow)
+			and `--intensity: 5` to correspond to a hue of `0` (pure red).
+
 		</details>
 	</article>
 
@@ -2585,7 +2787,7 @@
 			We can use Sass to define a generic `--index` property that we can then
 			use wherever we want in our CSS.
 
-			How does our code handle the case of exceeding the number of siblings
+			Going further: How does our code handle the case of exceeding the number of siblings
 			we have accounted for? Can we improve things?
 		</details>
 	</article>
@@ -3546,6 +3748,211 @@
 	</article>
 </section>
 <!-- End Strings -->
+
+<section>
+	<!--
+	Dependencies: none really, but it would be *weird* if it comes before
+	colors or numbers
+	 -->
+	<header class="slide" style="--icon: 🖼;">
+		<h1>Images</h1>
+	</header>
+
+	<article class="horizontal demo slide" id="url" style="--division: 50">
+		<textarea class="language-css">
+			article {
+				background: url("img/cat1.jpg") center / cover;
+			}
+		</textarea>
+	</article>
+
+	<article class="slide" id="url-cases">
+		<table>
+			<tr>
+				<td><pre><code>
+					--img: "cat1.jpg";
+					background: url("img/" var(--img));
+				</code></pre></td>
+				<td style="color: red">CSS limitation</td>
+			</tr>
+			<tr class="delayed">
+				<td><pre><code>
+					--img: "img/cat1.jpg";
+					background: url(var(--img));
+				</code></pre></td>
+				<td style="color: red">CSS bug</td>
+			</tr>
+			<tr class="delayed">
+				<td><pre><code>
+					--img: url("img/cat1.jpg");
+					background: var(--img);
+				</code></pre></td>
+				<td style="color: yellowgreen">Works!</td>
+			</tr>
+		</table>
+		<details class="notes">
+			The first case doesn't work because CSS lacks string concatenation syntax.
+			You may be familiar with concatenating strings in the `content` property
+			by just placing them next to each other,
+			but that is syntax specific to that property,
+			not a CSS wide concatenation mechanism.
+			Note that there is [consensus to add such syntax in some form](https://github.com/w3c/csswg-drafts/issues/542),
+			though the exact details have not been worked out yet.
+
+			The second case doesn’t work due to a …bug in CSS itself.
+			When `url()` was introduced in CSS 1, it allowed both quoted and unquoted URLs.
+			However, this flexibility comes at a hefty price:
+			to parse `url()` tokens, if their parameter is not a quoted string,
+			everything within needs to be assumed to be a relative URL,
+			and that includes `var()` references!
+			In this case, the unquoted `(` inside `url()` will cause a parse error,
+			so the entire declaration is thrown out as invalid.
+			There is a new function that was recently introduced, [`src()`](https://drafts.csswg.org/css-values-4/#urls),
+			which will fix this by only allowing strings to specify the URL,
+			however there are no implementations yet.
+
+			Including the entire `url()` token in the variable works,
+			though as we will see in the next few slides, it's not without its warts.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>
+			Custom properties can only contain entire `url()` tokens, not parts thereof
+			<div class="note">(for now)</div>
+		</h1>
+	</article>
+
+	<!-- <article class="horizontal isolated demo slide" id="letitsnow">
+		<textarea class="language-css">
+			:root {
+				--snow: url('data:image/svg+xml,\
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
+					<text y=".9em" font-size="20">❄️</text>\
+				</svg>');
+				--background: linear-gradient(black, navy);
+				background: var(--snow) 0 0 / 5em;
+			}
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			:root {
+				background: linear-gradient(hsl(200, 40%, 15%), hsl(200, 40%, 45%));
+				font-size: 250%;
+				height: 100vh;
+			}
+		</style>
+		<!--
+		@keyframes snow {
+			50% { background-position-x: 0; }
+			to { background-position-y: 5em, 3em, 10em }
+		}
+
+		:root {
+			--snow: url('data:image/svg+xml,\
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
+				<text y=".9em" font-size="20">❄️</text>\
+			</svg>');
+			background: var(--snow) 0 0 / 5em, var(--snow) 1em 0 / 3em, var(--snow) 2em 0 / 10em;
+			animation: snow 3s infinite linear;
+		}
+		--
+		<details class="notes">
+			So how could entire `url()` tokens be useful to store in CSS variables?
+			One perhaps non-obvious example is SVG data URIs.
+			You can specify the SVG once, and then re-use it as many times as you need.
+			You could even build an icon library!
+			Note that while this is a case that preprocessor variables could handle just fine,
+			the CSS they would produce would be rife with duplication, and potentially huge,
+			whereas when using native CSS variables, the data URI is only specified once.
+		</details>
+	</article> -->
+
+	<article class="slide">
+		<h1>How do relative URLs resolve?</h1>
+		<pre><code>
+			/* a.css */
+			--img: url("a.png");
+
+			/* b.css */
+			background-image: var(--img);
+		</code></pre>
+
+		<p class="delayed">
+			<a href="https://codepen.io/leaverou/project/editor/DNepLE">Let’s check out what happens!</a>
+		</p>
+
+		<details class="notes">
+			If you’re interested in the reasoning behind the decision,
+			[csswg-drafts#757](https://github.com/w3c/csswg-drafts/issues/757)
+			is the thread to dig into!
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Relative URLs in custom properties resolve at the point of usage</h1>
+		<div class="note delayed balance-lines">Registering as "&lt;url>" or "&lt;image>" will allow us to change this in the future (but doesn’t work yet)</p>
+	</article>
+
+	<!-- <article class="slide">
+		<h1>What about now?</h1>
+		<pre><code>
+			@property --img {
+				syntax: "&lt;url> | none";
+				initial-value: none;
+				inherits: false;
+			}
+
+			/* a.css */
+			--img: url("a.png");
+
+			/* b.css */
+			background-image: var(--img);
+		</code></pre>
+
+		<details class="notes">
+			This should resolve in `a.css`, however Chrome appears to be buggy with
+			`&lt;url>` registered properties right now.
+		</details>
+	</article> -->
+
+	<!-- <article class="takeaway slide">
+		<h1>Relative URLs in custom properties resolve at the point of usage
+			 ***unless* they are registered as `&lt;url>`**
+		</h1>
+	</article> -->
+
+	<!-- <article class="isolated demo slide" id="icon-links" style="--division: 60">
+		<textarea class="language-css">
+			a::before {
+				content: "";
+				background: var(--icon) bottom / contain no-repeat;
+				display: inline-block;
+				width: 1em;
+				height: .8em;
+				margin-right: .3em;
+			}
+
+			a[href^="https://twitter.com"]:before {
+				--icon: url("https://twitter.com/favicon.ico");
+			}
+
+			a[href^="https://github.com"]:before {
+				--icon: url("https://github.com/favicon.ico");
+			}
+
+			a[href*="https://smashingmagazine.com"]:before,
+			a[href*="https://smashingconf.com"]:before {
+				--icon: url("https://www.smashingmagazine.com/images/favicon/favicon.png");
+			}
+		</textarea>
+		<textarea class="language-html">
+			<p>Hi, I’m Lea.
+			I’m quite active on <a href="https://twitter.com/leaverou">Twitter</a>
+			and <a href="https://github.com/leaverou">GitHub</a>.
+			I hope you are enjoying <a href="https://smashingconf.com/online-workshops/workshops/lea-verou#/">this workshop</a>.
+		</textarea>
+	</article> -->
+</section>
 
 <section class="language-javascript">
 	<header class="slide" style="--icon: ⚙️; background-color: var(--accent3)">

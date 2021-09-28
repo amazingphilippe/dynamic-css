@@ -1,5 +1,7 @@
 var $ = Bliss, $$ = Bliss.$;
 
+let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 $$(".takeaway.slide").forEach((slide, i) => slide.style.setProperty("--takeaway", i+1));
 
 // Make external links open in a new tab
@@ -37,29 +39,45 @@ $$("ol.math > li, .math:not(ol)").forEach(eq => {
 
 $$("header.slide[style*='--icon']").forEach(slide => {
 	let icon = slide.style.getPropertyValue("--icon").trim();
+	let icon2 = slide.style.getPropertyValue("--icon-2").trim() || icon;
 	let style = "font-size: 30px;";
-	let styleFlipped = "transform: scaleX(-1); transform-origin: center; transform-box: fill-box;"
+	let style2 = icon === icon2? "transform: scaleX(-1); transform-origin: center; transform-box: fill-box;" : "";
 
 	slide.style.setProperty("--icon-svg", `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text style="${style}" x="20" y="50">${icon}</text></svg>')`)
-	slide.style.setProperty("--icon-svg-flipped", `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text style="${style} ${styleFlipped}" x="20" y="50">${icon}</text></svg>')`)
+	slide.style.setProperty("--icon-svg-2", `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text style="${style} ${style2}" x="20" y="50">${icon2}</text></svg>')`)
 
 });
+
+
 
 (async () => {
 
 await Inspire.importsLoaded;
 
 // Reduced slide deck for attendees to follow along with certain activities
-// if (Inspire.profile !== "speaker") {
-// 	let keep = `header, footer, .demo, .browser-support, .allow-attendee, [data-insert]`;
-// 	let remove = `.speaker-only, .demo.reveal`;
-// 	let slidesToRemove = $$(`.slide:not(${keep}), ${remove}`);
+if (Inspire.profile !== "speaker") {
+	let remove = `.color-reveal, .demo.reveal, .speaker-only`;
+	let slidesToRemove = $$(`.slide:is(${remove})`);
 
-// 	slidesToRemove.forEach(slide => slide.remove());
+	slidesToRemove.forEach(slide => slide.remove());
 
-// 	// Remove empty sections
-// 	$$("header.slide:only-child").forEach(slide => slide.remove());
-// }
+	// Remove empty sections
+	$$("header.slide:only-child").forEach(slide => slide.remove());
+}
+
+// Wait 10s to ensure all Markdown has run (we really need a promise for this…)
+await delay(10 * 1000);
+
+for (let a of $$('details.notes a[href^="https://codepen.io"]')) {
+	if (a.textContent.toLowerCase().trim().includes("solution")) {
+		a.target = "_blank";
+		a.addEventListener("click", evt => {
+			if (!confirm("Are you sure? Once you see the solution, you cannot unsee it.")) {
+				evt.preventDefault();
+			}
+		}, {once: true});
+	}
+}
 
 })();
 

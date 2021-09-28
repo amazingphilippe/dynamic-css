@@ -160,7 +160,7 @@ section > header.slide {
 	justify-content: center;
 	--background-size: 5em;
 	background: var(--icon-svg) 0 / var(--background-size) var(--background-size),
-	var(--icon-svg-flipped) calc(var(--background-size) / 2) calc(var(--background-size) / 2) / var(--background-size) var(--background-size) var(--accent1);
+	var(--icon-svg-2) calc(var(--background-size) / 2) calc(var(--background-size) / 2) / var(--background-size) var(--background-size) var(--accent1);
 }
 
 section > header.slide:target {

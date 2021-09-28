@@ -1,4 +1,8 @@
 .bar-chart {
+	display: flex;
+	align-items: flex-end;
+	gap: 1.5em;
+	padding: 0 1.5em;
 	font-size: 60%;
 	background: linear-gradient(to bottom, hsla(0,0%,100%,.1) 50%, transparent 0) top / 100% 20%;
 	border: 2px solid white;
@@ -10,10 +14,13 @@
 }
 
 .bar-chart > div {
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	width: 2em;
 	background: deeppink;
 	box-sizing: border-box;
 	padding: .3em 0;
-	margin: 0 .9em;
 	font-weight: bold;
 	letter-spacing: -.04em;
 	word-wrap: break-word;
@@ -21,16 +28,6 @@
 	color: white;
 }
 
-/* Solution: */
-.bar-chart {
-	display: flex;
-	align-items: flex-end;
-}
-
 .bar-chart > div {
-	display: flex;
-	align-items: flex-end;
-	justify-content: center;
-	width: 2em;
 	height: var(--p);
 }

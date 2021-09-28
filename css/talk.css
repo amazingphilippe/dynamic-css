@@ -46,6 +46,28 @@
 			text-decoration: none;
 		}
 
+#lea-verou {
+	align-items: start
+}
+
+#lea-verou h1 {
+		text-align: left
+	}
+
+#lea-verou h1 a[href^="https://twitter.com"] {
+			display: block;
+			font-size: 60%;
+			color: var(--color-aqua);
+			text-decoration: none;
+		}
+
+#lea-verou img {
+		position: absolute;
+		top: 1em;
+		right: 1em;
+		border-radius: 50%;
+	}
+
 .slide[data-steps] .swap::before {
 	content: var(--content);
 }
@@ -683,6 +705,15 @@ var {
 	font-family: Cambria Math, Cambria, serif;
 }
 
+ul.emoji-list > li,
+li.emoji-list {
+	padding-left: .3em
+}
+
+ul.emoji-list > li[style*="list-style-image:"]::marker, li.emoji-list[style*="list-style-image:"]::marker {
+		font-size: 1.6em;
+	}
+
 .math {
 	font-weight: 400;
 	list-style-type: none
@@ -898,3 +929,16 @@ button.run {
 img[alt="Mavo"] {
 	filter: drop-shadow(0 0 .2em rgba(0,0,0,.5));
 }
+
+details.notes a[href^="https://codepen.io"] {
+	white-space: nowrap
+}
+
+details.notes a[href^="https://codepen.io"]::before {
+		content: " ";
+		background: url(../img/codepen.svg) center / contain no-repeat;
+		display: inline-block;
+		width: 1em;
+		height: .8em;
+		margin-right: .2em;
+	}
