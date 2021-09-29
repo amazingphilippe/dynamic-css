@@ -42,10 +42,10 @@
 	<h1 data-label="Welcome! 👋🏼" style="--label-color: var(--accent1)">Prerequisites</h1>
 
 	<ul>
-		<li>A solid understanding of modern CSS</li>
-		<li>Significant experience solving problems with CSS</li>
-		<li>A little bit of Sass (variables, @for loops)</li>
-		<li>A little bit of vanilla JS (events, basic DOM)</li>
+		<li>A solid understanding of <strong>modern CSS</strong></li>
+		<li>Significant experience <strong>solving problems with CSS</strong></li>
+		<li>A little bit of <strong>Sass</strong> (variables, @for loops)</li>
+		<li>A little bit of <strong>vanilla JS</strong> (events, basic DOM)</li>
 	</ul>
 </article>
 
@@ -152,6 +152,7 @@
 		This means that we can set them and use them in entirely unrelated parts of
 		our CSS, and things just work beautifully.
 		Take a look at this example. How would you do it in Sass?
+		The same code using Sass variables would produce a [syntax error](https://codepen.io/leaverou/pen/3ae47e6e2b1587c66d6b2545ab26de79?editors=1100).
 
 		Try setting the corner size via an inline style.
 		That is definitely something you can't do with preprocessors!
@@ -1348,6 +1349,25 @@
 		</textarea>
 	</article>
 
+	<article class="slide">
+		<h1>What about this?</h1>
+
+		<pre><code>
+			font-size: 20px;
+			font-size: clamp(16px, 100 * var(--font-size-scale), 24px);
+		</code></pre>
+
+		<p class="note">What happens in browsers that don’t support clamp()?</p>
+
+		<details class="notes">
+			Because when parsing, the browser doesn't have the values of custom properties,
+			it cannot know if after substitution, the resulting values will be valid.
+			Therefore, it optimistically assumes they will be valid, and throws away any other fallback values.
+			So, even though the unsupported function is right there, and not inside a variable, like in our previous examples,
+			once `var()` is introduced, these types of fallbacks go out of the window, and `@supports` is the only way.
+		</details>
+	</article>
+
 	<article class="slide allow-attendee" id="homework-bar-chart">
 		<h1 data-label="Exercise">Customizable bar chart component</h1>
 		<style data-slide media="not all">
@@ -2094,6 +2114,8 @@
 			we need to adjust both when the base value changes.
 			One way to avoid this is to define optional *scaling factors* in our MQs, and
 			use them defensively in our base CSS.
+
+			[Codepen solution](https://codepen.io/leaverou/pen/77d09a1015c57d8d6f40c0fbfda3d839?editors=1100)
 		</details>
 	</article>
 
@@ -2778,7 +2800,7 @@
 		</h1>
 	</article>
 
-	<article class="codepen slide" id="staggered">
+	<!-- <article class="codepen slide" id="staggered">
 		<iframe scrolling="no" title="Staggered slide in" src="https://codepen.io/leaverou/embed/preview/wvJpEMQ?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 		<details class="notes">
 			It is common to want to apply various effects, especially animations,
@@ -2794,7 +2816,7 @@
 
 	<article class="takeaway slide">
 		<h1>A generic `--index` can be used for many effects, including staggered animations</h1>
-	</article>
+	</article> -->
 </section>
 <!-- End Animations -->
 
@@ -2945,12 +2967,14 @@
 		</details>
 	</article>
 
-	<article class="horizontal isolated demo slide" id="currying" style="--division: 70;">
+	<article class=" isolated demo slide" id="currying" style="--division: 60;">
 		<textarea class="language-css">
 			* {
 				--3d-with-shadow: initial;
-				text-shadow: 1px 1px hsl(0 0% 80%), 2px 2px hsl(0 0% 75%),
-				             3px 3px hsl(0 0% 70%), 4px 4px hsl(0 0% 65%),
+				text-shadow: 1px 1px hsl(0 0% 80%),
+				             2px 2px hsl(0 0% 75%),
+				             3px 3px hsl(0 0% 70%),
+				             4px 4px hsl(0 0% 65%),
 				             4px 4px var(--3d-with-shadow);
 			}
 
@@ -2971,7 +2995,7 @@
 			}
 		</style>
 		<textarea class="language-html">
-			<h1>Extruded text</h1>
+			<h1>Deep purple text</h1>
 		</textarea>
 		<details class="notes">
 			A useful application of the fact that variable values can contain
@@ -2982,7 +3006,7 @@
 
 	<article class="takeaway slide">
 		<h1>CSS Variables let you create <br>single property mixins
-		<div class="delayed note">(like function currying, in programmerese)</div></h1>
+		<div class="delayed note">(like function currying)</div></h1>
 	</article>
 
 	<article class="slide" data-insert="#viewport"></article>
@@ -3705,6 +3729,13 @@
 		<details class="notes">
 			Let's try to use this trick to display a percentage on each bar.
 			What problem do you see?
+
+			----------
+
+			We can convert any number to an integer by assigning it to a
+			property registered as `&lt;integer>` and doing some (even trivial)
+			math with it to trigger the conversion.
+
 		</details>
 	</article>
 
@@ -4185,14 +4216,17 @@
 			Let's change the background gradient to draw a circle.
 			Note that we did not need to change anything in the JS.
 
+			Can we use this code as a starting point to draw a "ripple effect", similar to [that of Material Design](https://material.io/components/buttons)?
+			If you're not familiar with it, this means that after clicking, the semi-transparent white circle
+			grows in radius until it fills the entire button and simultaneously decreases in opacity until it fades out.
+
 			Let's now change the code to draw this effect as the pointer moves over the element
-			([solution](https://codepen.io/leaverou/pen/56f9b2ff238636c5117d87436fb55c9b)).
+			([solution](https://codepen.io/leaverou/pen/acb3c50c99c89ed9aec9f141c6b1653a)).
 		</details>
 	</article>
 
 	<article class="md slide">
 		# A note on performance
-
 
 		- Event delegation (monitoring events on `document`)
 		gives you maximum flexibility and maintainability, but can be slower
@@ -4205,8 +4239,12 @@
 		</details>
 	</article>
 
-	<article class="codepen slide" id="ripple-effect">
+	<article class="codepen slide speaker-only" id="ripple-effect">
 		<iframe src="https://codepen.io/leaverou/embed/preview/acb3c50c99c89ed9aec9f141c6b1653a?height=265&theme-id=dark&default-tab=html,result&editable=true" loading="lazy"></iframe>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Range mapping is also useful to avoid registering a ton of properties</h1>
 	</article>
 
 	<!-- <article class="slide allow-attendee">

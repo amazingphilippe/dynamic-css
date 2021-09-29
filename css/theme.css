@@ -51,6 +51,10 @@ code, textarea, pre, div.editor {
 	text-align: left;
 }
 
+div.prism-live.prism-live {
+	font-size: clamp(16px, calc(var(--font-size-multiplier, 1) * 100%), 28px);
+}
+
 pre {
 	overflow: auto;
 }
@@ -159,7 +163,7 @@ section > header.slide {
 	align-items: center;
 	justify-content: center;
 	--background-size: 5em;
-	background: var(--icon-svg) 0 / var(--background-size) var(--background-size),
+	background: var(--icon-svg) 0 0 / var(--background-size) var(--background-size),
 	var(--icon-svg-2) calc(var(--background-size) / 2) calc(var(--background-size) / 2) / var(--background-size) var(--background-size) var(--accent1);
 }
 
