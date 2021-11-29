@@ -67,6 +67,58 @@
 </article>
 
 <article class="slide">
+	<h1>How will we learn it?</h1>
+
+	<ul class="emoji-list">
+		<li style="list-style-type: '👩🏽‍🏫'">
+			Teaching
+			<ul>
+				<li>Regular slides</li>
+				<li>Live coding slides</li>
+				<li>Mini-quizzes</li>
+			</ul>
+		</li>
+		<li style="list-style-type: '🏋🏽‍♀️'">Practice</li>
+		<li style="list-style-type: '📚'">Homework</li>
+	</ul>
+	<details class="notes">
+		There are two main components to this workshop: teaching, and practice.
+
+		When you hear "teaching", you may imagine passive listening, but this part of the workshop is hands-on as well.
+		There are a few more classic slides, but the bulk of what we learn will be taught by interactive live coding demos where I explain as I code, and you can
+		choose to either watch, or follow along, it’s up to you.
+
+		You can code directly in the slides, or open each example in CodePen and work there, if you’re more comfortable with that.
+		If you run into any issues while doing this, you can always interrupt me to ask.
+
+		When we are about to learn something potentially surprising, it is often preceded by "mini-quizzes", where I ask you what result you expect a small snippet of code to produce
+		and you guess, either freely or between predefined answers.
+		These quizzes are not testing your knowledge, since to answer correctly they'd require knowing something we haven’t learned yet.
+		They just aim to demonstrate how surprising aspects of CSS may be, and how code we think we fully understand can often have surprising results
+		because of concepts we may not know.
+
+		There are also exercises, i.e. mini-projects where you practice what we have learned so far on your own, ask any questions along the way,
+		and after a while we reconvene to code the solution together. This may often involve multiple steps.
+
+		A more freeform mini-project will be given as homework during our 2 week break, but there will be no homework between the other sessions, as they are in consecutive days.
+
+		There is no over-arching large project that we build gradually throughout this workshop.
+		While there is value in that approach, it is not my approach of choice.
+		Those who know me from other workshops, or my book know I prefer smaller, self-contained examples and exercises that are designed to let you practice specific things
+		and do not involve grunt work that is unrelated to what we're learning.
+		This means that if for any reason you have trouble with one exercise, it does not affect how you do in the rest.
+
+		The breakdown of each session into teaching and practicing is not constant.
+		The first session is mainly teaching, so we build a solid foundation, whereas the other three are more balanced.
+
+		Your companion slides include almost anything that my slides include, except the quizzes (otherwise it wouldn’t be fun).
+		At the end of the workshop, you will get the full version that includes the quizzes as well.
+
+		Please do not skip ahead on your slide deck. Slides are not designed to be standalone, and you’re missing out on what is currently being taught.
+	</details>
+</article>
+
+<article class="slide">
 	<h1>What will you need?</h1>
 
 	<ul class="emoji-list">
@@ -77,7 +129,8 @@
 </article>
 
 <article class="confused slide">
-	<h1 class="balance-lines">A whole day discussing …CSS variables? Really?!</h1>
+	<!-- <h1 class="balance-lines">A whole day discussing …CSS variables? Really?!</h1> -->
+	<h1 class="balance-lines">A whole workshop discussing …CSS variables? Really?!</h1>
 </article>
 
 <article class="slide" id="preprocessors" data-steps="1">
@@ -427,7 +480,7 @@
 			One of the major ways we take advantage of this inheritance is media queries.
 			We can only overide a few variables in the media query and have all our styles adjust
 			instead of rewriting a bunch of rules.
-			Let's see how this works in practice with a dark mode version of this website.
+			Let's see how this works in practice with a crude dark mode version of this website.
 			[Codepen solution](https://codepen.io/leaverou/pen/deee6211f81af64b1a5ebb70f53e044e?editors=1100)
 
 			------
@@ -462,6 +515,12 @@
 				}
 			</code></pre>
 		</div>
+		<details class="notes">
+			Related:
+
+			- [Initial value of `color` is `canvastext`, not `black`](https://drafts.csswg.org/css-color/#the-color-property)
+			- [The `color-scheme` property](https://drafts.csswg.org/css-color-adjust/#color-scheme-prop)
+		</details>
 	</article>
 
 	<article class="question slide">
@@ -601,6 +660,9 @@
 			and they are not affected by any potential `all: unset` CSS resets.
 			Users of Web components cannot directly style them (that’s the whole point of encapsulation),
 			but custom properties can provide style hooks for customizing aspects of the component.
+
+			Here we see how the [Shoelace Image Comparer](https://shoelace.style/components/image-comparer) component
+			is using CSS variables as style hooks.
 
 			Photo by Jari Hytönen on Unsplash
 		</details>
@@ -935,7 +997,7 @@
 		</code></pre>
 	</article>
 
-	<!-- <article class="slide color-reveal">
+	<article class="slide color-reveal">
 		<div class="delayed-children">
 			<br>
 			<div style="background: orange">--accent-color: initial</div>
@@ -986,7 +1048,7 @@
 		<h1>Out of all CSS wide keywords, only `initial` actually triggers the fallback
 			<div class="note">(and anything that resolves to it)</div>
 		</h1>
-	</article> -->
+	</article>
 
 	<article class="slide" id="multiple-default-values" data-steps="1">
 		<h1>Multiple fallbacks?</h1>
@@ -1087,33 +1149,45 @@
 	</article>
 
 	<article class="takeaway slide">
-		<h1><abbr title="Don’t Repeat Yourself">DRY</abbr> fallback strategies</h1>
+		<h1><abbr title="Don’t Repeat Yourself">DRY</abbr> fallback strategy 1: Fallback in a separate variable</h1>
 
-		<ol>
-			<li>
-				Fallback in a variable
-				<pre><code>
-					--color-initial: black;
-					...
-					color: var(--color, var(--color-initial));
-				</code></pre>
-			</li>
-			<li>
-				Pseudo-private properties
-				<pre><code>
-					--__color: var(--color, black);
-					...
-					color: var(--__color);
-				</code></pre>
-			</li>
-		</ol>
+		<pre><code>
+			--color-initial: black;
+			...
+			color: var(--color, var(--color-initial));
+		</code></pre>
+
 		<details class="notes">
-			The first way allows you to use the same property internally
-			that you expose to other people, but it makes each usage far more verbose.
+			This way allows you to use the same property internally
+			that you expose to other people, but it makes each usage extremely verbose.
 
-			The second way is more concise, but it suffers from the wart that
-			you have to use a different property internally than the one you expose
-			and it's only private by convention.
+			One advantage is that it allows consumers of your component *to override the defaults*,
+			which no other method allows.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1><abbr title="Don’t Repeat Yourself">DRY</abbr> fallback strategy 2: <br>Pseudo-private properties</h1>
+
+		<pre><code>
+			--_color: var(--color, black);
+			...
+			color: var(--_color);
+		</code></pre>
+
+		<details class="notes">
+			I’ve written more about this method in [this article](https://lea.verou.me/2021/10/custom-properties-with-defaults/),
+			and in most cases, it’s my method of choice.
+
+			With this method, you use different properties internally than the ones you expose to the outside world,
+			which have the defaults "baked in".
+
+			The advantages of this method is that it doesn’t add any extra verbosity, and it is self-documenting.
+			It’s like the code is saying: "This is my CSS API, and these are the defaults for each property".
+			For a demonstration of this, take a look at [this example of a switch-styled checkbox](https://codepen.io/leaverou/pen/PoKPQYE)
+
+			One downside of this method is that it’s easy to forget the `_` when writing CSS, then be puzzled why the CSS is broken.
+			Another downside is that these are only private by convention, but hey, that worked for JS for over 20 years!
 		</details>
 	</article>
 
@@ -1132,9 +1206,10 @@
 
 		<details class="notes">
 			In most cases, `@property` offers a far better solution,
-			with the main drawback being its browser support.
+			with the main drawbacks being its browser support and the fact that it’s tree scoped
+			(essentially global, unless you’re in Shadow DOM).
 
-			However, do note that the other approaches
+			Another downside is that the other approaches
 			allow for different defaults per use,
 			whereas an `@property` rule is global.
 		</details>
@@ -1149,6 +1224,81 @@
 			When custom properties are used as styling hooks, a component can
 			change its internal CSS structure entirely, without anyone needing to change their
 			code that uses and customizes said component.
+		</details>
+	</article>
+
+	<article class="slide allow-attendee" id="homework-bar-chart">
+		<h1 data-label="Exercise">Customizable bar chart component</h1>
+		<style data-slide media="not all">
+			@import url("css/bar-chart.css");
+		</style>
+		<div class="bar-chart">
+			<div style="--p: 95%">A</div>
+			<div style="--p: 100%">B</div>
+			<div style="--p: 95%">C</div>
+			<div style="--p: 38%">D</div>
+			<div style="--p: 84.21%">E</div>
+			<div style="--p: 49%">F</div>
+		</div>
+	</article>
+
+	<article class="isolated demo slide" id="bar-chart">
+		<textarea class="language-css">
+			:root {
+				background: hsl(200, 15%, 20%);
+			}
+
+			.bar-chart {
+				display: flex;
+				align-items: flex-end;
+				gap: 1.5em;
+				padding: 0 1.5em;
+				font-size: 60%;
+				background: linear-gradient(to bottom, hsla(0,0%,100%,.1) 50%, transparent 0) top / 100% 20%;
+				border: 2px solid white;
+				border-top: 0;
+				border-right: 0;
+				width: fit-content;
+				height: calc(100vmin - 12em);
+				margin: 2em auto;
+			}
+
+			.bar-chart > div {
+				display: flex;
+				align-items: flex-end;
+				justify-content: center;
+				width: 2em;
+				background: deeppink;
+				box-sizing: border-box;
+				padding: .3em 0;
+				font-weight: bold;
+				letter-spacing: -.04em;
+				word-wrap: break-word;
+				line-height: 1;
+				color: white;
+			}
+		</textarea>
+		<textarea class="language-html">
+			<div class="bar-chart">
+				<div style="--p: 95%">A</div>
+				<div style="--p: 100%">B</div>
+				<div style="--p: 95%">C</div>
+				<div style="--p: 38%">D</div>
+				<div style="--p: 84.21%">E</div>
+				<div style="--p: 49%">F</div>
+			</div>
+		</textarea>
+		<details class="notes">
+			1. **Base**: Fill in the CSS missing to utilize the `--p` variables for the percentages.
+				You will find Flexbox helpful for the layout.
+			2. **Going further:** Introduce properties to further customize the chart. Some ideas:
+				* `--bar-color`
+				* `--bar-width`
+				* `--bar-spacing`
+				* `--band-count`
+			3. Question: Why use `--bar-color` or `--bar-width` when we could just override the corresponding properties?
+
+			[CodePen solution](https://codepen.io/leaverou/pen/6e8a25602a965ce9b016cc5b266316aa)
 		</details>
 	</article>
 </section>
@@ -1205,8 +1355,8 @@
 			* In general, the computed value resolves the specified value as far as possible without laying out the document or performing other expensive or hard-to-parallelize operations,
 			such as resolving network requests or retrieving values other than from the element and its parent.
 			* Read more:
-				- [Computed Values](https://www.w3.org/TR/css-cascade-4/#computed)
-				- [Used Values](https://www.w3.org/TR/css-cascade-4/#used)
+				  * [Computed Values](https://www.w3.org/TR/css-cascade-4/#computed)
+				  * [Used Values](https://www.w3.org/TR/css-cascade-4/#used)
 		</details>
 	</article>
 
@@ -1365,79 +1515,6 @@
 			Therefore, it optimistically assumes they will be valid, and throws away any other fallback values.
 			So, even though the unsupported function is right there, and not inside a variable, like in our previous examples,
 			once `var()` is introduced, these types of fallbacks go out of the window, and `@supports` is the only way.
-		</details>
-	</article>
-
-	<article class="slide allow-attendee" id="homework-bar-chart">
-		<h1 data-label="Exercise">Customizable bar chart component</h1>
-		<style data-slide media="not all">
-			@import url("css/bar-chart.css");
-		</style>
-		<div class="bar-chart">
-			<div style="--p: 95%">A</div>
-			<div style="--p: 100%">B</div>
-			<div style="--p: 95%">C</div>
-			<div style="--p: 38%">D</div>
-			<div style="--p: 84.21%">E</div>
-			<div style="--p: 49%">F</div>
-		</div>
-	</article>
-
-	<article class="isolated demo slide" id="bar-chart">
-		<textarea class="language-css">
-			:root {
-				background: hsl(200, 15%, 20%);
-			}
-
-			.bar-chart {
-				display: flex;
-				align-items: flex-end;
-				gap: 1.5em;
-				padding: 0 1.5em;
-				font-size: 60%;
-				background: linear-gradient(to bottom, hsla(0,0%,100%,.1) 50%, transparent 0) top / 100% 20%;
-				border: 2px solid white;
-				border-top: 0;
-				border-right: 0;
-				width: fit-content;
-				height: calc(100vmin - 12em);
-				margin: 2em auto;
-			}
-
-			.bar-chart > div {
-				display: flex;
-				align-items: flex-end;
-				justify-content: center;
-				width: 2em;
-				background: deeppink;
-				box-sizing: border-box;
-				padding: .3em 0;
-				font-weight: bold;
-				letter-spacing: -.04em;
-				word-wrap: break-word;
-				line-height: 1;
-				color: white;
-			}
-		</textarea>
-		<textarea class="language-html">
-			<div class="bar-chart">
-				<div style="--p: 95%">A</div>
-				<div style="--p: 100%">B</div>
-				<div style="--p: 95%">C</div>
-				<div style="--p: 38%">D</div>
-				<div style="--p: 84.21%">E</div>
-				<div style="--p: 49%">F</div>
-			</div>
-		</textarea>
-		<details class="notes">
-			1. **Base**: Fill in the CSS missing to utilize the `--p` variables for the percentages.
-				You will find Flexbox helpful for the layout.
-			2. **Going further:** Introduce properties to further customize the chart. Some ideas:
-				* `--bar-color`
-				* `--bar-width`
-				* `--bar-spacing`
-				* `--band-count`
-			3. Question: Why use `--bar-color` or `--bar-width` when we could just override the corresponding properties?
 		</details>
 	</article>
 
@@ -1610,7 +1687,7 @@
 		</details>
 	</article>
 
-	<!-- <article class="future slide">
+	<article class="future slide">
 		<h1>Possible <a href="https://github.com/w3c/csswg-drafts/issues/2864#issuecomment-816280875">future</a>?</h1>
 
 		<pre><code>
@@ -1631,7 +1708,7 @@
 			It was [accepted by the CSS WG](https://github.com/w3c/csswg-drafts/issues/2864#issuecomment-816280875),
 			though note that any implementation is likely several years away.
 		</details>
-	</article> -->
+	</article>
 
 	<article class="slide">
 		<h1>Combining Sass and CSS variables</h1>
@@ -1908,7 +1985,7 @@
 				padding: .6em 1em;
 				border-radius: .2em;
 				color: white;
-				font: 600 100%/1 sans-serif;
+				font: 600 100%/1 system-ui, sans-serif;
 				cursor: pointer;
 			}
 		</style>
@@ -1927,6 +2004,15 @@
 			We can even alias ` ` and `initial` to `--ON` and `--OFF` to make the code more readable.
 			This is called "space toggle". It's a hack, but sometimes it's the only way to do things.
 			Like this example? You can find a more elaborate one [here](https://lea.verou.me/2020/10/the-var-space-hack-to-toggle-multiple-values-with-one-custom-property/).
+
+			[CodePen Solution](https://codepen.io/leaverou/pen/51f5cd77ad5b9c701a33826430874b8a?editors=1100)
+
+			----------
+
+			Space Toggle can be very useful in certain cases, but is not without its limitations.
+			The main limitation is that you can only use it to activate parts of a property,
+			but you cannot provide an *"else"* clause.
+			We could work around this by manually setting an `--is-not-shiny` property, but it’s clumsy.
 		</details>
 	</article>
 
@@ -1981,6 +2067,8 @@
 			<div class="note">(Space Toggle)</div>
 		</h1>
 	</article>
+
+	<article class="slide" data-insert="#space-toggle"></article>
 
 	<!-- <article class="slide" data-steps="1">
 		<style data-slide media="not all">
@@ -2315,8 +2403,8 @@
 	</article>
 
 	<article class="takeaway slide">
-		<h1>Use hue-based aliases of accent colors to make intent clear</h1>
-		<pre><code>--color-red: var(--color-primary);</code></pre>
+		<h1>Use both accent colors and hue-based aliases to make intent clear</h1>
+		<pre><code>--color-primary: var(--color-red);</code></pre>
 	</article>
 
 	<article class="isolated demo slide" id="color-variations" style="--division: 55">
@@ -2462,7 +2550,9 @@
 	<article class="isolated demo slide" id="migraine" style="--division: 55">
 		<textarea class="language-css">
 			article {
-				/* To-do: Make color depend on intensity */
+				/* To-do: Make color depend on intensity
+					1-5 intensity to roughly 50-0 hue (warm yellow to pure red)
+				 */
 				--color: hsl(0 70% 40%);
 				background: var(--color);
 			}
@@ -2473,6 +2563,11 @@
 
 			article .content {
 				background: hsl(0 0% 100% / .8);
+			}
+
+			meter {
+				filter: grayscale() contrast(3);
+				mix-blend-mode: screen;
 			}
 		</textarea>
 		<style class="demo" data-slide media="not all">
@@ -2551,9 +2646,11 @@
 			Let's try to modify the CSS so that stronger migraines are more red
 			and lighter ones are more yellow!
 
-			We want `--intensity: 0` to correspond to a hue of `50` (warm yellow)
+			We want `--intensity: 0` to correspond to a hue of roughly `50` (warm yellow)
 			and `--intensity: 5` to correspond to a hue of `0` (pure red).
 
+			- [Solution on CodePen](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1)
+			<!-- - [Future: Safari 15+ solution](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1) -->
 		</details>
 	</article>
 
@@ -2586,7 +2683,7 @@
 			- Custom properties that store only colors
 			- Functions to manipulate colors
 			- `color-mix(in lch, var(--color) 80%, white)`
-			- Relative syntax: `hsl(from var(--color) h s 80%)`
+			- Relative syntax: `hsl(from var(--color) h s calc(l * 1.2))`
 			- Better color spaces for adjustment: `lch(from var(--color) 80% c h)`
 		</div>
 	</article>
