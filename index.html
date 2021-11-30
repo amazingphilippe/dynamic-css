@@ -1366,7 +1366,7 @@
 	</article>
 
 	<article class="takeaway slide">
-		<h1 class="no-balance-lines">IACVT → `unset`</h1>
+		<h1 class="no-balance-lines"><abbr title="Invalid At Computed Value Time">IACVT</abbr> → `unset`</h1>
 		<details class="notes">
 			So what does IACVT mean in practice?
 			A property that is IACVT is treated as being set to [`unset`](https://developer.mozilla.org/en-US/docs/Web/CSS/unset).
@@ -1392,7 +1392,7 @@
 		<h1>Fallbacks can also trigger IACVT</h1>
 	</article>
 
-	<article class="slide heading-3x3" id="iavct-cascade">
+	<article class="slide heading-3x3 speaker-only" id="iavct-cascade">
 		<h1>Are these equivalent?</h1>
 		<pre><code>
 			background: gold;
@@ -1417,14 +1417,14 @@
 		<p class="supported">
 			LCH: <span class="swatch lch-pink" style=""></span>
 		</p>
-		<p class="not-supported delayed">
-			No LCH: <span class="swatch" style="background: gold;"></span>
+		<p class="not-supported">
+			No LCH: <span class="swatch delayed" style="background: gold;"></span>
 		</p>
-		<p class="not-supported delayed">
-			No LCH: <span class="swatch transparent"></span>
+		<p class="not-supported">
+			No LCH: <span class="swatch transparent delayed"></span>
 		</p>
-		<p class="not-supported delayed">
-			No LCH: <span class="swatch transparent"></span>
+		<p class="not-supported">
+			No LCH: <span class="swatch transparent delayed"></span>
 		</p>
 		<details class="notes">
 			We are used to the classic cascade behavior,
@@ -1502,6 +1502,12 @@
 				background: var(--primary-color);
 			}
 		</textarea>
+		<details class="notes">
+			Yes, this is quite verbose and annoying.
+			There are plans to allow `@supports` to be nested in regular CSS rules.
+			There are also plans for an inline [`first-supported()`](https://github.com/w3c/csswg-drafts/issues/5055) function.
+			Both of these are quite far into the future though.
+		</details>
 	</article>
 
 	<article class="slide">
@@ -1509,7 +1515,7 @@
 
 		<pre><code>
 			font-size: 20px;
-			font-size: clamp(16px, 100 * var(--font-size-scale), 24px);
+			font-size: clamp(16px, 1em * var(--font-size-scale), 24px);
 		</code></pre>
 
 		<p class="note">What happens in browsers that don’t support clamp()?</p>
@@ -1530,6 +1536,7 @@
 			:root {
 				--primary-color: hsl(250 30% 40%);
 				--secondary-color: hsl(190 40% 40%);
+				--tinted-background: hsl(0 0% 100% / .8);
 			}
 
 			h1 {
@@ -1554,7 +1561,7 @@
 			}
 
 			article .content {
-				background: hsl(0 0% 100% / .8);
+				background: var(--tinted-background);
 			}
 		</textarea>
 		<style class="demo" data-slide media="not all">
@@ -2073,8 +2080,6 @@
 		</h1>
 	</article>
 
-	<article class="slide" data-insert="#space-toggle"></article>
-
 	<!-- <article class="slide" data-steps="1">
 		<style data-slide media="not all">
 			article.slide[data-step] {
@@ -2100,6 +2105,446 @@
 		</details>
 	</article> -->
 </section>
+
+<section id="tokens">
+	<!-- <header class="slide" style="--icon: 🪙;">
+		<h1>Tokens</h1>
+	</header> -->
+
+	<!-- <article class="isolated demo slide" style="--division: 60">
+		<textarea class="language-css">
+			button.play {
+				font-size: 200%;
+				box-sizing: content-box;
+				padding: .2em;
+				width: 2em;
+				line-height: 1;
+				height: 2em;
+				margin: .2em;
+				color: slategray;
+				border: .2em solid;
+				border-radius: 50%;
+			}
+
+			button.play.initial {
+				background: conic-gradient(
+						at right,
+						transparent 67%,
+						currentColor 0 83%,
+						transparent 0
+					) 58% 50% / 1.1em 1.5em no-repeat hsl(220 20% 85%);
+			}
+
+			button.play.playing {
+				background: linear-gradient(
+					currentColor, currentColor
+				) center / 1em 1em no-repeat hsl(220 20% 85%);
+			}
+		</textarea>
+		<textarea class="language-html">
+			<button title="Play" class="play initial"> </button>
+			<button title="Pause" class="play playing"> </button>
+		</textarea>
+		<details class="notes">
+			Here we used a trick with gradients to create a triangle and a square,
+			since the corresponding Unicode characters are unreliable.
+			However, this is mixed in with the rest of our CSS,
+			making our code hard to understand and creating repetition.
+			Let's abstract the symbol drawing away from the rest of the styling.
+			What do you notice?
+		</details>
+	</article> -->
+
+
+</section>
+
+<section id="colors-section">
+	<!--
+	Dependencies: values are token lists
+	 -->
+	<header class="slide" style="--icon: 🌈; background-color: var(--accent2)">
+		<h1>Colors</h1>
+	</header>
+
+
+
+	<article class="isolated demo slide" id="color-aliases">
+		<textarea class="language-css">
+			:root {
+				--accent-color-1: hsl(200 100% 50%);
+				--accent-color-2: hsl(0 70% 50%);
+			}
+
+			button {
+				--color: var(--accent-color-1);
+				border: .1em solid;
+				border-radius: .2em;
+				color: var(--color);
+				background: transparent;
+			}
+
+			button:hover {
+				background-color: var(--color);
+				border-color: transparent;
+				color: white;
+			}
+
+			button.danger {
+				--color: var(--accent-color-2);
+			}
+
+			h1 {
+				color: var(--accent-color-1);
+			}
+
+			h2 {
+				color: var(--accent-color-2);
+			}
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			button {
+				padding: .6em 1em;
+				margin: .1em;
+				font-weight: bold;
+				cursor: pointer;
+			}
+
+			h1, h2 {
+				line-height: 1;
+			}
+
+			h1 {
+				font-size: 300%;
+				font-weight: 300;
+			}
+
+			h2 {
+				font-size: 120%;
+				font-weight: -.04em;
+			}
+		</style>
+		<textarea class="language-html">
+			<h1>Heading 1</h1>
+			<h2>Heading 2</h2>
+			<p>Text</p>
+			<button>Submit</button>
+			<button class="danger">Cancel</button>
+
+			<p>More text</p>
+			<button>Back</button>
+			<button class="danger">Delete</button>
+		</textarea>
+		<details class="notes">
+			Abstracting away colors can be useful to make it easier
+			to change an entire theme by only changing a few variables.
+			However, it needs to be done with care, because colors also have meaning.
+			Here, we use red to signify that an action is destructive, a common convention.
+			What happens if in a future redesign, the secondary accent color becomes green?
+			Now the UI communicates the *opposite* message!
+
+			The problem is that there is a mismatch between our *intent*
+			and our code. Our code says "give me any accent color",
+			while our intent was to get a red color that fits in nicely with the current theme,
+			regardless of whether it's the primary or secondary color.
+
+			One strategy to avoid this is to use *aliases*:
+			in the same place you set your accent colors,
+			you can also set hue-based variables.
+			Then you use the accent color variables where you just need an accent color,
+			and the hue based ones when you need a specific hue to communicate something.
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Use both accent colors and hue-based aliases to make intent clear</h1>
+		<pre><code>--color-primary: var(--color-red);</code></pre>
+	</article>
+
+	<article class="isolated demo slide" id="migraine" style="--division: 55">
+		<textarea class="language-css">
+			article {
+				/* To-do: Make color depend on intensity
+					1-5 intensity to roughly 50-0 hue (warm yellow to pure red)
+				 */
+				--color: hsl(0 70% 40%);
+				background: var(--color);
+			}
+
+			article h2 {
+				color: white;
+			}
+
+			article .content {
+				background: hsl(0 0% 100% / .8);
+			}
+
+			meter {
+				filter: grayscale() contrast(3);
+				mix-blend-mode: screen;
+			}
+		</textarea>
+		<style class="demo" data-slide media="not all">
+			body {
+				font-size: 100%;
+				line-height: 1.5;
+			}
+
+			article {
+				border-radius: .3rem;
+				overflow: hidden;
+				margin: 1em 0;
+			}
+
+			article h2 {
+				padding: .3rem .5rem;
+				margin: 0;
+			}
+
+			article .content {
+				padding: .1em .5rem;
+			}
+		</style>
+		<textarea class="language-html">
+			<h1>🤕 Migraine log</h1>
+
+			<article style="--intensity:1">
+				<h2>
+					<time datetime="2021-05-19T20:45">May 19th, 2021 at 20:45</time>
+					until <time datetime="2021-05-20T01:15">01:15</time>
+					<meter max="5" value="2"></meter>
+				</h2>
+				<div class="content">
+					<p>Started after dinner</p>
+				</div>
+			</article>
+
+			<article style="--intensity:3">
+				<h2>
+					<time datetime="2021-05-18T10:50">May 18th, 2021 at 10:50</time>
+					until <time datetime="2021-05-18T15:15">15:15</time>
+					<meter max="5" value="4"></meter>
+				</h2>
+				<div class="content">
+					<p>Upon waking up</p>
+				</div>
+			</article>
+
+			<article style="--intensity:;">
+				<h2>
+					<time datetime="2021-05-16T15:00">May 16th, 2021 at 15:00</time>
+					until <time datetime="2021-05-16T20:00">20:00</time>
+					<meter max="5"></meter>
+				</h2>
+				<div class="content">
+					<p>Headache for several hours, then turned to migraine</p>
+				</div>
+			</article>
+
+			<article style="--intensity:5;">
+				<h2>
+					<time datetime="2021-05-12T07:00">May 12th, 2021 at 07:00</time>
+					until <time datetime="2021-05-12T16:30">16:30</time>
+					<meter max="5" value="5"></meter>
+				</h2>
+				<div class="content">
+					<p>Long tail off</p>
+				</div>
+			</article>
+		</textarea>
+		<details class="notes">
+			Here we have some repeated HTML to display some data,
+			which could have been generated from a server-side templating script.
+			We are using an `--intensity` CSS variable to communicate the
+			migraine intensity to the CSS so it can be used for styling.
+			Let's try to modify the CSS so that stronger migraines are more red
+			and lighter ones are more yellow!
+
+			We want `--intensity: 0` to correspond to a hue of roughly `50` (warm yellow)
+			and `--intensity: 5` to correspond to a hue of `0` (pure red).
+
+			- [Solution on CodePen](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1)
+			<!-- - [Future: Safari 15+ solution](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1) -->
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>We can use variables to set color components to create dynamic palettes</h1>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>To provide a fallback for an entire calculation, use an intermediate variable</h1>
+	</article>
+
+	<article class="isolated demo slide" id="color-variations" style="--division: 55">
+		<textarea class="language-css">
+			:root {
+				--primary-color: hsl(250 30% 40%);
+				--secondary-color: hsl(190 40% 40%);
+			}
+
+			h1 {
+				color: var(--secondary-color);
+			}
+
+			article {
+				background: var(--primary-color);
+			}
+
+			article h2 {
+				background: var(--primary-color);
+				color: white;
+			}
+
+			article a {
+				color: var(--secondary-color);
+				filter: brightness(60%);
+			}
+
+			article .content {
+				background: hsl(0 0% 100% / .8);
+			}
+		</textarea>
+		<style class="demo" data-slide media="not all">
+			body {
+				font-size: 100%;
+				line-height: 1.5;
+			}
+
+			article {
+				border-radius: .3rem;
+				overflow: hidden;
+				margin: 1em 0;
+			}
+
+			article h2 {
+				padding: .3rem .5rem;
+				margin: 0;
+			}
+
+			article a {
+				font-weight: bold;
+			}
+
+			article .content {
+				padding: .1em .5rem;
+			}
+		</style>
+		<textarea class="language-html">
+			<h1>Lea Verou's blog</h1>
+
+			<article>
+				<h2>Blog Post 1</h2>
+				<div class="content">
+					<p>Blog post 1 content with <a href="https://lea.verou.me">link</a></p>
+				</div>
+			</article>
+
+			<article class="alt">
+				<h2>Blog Post 2</h2>
+				<div class="content">
+					<p>Blog post 2 content with <a href="https://lea.verou.me">link</a></p>
+				</div>
+			</article>
+		</textarea>
+		<details class="notes">
+			Here we are using a variety of hacks to create color variations:
+			`filter: brightness()` or semi-transparent white overlays.
+
+			[Soon](https://drafts.csswg.org/css-color-5) we will be able to manipulate colors directly,
+			but currently this is only supported in Safari (and very partially Firefox).
+
+			What can we do meanwhile? Define more granular custom properties, what else? 😁
+
+			Let's first go the more verbose but clear way: defining individual properties
+			for each component.
+			Be careful of inheritance caveats!
+			How can we ensure that the resulting color is still readable?
+
+			--------------
+
+			Can we eliminate verbosity?
+			We can store the hue and saturation in the same property.
+
+			We can also store lighter and darker variations and use those throughout.
+
+			---------------
+
+			What happens if we want to make the link color lighter on hover?
+			With this approach, we'd need to redefine the entire color.
+			Let's look at a slightly different approach.
+			Instead of specifying the link lightness inline, we could assign it to a variable as well, a local one.
+			Then on hover, we can just override the variable.
+
+			<!-- -----------------
+
+			We can even override some components in media queries
+			to create a rudimentary dark mode!
+			[Read more about this technique](https://lea.verou.me/2021/03/inverted-lightness-variables/) -->
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>We can specify each color component via separate variables and do math with it
+			<div class="note">(but it's verbose AF)</div>
+		</h1>
+	</article>
+
+	<article class="takeaway slide" data-type="Aside">
+		<h1>Use `clamp()` to ensure readability</h1>
+	</article>
+
+	<article class="slide" data-insert="#color-variations"></article>
+
+	<article class="takeaway slide">
+		<h1>We can store multiple color components in the same variable</h1>
+	</article>
+
+	<article class="slide" data-insert="#color-variations"></article>
+
+	<article class="takeaway slide">
+		<h1>`--background-color-*` and `--text-color-*` for independent tweaking</h1>
+	</article>
+
+	<!-- <article class="slide" data-insert="#color-variations"></article>
+
+	<article class="takeaway slide">
+		<h1>`--l-*` lightness variables for a quick & dirty dark mode
+			<div class="note delayed">lch() will make this less dirty</div>
+		</h1>
+	</article>
+
+	 -->
+
+
+
+	<article class="slide">
+		<h1>Color manipulation, today</h1>
+
+		<div class="md balance-lines">
+			- Separate `--primary-color-*` properties
+			- Hue and saturation can be stored together
+			- Precomputed variations: `--primary-color-lighter`, `--primary-color-darker` etc
+			- `--background-color-*` and `--text-color-*` Properties
+		</div>
+		<p class="delayed note">All of the above can coexist!</p>
+	</article>
+
+	<article class="slide" data-insert="#color-variations"></article>
+
+	<article class="slide">
+		<h1 style="--emoji: '🌈'">The future is colorful</h1>
+
+		<div class="md balance-lines">
+			- Custom properties that store only colors
+			- Functions to manipulate colors
+			- `color-mix(in lch, var(--color) 80%, white)`
+			- Relative syntax: `hsl(from var(--color) h s calc(l * 1.2))`
+			- Better color spaces for adjustment: `lch(from var(--color) calc(l * 1.2) c h)`
+			- Currently only Safari 15+ 😢
+		</div>
+	</article>
+</section>
+<!-- End Colors -->
 
 <section>
 	<header class="slide" style="--icon: 📲; background-color: var(--accent2)">
@@ -2257,443 +2702,6 @@
 	</article>
 
 </section>
-
-<section id="tokens">
-	<!-- <header class="slide" style="--icon: 🪙;">
-		<h1>Tokens</h1>
-	</header> -->
-
-	<!-- <article class="isolated demo slide" style="--division: 60">
-		<textarea class="language-css">
-			button.play {
-				font-size: 200%;
-				box-sizing: content-box;
-				padding: .2em;
-				width: 2em;
-				line-height: 1;
-				height: 2em;
-				margin: .2em;
-				color: slategray;
-				border: .2em solid;
-				border-radius: 50%;
-			}
-
-			button.play.initial {
-				background: conic-gradient(
-						at right,
-						transparent 67%,
-						currentColor 0 83%,
-						transparent 0
-					) 58% 50% / 1.1em 1.5em no-repeat hsl(220 20% 85%);
-			}
-
-			button.play.playing {
-				background: linear-gradient(
-					currentColor, currentColor
-				) center / 1em 1em no-repeat hsl(220 20% 85%);
-			}
-		</textarea>
-		<textarea class="language-html">
-			<button title="Play" class="play initial"> </button>
-			<button title="Pause" class="play playing"> </button>
-		</textarea>
-		<details class="notes">
-			Here we used a trick with gradients to create a triangle and a square,
-			since the corresponding Unicode characters are unreliable.
-			However, this is mixed in with the rest of our CSS,
-			making our code hard to understand and creating repetition.
-			Let's abstract the symbol drawing away from the rest of the styling.
-			What do you notice?
-		</details>
-	</article> -->
-
-
-</section>
-
-<section id="colors-section">
-	<!--
-	Dependencies: values are token lists
-	 -->
-	<header class="slide" style="--icon: 🌈; background-color: var(--accent2)">
-		<h1>Colors</h1>
-	</header>
-
-
-
-	<article class="isolated demo slide" id="color-aliases">
-		<textarea class="language-css">
-			:root {
-				--accent-color-1: hsl(200 100% 50%);
-				--accent-color-2: hsl(0 70% 50%);
-			}
-
-			button {
-				--color: var(--accent-color-1);
-				border: .1em solid;
-				border-radius: .2em;
-				color: var(--color);
-				background: transparent;
-			}
-
-			button:hover {
-				background-color: var(--color);
-				border-color: transparent;
-				color: white;
-			}
-
-			button.danger {
-				--color: var(--accent-color-2);
-			}
-
-			h1 {
-				color: var(--accent-color-1);
-			}
-
-			h2 {
-				color: var(--accent-color-2);
-			}
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			button {
-				padding: .6em 1em;
-				margin: .1em;
-				font-weight: bold;
-				cursor: pointer;
-			}
-
-			h1, h2 {
-				line-height: 1;
-			}
-
-			h1 {
-				font-size: 300%;
-				font-weight: 300;
-			}
-
-			h2 {
-				font-size: 120%;
-				font-weight: -.04em;
-			}
-		</style>
-		<textarea class="language-html">
-			<h1>Heading 1</h1>
-			<h2>Heading 2</h2>
-			<p>Text</p>
-			<button>Submit</button>
-			<button class="danger">Cancel</button>
-
-			<p>More text</p>
-			<button>Back</button>
-			<button class="danger">Delete</button>
-		</textarea>
-		<details class="notes">
-			Abstracting away colors can be useful to make it easier
-			to change an entire theme by only changing a few variables.
-			However, it needs to be done with care, because colors also have meaning.
-			Here, we use red to signify that an action is destructive, a common convention.
-			What happens if in a future redesign, the secondary accent color becomes green?
-			Now the UI communicates the *opposite* message!
-
-			The problem is that there is a mismatch between our *intent*
-			and our code. Our code says "give me any accent color",
-			while our intent was to get a red color that fits in nicely with the current theme,
-			regardless of whether it's the primary or secondary color.
-
-			One strategy to avoid this is to use *aliases*:
-			in the same place you set your accent colors,
-			you can also set hue-based variables.
-			Then you use the accent color variables where you just need an accent color,
-			and the hue based ones when you need a specific hue to communicate something.
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>Use both accent colors and hue-based aliases to make intent clear</h1>
-		<pre><code>--color-primary: var(--color-red);</code></pre>
-	</article>
-
-	<article class="isolated demo slide" id="color-variations" style="--division: 55">
-		<textarea class="language-css">
-			:root {
-				--primary-color: hsl(250 30% 40%);
-				--secondary-color: hsl(190 40% 40%);
-			}
-
-			h1 {
-				color: var(--secondary-color);
-			}
-
-			article {
-				background: var(--primary-color);
-			}
-
-			article h2 {
-				background: var(--primary-color);
-				color: white;
-			}
-
-			article a {
-				color: var(--secondary-color);
-				filter: brightness(60%);
-			}
-
-			article .content {
-				background: hsl(0 0% 100% / .8);
-			}
-		</textarea>
-		<style class="demo" data-slide media="not all">
-			body {
-				font-size: 100%;
-				line-height: 1.5;
-			}
-
-			article {
-				border-radius: .3rem;
-				overflow: hidden;
-				margin: 1em 0;
-			}
-
-			article h2 {
-				padding: .3rem .5rem;
-				margin: 0;
-			}
-
-			article a {
-				font-weight: bold;
-			}
-
-			article .content {
-				padding: .1em .5rem;
-			}
-		</style>
-		<textarea class="language-html">
-			<h1>Lea Verou's blog</h1>
-
-			<article>
-				<h2>Blog Post 1</h2>
-				<div class="content">
-					<p>Blog post 1 content with <a href="https://lea.verou.me">link</a></p>
-				</div>
-			</article>
-
-			<article class="alt">
-				<h2>Blog Post 2</h2>
-				<div class="content">
-					<p>Blog post 2 content with <a href="https://lea.verou.me">link</a></p>
-				</div>
-			</article>
-		</textarea>
-		<details class="notes">
-			Here we are using a variety of hacks to create color variations:
-			`filter: brightness()` or semi-transparent white overlays.
-
-			[Soon](https://drafts.csswg.org/css-color-5) we will be able to manipulate colors directly,
-			but currently this is only supported in Safari (and very partially Firefox).
-
-			What can we do meanwhile? Define more granular custom properties, what else? 😁
-
-			Let's first go the more verbose but clear way: defining individual properties
-			for each component.
-			Be careful of inheritance caveats!
-			How can we ensure that the resulting color is still readable?
-
-			--------------
-
-			Can we eliminate verbosity?
-			We can store the hue and saturation in the same property.
-
-			We can also store lighter and darker variations and use those throughout.
-
-			---------------
-
-			What happens if we want to make the link color lighter on hover?
-			With this approach, we'd need to redefine the entire color.
-			Let's look at a slightly different approach.
-			Instead of specifying the link lightness inline, we could assign it to a variable as well, a local one.
-			Then on hover, we can just override the variable.
-
-			<!-- -----------------
-
-			We can even override some components in media queries
-			to create a rudimentary dark mode!
-			[Read more about this technique](https://lea.verou.me/2021/03/inverted-lightness-variables/) -->
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>We can specify each color component via separate variables and do math with it
-			<div class="note">(but it's verbose AF)</div>
-		</h1>
-	</article>
-
-	<article class="takeaway slide" data-type="Aside">
-		<h1>Use `clamp()` to ensure readability</h1>
-	</article>
-
-	<article class="slide" data-insert="#color-variations"></article>
-
-	<article class="takeaway slide">
-		<h1>We can store multiple color components in the same variable</h1>
-	</article>
-
-	<article class="slide" data-insert="#color-variations"></article>
-
-	<article class="takeaway slide">
-		<h1>`--background-color-*` and `--text-color-*` for independent tweaking</h1>
-	</article>
-
-	<!-- <article class="slide" data-insert="#color-variations"></article>
-
-	<article class="takeaway slide">
-		<h1>`--l-*` lightness variables for a quick & dirty dark mode
-			<div class="note delayed">lch() will make this less dirty</div>
-		</h1>
-	</article>
-
-	 -->
-
-	<article class="isolated demo slide" id="migraine" style="--division: 55">
-		<textarea class="language-css">
-			article {
-				/* To-do: Make color depend on intensity
-					1-5 intensity to roughly 50-0 hue (warm yellow to pure red)
-				 */
-				--color: hsl(0 70% 40%);
-				background: var(--color);
-			}
-
-			article h2 {
-				color: white;
-			}
-
-			article .content {
-				background: hsl(0 0% 100% / .8);
-			}
-
-			meter {
-				filter: grayscale() contrast(3);
-				mix-blend-mode: screen;
-			}
-		</textarea>
-		<style class="demo" data-slide media="not all">
-			body {
-				font-size: 100%;
-				line-height: 1.5;
-			}
-
-			article {
-				border-radius: .3rem;
-				overflow: hidden;
-				margin: 1em 0;
-			}
-
-			article h2 {
-				padding: .3rem .5rem;
-				margin: 0;
-			}
-
-			article .content {
-				padding: .1em .5rem;
-			}
-		</style>
-		<textarea class="language-html">
-			<h1>🤕 Migraine log</h1>
-
-			<article style="--intensity:1">
-				<h2>
-					<time datetime="2021-05-19T20:45">May 19th, 2021 at 20:45</time>
-					until <time datetime="2021-05-20T01:15">01:15</time>
-					<meter max="5" value="2"></meter>
-				</h2>
-				<div class="content">
-					<p>Started after dinner</p>
-				</div>
-			</article>
-
-			<article style="--intensity:3">
-				<h2>
-					<time datetime="2021-05-18T10:50">May 18th, 2021 at 10:50</time>
-					until <time datetime="2021-05-18T15:15">15:15</time>
-					<meter max="5" value="4"></meter>
-				</h2>
-				<div class="content">
-					<p>Upon waking up</p>
-				</div>
-			</article>
-
-			<article style="--intensity:;">
-				<h2>
-					<time datetime="2021-05-16T15:00">May 16th, 2021 at 15:00</time>
-					until <time datetime="2021-05-16T20:00">20:00</time>
-					<meter max="5"></meter>
-				</h2>
-				<div class="content">
-					<p>Headache for several hours, then turned to migraine</p>
-				</div>
-			</article>
-
-			<article style="--intensity:5;">
-				<h2>
-					<time datetime="2021-05-12T07:00">May 12th, 2021 at 07:00</time>
-					until <time datetime="2021-05-12T16:30">16:30</time>
-					<meter max="5" value="5"></meter>
-				</h2>
-				<div class="content">
-					<p>Long tail off</p>
-				</div>
-			</article>
-		</textarea>
-		<details class="notes">
-			Here we have some repeated HTML to display some data,
-			which could have been generated from a server-side templating script.
-			We are using an `--intensity` CSS variable to communicate the
-			migraine intensity to the CSS so it can be used for styling.
-			Let's try to modify the CSS so that stronger migraines are more red
-			and lighter ones are more yellow!
-
-			We want `--intensity: 0` to correspond to a hue of roughly `50` (warm yellow)
-			and `--intensity: 5` to correspond to a hue of `0` (pure red).
-
-			- [Solution on CodePen](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1)
-			<!-- - [Future: Safari 15+ solution](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1) -->
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>We can use variables to set color components to create dynamic palettes</h1>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>To provide a fallback for an entire calculation, use an intermediate variable</h1>
-	</article>
-
-	<article class="slide">
-		<h1>Color manipulation, today</h1>
-
-		<div class="md balance-lines">
-			- Separate `--primary-color-*` properties
-			- Hue and saturation can be stored together
-			- Precomputed variations: `--primary-color-lighter`, `--primary-color-darker` etc
-			- `--background-color-*` and `--text-color-*` Properties
-		</div>
-		<p class="delayed note">All of the above can coexist!</p>
-	</article>
-
-	<article class="slide" data-insert="#color-variations"></article>
-
-	<article class="slide">
-		<h1 style="--emoji: '🌈'">The future is colorful</h1>
-
-		<div class="md balance-lines">
-			- Custom properties that store only colors
-			- Functions to manipulate colors
-			- `color-mix(in lch, var(--color) 80%, white)`
-			- Relative syntax: `hsl(from var(--color) h s calc(l * 1.2))`
-			- Better color spaces for adjustment: `lch(from var(--color) 80% c h)`
-		</div>
-	</article>
-</section>
-<!-- End Colors -->
 
 <section id="animations">
 	<header class="slide" style="--icon: ⏳; background-color: var(--accent3)">
@@ -2902,7 +2910,7 @@
 		</h1>
 	</article>
 
-	<!-- <article class="codepen slide" id="staggered">
+	<article class="codepen slide" id="staggered">
 		<iframe scrolling="no" title="Staggered slide in" src="https://codepen.io/leaverou/embed/preview/wvJpEMQ?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 		<details class="notes">
 			It is common to want to apply various effects, especially animations,
@@ -2918,7 +2926,7 @@
 
 	<article class="takeaway slide">
 		<h1>A generic `--index` can be used for many effects, including staggered animations</h1>
-	</article> -->
+	</article>
 </section>
 <!-- End Animations -->
 

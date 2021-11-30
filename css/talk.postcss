@@ -559,8 +559,13 @@ h1[data-label] {
 
 .swatch {
 	display: inline-block;
-	padding: 1em;
+	padding: .25em .5em;
+	width: 1em;
+	height: 1.5em;
+	line-height: 1.5;
 	border-radius: .1em;
+	text-align: center;
+	font-weight: bold;
 
 	&.transparent {
 		border: 2px dashed white;
@@ -579,6 +584,17 @@ h1[data-label] {
 
 	& .swatch {
 		vertical-align: middle;
+
+		&.delayed:where(:not(.current):not(.displayed)) {
+			opacity: 1;
+			background: hsl(0 0% 100% / .5) !important;
+			border-color: transparent;
+
+			&::before {
+				content: "?";
+
+			}
+		}
 	}
 
 	& .supported::before {
