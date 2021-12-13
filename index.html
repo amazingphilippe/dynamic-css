@@ -1835,7 +1835,7 @@
 		</table>
 	</article> -->
 
-	<article class="speaker-only codepen slide" data-type="Practice time!">
+	<article class="codepen slide" data-type="Practice time!">
 		<h1>Flexible pie chart</h1>
 		<iframe src="https://codepen.io/leaverou/embed/preview/c701c26e89a4e964e14e4b2ca0a6845a?height=265&theme-id=dark&default-tab=html,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
 			</iframe>
@@ -2265,7 +2265,7 @@
 			article {
 				/* To-do: Make color depend on intensity
 					1-5 intensity to roughly 50-0 hue (warm yellow to pure red)
-				 */
+				*/
 				--color: hsl(0 70% 40%);
 				background: var(--color);
 			}
@@ -2364,6 +2364,12 @@
 
 			- [Solution on CodePen](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1)
 			<!-- - [Future: Safari 15+ solution](https://codepen.io/leaverou/pen/f4cdf55de3967f451b36f95306b7c8f1) -->
+
+			-----------
+
+			Remember this? Now that we've learned range mapping, this becomes trivial and we can even do it with precision.
+			We can even just [plug the numbers in](https://css.land/ranges/?min_x=1&min_y=50&max_x=5&max_y=0&variableName=intensity)
+			and voila!
 		</details>
 	</article>
 
@@ -2546,390 +2552,6 @@
 </section>
 <!-- End Colors -->
 
-<section>
-	<header class="slide" style="--icon: 📲; background-color: var(--accent2)">
-		<h1>Responsive Design</h1>
-	</header>
-
-	<article class="isolated slide demo no-base-css" id="responsive" style="--font-size-multiplier: .8">
-		<textarea class="language-css">
-			body {
-				display: grid;
-				gap: .3em;
-				font-size: 90%;
-			}
-
-			section {
-				background: silver;
-				padding: 1.2em;
-			}
-
-			section:nth-of-type(3n + 4) {
-				background-color: #f06;
-				color: hsl(0 0% 100% /.6);
-			}
-
-			section:nth-last-of-type(2) {
-				background-color: orange;
-			}
-
-			@media (min-width: 600px) {
-				body {
-					gap: .5em;
-					font-size: 110%;
-					grid-template-columns: repeat(3, 1fr);
-				}
-
-				section {
-					padding: 1.6em;
-				}
-
-				section:nth-of-type(3n + 4) {
-					grid-column-end: span 3;
-				}
-
-				section:nth-last-of-type(2) {
-					grid-column-end: span 2;
-				}
-			}
-		</textarea>
-		<textarea class="language-html">
-			<section>
-				<p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.</p>
-			</section>
-			<section>
-				<p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment.</p>
-			</section>
-			<section>
-				<p>His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream.</p>
-			</section>
-
-			<section>
-				<p>His room, a proper human room although a little too small, lay peacefully between its four familiar walls.</p>
-				<p>A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>
-				<p>It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.</p>
-				<p>Drops of rain could be heard hitting the pane, which made him feel quite sad.</p>
-
-			</section>
-
-			<section>
-				<p>"How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where he was.</p>
-			</section>
-			<section>
-				<p>He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before.</p>
-			</section>
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			body {
-				padding: 1em;
-				font-weight: bold;
-				font-family: Helvetica Neue, Segoe UI, sans-serif;
-			}
-
-			section {
-				box-sizing: border-box;
-				hyphens: auto;
-			}
-
-			p:first-child {margin-top: 0}
-			p:last-child {margin-bottom: 0}
-		</style>
-		<details class="notes">
-			Custom properties make responsive design easier,
-			but there are many different ways to use them.
-			The obvious way is using variables in our base CSS,
-			and overriding them as needed in the media query.
-			This tremendously reduces the amount of overrides needed, making code
-			far more maintainable.
-
-			------------
-
-			However, it does mean we still need to hunt down in multiple places for the
-			value of each style. Another strategy to keep everything together is to
-			use different properties for each breakpoint, e.g. `--font-size-large`
-
-			When the adjustment is relative, it means that
-			we need to adjust both when the base value changes.
-			One way to avoid this is to define optional *scaling factors* in our MQs, and
-			use them defensively in our base CSS.
-
-			[Codepen solution](https://codepen.io/leaverou/pen/77d09a1015c57d8d6f40c0fbfda3d839?editors=1100)
-		</details>
-	</article>
-
-	<article class="takeaway slide" id="responsive-takeaway">
-		<h1>RWD strategy 1</h1>
-
-		<p>Base CSS uses <code>var()</code> and sets defaults, MQs override</p>
-
-		<pre><code>
-			margin: var(--gutter);
-			padding: calc(.6em + var(--gutter) * 2);
-		</code></pre>
-	</article>
-
-	<article class="slide" data-insert="#responsive"></article>
-
-	<article class="takeaway slide" id="responsive-takeaway">
-		<h1>RWD strategy 2</h1>
-
-		<p>Base CSS sets different custom properties for each breakpoint, MQs use them</p>
-
-		<pre><code>
-			font-size: 90%;
-			--font-size-large: 110%;
-		</code></pre>
-	</article>
-
-	<article class="takeaway slide" id="responsive-takeaway">
-		<h1>RWD strategy 3</h1>
-
-		<p>Base CSS multiplies by optional scaling factor, MQs set said factor</p>
-
-		<pre><code>
-			font-size: calc(90% * var(--font-size-scale, 1));
-		</code></pre>
-
-		<details class="notes">
-			Want to dig in more?
-			[This article](https://css-tricks.com/responsive-designs-and-css-custom-properties-defining-variables-and-breakpoints/)
-			by Mikolaj Dobrucki is quite good.
-
-			Note that these techniques are useful every time you need to create variations of a design,
-			not just for RWD. E.g. multipliers can be useful when you have multiple instances of a component with different content,
-			and need to vary some of them. In fact, these slides use a similar technique to vary the font size of the live demos!
-		</details>
-	</article>
-
-</section>
-
-<section id="animations">
-	<header class="slide" style="--icon: ⏳; background-color: var(--accent3)">
-		<h1>Transitions <span class="amp">&</span> Animations</h1>
-	</header>
-
-	<article class="isolated demo slide" id="gallery-transition" style="--division: 55">
-		<textarea class="language-css">
-			img {
-				width: 20vw;
-				aspect-ratio: 1 / 1;
-				object-fit: cover;
-				transform: scale(var(--scale, 1))
-				           rotate(var(--rotate, 0deg));
-				transition: .5s;
-			}
-
-			img:hover {
-				background: hsl(50 90% 90%);
-				--scale: 1.2;
-			}
-
-			img:nth-child(odd) { --rotate: 3deg; }
-			img:nth-child(3n+1) { --rotate: -2deg; }
-		</textarea>
-		<style class="demo" data-slide media="not all">
-			img {
-				margin: .3em;
-				padding: .2em;
-				background: white;
-				box-shadow: 0 .05em .1em rgb(0 0 0 / .1);
-			}
-		</style>
-		<textarea class="language-html">
-			<img src="img/cat1.jpg" alt="">
-			<img src="img/cat2.jpg" alt="">
-			<img src="img/cat3.jpg" alt="">
-			<img src="img/cat4.jpg" alt="">
-			<img src="img/cat5.jpg" alt="">
-			<img src="img/cat6.jpg" alt="">
-			<img src="img/cat7.jpg" alt="">
-			<img src="img/cat8.jpg" alt="">
-			<img src="img/cat9.jpg" alt="">
-			<img src="img/cat10.jpg" alt="">
-		</textarea>
-		<details class="notes">
-			Remember this gallery?
-			Note how the hover style triggers a smooth transition.
-			But what if we wanted to apply different parameters to the `--scale`
-			transition and different ones to the background one?
-			For example, if we wanted the scale transition to bounce,
-			by using [`cubic-bezier()`](https://cubic-bezier.com/#.1,.6,.6,2)
-			values > 1.
-			We don’t want our background to bounce too, cause that’s just *weird*.
-			However, restricting our transition to `--scale` does not have the intended result…
-
-			---------------
-
-			Can we enable transitions and animations on the custom property itself?
-			Yes, if we can register it with a syntax!
-		</details>
-	</article>
-
-	<article class="slide">
-		<blockquote style="width: 21em">
-			<p>[CSS variables] can even be <strong>tran&shy;sitioned or ani&shy;mated</strong>, but since the UA has no way to interpret their con&shy;tents, <strong>they always use the "flips at 50%"</strong> behav&shy;ior that is used for any oth&shy;er pair of val&shy;ues that can’t be intelligently interpolated.</p>
-			<p class="cite"><a href="https://w3.org/TR/css-variables-1/">CSS Custom Properties for Cascading Variables Module Level 1</a></p>
-		</blockquote>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>Custom properties can trigger transitions but do not interpolate by default</h1>
-	</article>
-
-	<article class="slide" data-insert="#gallery-transition"></article>
-
-	<article class="takeaway slide">
-		<h1>*Registered* custom properties can interpolate!</h1>
-	</article>
-
-	<article class="isolated demo slide" id="animation" style="--division: 60">
-		<textarea class="language-css">
-			@keyframes bg {
-				from { background-color: yellow; }
-				to { background-color: #0ca; }
-			}
-
-			:root {
-				--accent-color-1: yellow;
-				--accent-color-2: #0ca;
-
-				animation: 2s bg infinite alternate;
-			}
-		</textarea>
-		<textarea class="language-markup">
-			<h1>CSS Variables in @keyframes?</h1>
-		</textarea>
-		<details class="notes">
-			Here we are animating from one color to another.
-			Let's use our two main colors instead of repeating them.
-			This works just fine.
-
-			Animating the custom properties themselves requires registration however.
-		</details>
-	</article>
-
-	<article class="takeaway slide" id="animation-poop">
-		<h1>`var()` in keyframes works just fine</h1>
-	</article>
-
-	<article class="isolated horizontal demo slide">
-		<textarea class="language-css">
-			@keyframes progress {
-				to {
-					background: linear-gradient(to right, black 100%, white);
-				}
-			}
-
-			:root {
-				background: linear-gradient(to right, black 0%, white);
-				animation: 1s progress infinite alternate;
-			}
-		</textarea>
-		<details class="notes">
-			Interpolating parts of non-interpolatable values is a prime use case for
-			animating custom properties, and gradients are possibly the most common such case.
-			Even if gradients *were* interpolatable, animating custom properties is usually preferable,
-			as it allows for more [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) code.
-
-			Let's modify this code to do a cool image reveal!
-
-			Interested in more examples of animating gradients?
-			Ana Tudor has written [a whole article](https://css-tricks.com/the-state-of-changing-gradients-with-css-transitions-and-animations/) about it.
-
-			And when it comes to animating custom properties in general,
-			[this article](https://css-tricks.com/exploring-property-and-its-animating-powers/) by Jhey Tompkins is full of cool examples and intersting techniques.
-		</details>
-	</article>
-
-	<!-- <article class="isolated demo slide" style="--division: 65">
-		<textarea class="language-css">
-			:root {
-				background:repeating-conic-gradient(
-					from 0deg,
-					transparent 0 2.5%,
-					hsl(0 0% 100% / .3) 0 5%
-				) slategray;
-				height: 100vh;
-			}
-		</textarea>
-		<details class="notes">
-			Here we have a typical starburst background, generated with a repeating conic gradient.
-			Let’s add some styling hooks through custom properties.
-			What properties would you use?
-
-			Now let's try to make it rotate by increasing the `from` argument
-			(hint: you can just click on it and press the up/down arrows to do that).
-
-			Let's create a CSS animation to produce the same effect.
-			Which of the other custom properties might be fun to animate?
-		</details>
-	</article> -->
-
-	<article class="isolated horizontal demo slide" id="autoprefixing" style="--division: 60;">
-		<textarea class="language-css">
-			* {
-				--backdrop-filter: initial;
-				-webkit-backdrop-filter: var(--backdrop-filter);
-				backdrop-filter: var(--backdrop-filter);
-			}
-
-			section {
-				background: hsl(0 0% 100% / .5);
-				--backdrop-filter: blur(5px);
-			}
-		</textarea>
-		<style data-slide media="not all" class="demo">
-			body {
-				background: url(img/cat5.jpg) center / cover;
-				display: flex;
-				min-height: 100vh;
-				margin: 0;
-			}
-
-			section {
-				padding: 1em;
-				margin: auto;
-				border-radius: .2em;
-			}
-		</style>
-		<textarea class="language-html">
-			<section>
-				<p>Content</p>
-			</section>
-		</textarea>
-		<details class="notes">
-			Custom properties can help with vendor prefixes.
-			For example, `backdrop-filter` still needs a `-webkit-` prefix
-			in [certain browsers](https://caniuse.com/css-backdrop-filter).
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>CSS Variables enable you to <br>set multiple properties at once
-			<div class="note">but they do not interpolate!</div>
-		</h1>
-	</article>
-
-	<article class="codepen slide" id="staggered">
-		<iframe scrolling="no" title="Staggered slide in" src="https://codepen.io/leaverou/embed/preview/wvJpEMQ?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
-		<details class="notes">
-			It is common to want to apply various effects, especially animations,
-			that are different depending on the index of an element among its siblings.
-			Staggered animations are a common example.
-			We can use Sass to define a generic `--index` property that we can then
-			use wherever we want in our CSS.
-
-			Going further: How does our code handle the case of exceeding the number of siblings
-			we have accounted for? Can we improve things?
-		</details>
-	</article>
-
-	<article class="takeaway slide">
-		<h1>A generic `--index` can be used for many effects, including staggered animations</h1>
-	</article>
-</section>
-<!-- End Animations -->
-
 <section id="types">
 	<header class="slide" style="--icon: 🧮; background-color: var(--accent3)">
 		<h1>Numbers <span class="amp">&</span> Lengths</h1>
@@ -2956,7 +2578,7 @@
 		<details class="notes">
 			Here we have an element whose aspect ratio we want to mirror
 			the aspect ratio of our viewport.
-			To avoid repeating the fraction of the viewport its dimensions are twice,
+			To avoid repeating twice what fraction of the viewport it is,
 			it's a reasonable thought to try and abstract that into a variable.
 			However, simple concatenation like in Sass
 			does not work to get a `&lt;length>` out of that.
@@ -2968,7 +2590,7 @@
 			Yes, `calc()` is a little verbose.
 			Another idea idea may be to specify the entire width in
 			the variable, then only use `calc()` in `height`.
-			It's a good idea, but does not work yet.
+			It's a good idea, but does not work yet because we cannot divide by anything that has a unit.
 
 			--------
 
@@ -3437,6 +3059,18 @@
 
 			Note that our <var>min</var> and <var>max</var> variables
 			do not necessarily satisfy <var>min</var> < <var>max</var>!
+
+			[Codepen solution](https://codepen.io/leaverou/pen/9ba1b5e2fb7fbb320c3ab244df7baf3d)
+
+			------------
+
+			Now let's animate `--p` from `-1` to `1`!
+
+			[Codepen solution](https://codepen.io/leaverou/pen/9c12ab442ff91d44a0bd0ff945a29847)
+
+			Credit where it’s due: [This is the codepen](https://codepen.io/jh3y/pen/MWbvzKb)
+			that gave me the inspiration for this example.
+			It's a bit more complex, but also a lot nicer.
 		</details>
 	</article>
 
@@ -3474,22 +3108,12 @@
 		</div>
 	</article>
 
-	<article class="codepen slide">
-		<iframe scrolling="no" title="" src="https://codepen.io/leaverou/embed/bGRmQKv?default-tab=result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-			See the Pen <a href="https://codepen.io/leaverou/pen/bGRmQKv">
-			</a> by Lea Verou (<a href="https://codepen.io/leaverou">@leaverou</a>)
-			on <a href="https://codepen.io">CodePen</a>.
-		  </iframe>
-	</article>
+	<article class="iframe slide" data-src="https://css.land/ranges"></article>
 
 	<article class="slide" data-insert="#migraine"></article>
 
 	<article class="slide takeaway">
 		<h1>Range mapping allows the same variable to control multiple things</h1>
-	</article>
-
-	<article class="codepen slide">
-		<iframe src="https://codepen.io/jh3y/embed/preview/MWbvzKb?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 	</article>
 
 
@@ -3655,6 +3279,405 @@
 	</article> -->
 </section>
 <!-- End Numbers & lengths -->
+
+
+<section>
+	<header class="slide" style="--icon: 📲; background-color: var(--accent2)">
+		<h1>Responsive Design</h1>
+	</header>
+
+	<article class="isolated slide demo no-base-css" id="responsive" style="--font-size-multiplier: .8">
+		<textarea class="language-css">
+			body {
+				display: grid;
+				gap: .3em;
+				font-size: 90%;
+			}
+
+			section {
+				background: silver;
+				padding: 1.2em;
+			}
+
+			section:nth-of-type(3n + 4) {
+				background-color: #f06;
+				color: hsl(0 0% 100% /.6);
+			}
+
+			section:nth-last-of-type(2) {
+				background-color: orange;
+			}
+
+			@media (min-width: 600px) {
+				body {
+					gap: .5em;
+					font-size: 110%;
+					grid-template-columns: repeat(3, 1fr);
+				}
+
+				section {
+					padding: 1.6em;
+				}
+
+				section:nth-of-type(3n + 4) {
+					grid-column-end: span 3;
+				}
+
+				section:nth-last-of-type(2) {
+					grid-column-end: span 2;
+				}
+			}
+		</textarea>
+		<textarea class="language-html">
+			<section>
+				<p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.</p>
+			</section>
+			<section>
+				<p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment.</p>
+			</section>
+			<section>
+				<p>His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream.</p>
+			</section>
+
+			<section>
+				<p>His room, a proper human room although a little too small, lay peacefully between its four familiar walls.</p>
+				<p>A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>
+				<p>It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.</p>
+				<p>Drops of rain could be heard hitting the pane, which made him feel quite sad.</p>
+
+			</section>
+
+			<section>
+				<p>"How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where he was.</p>
+			</section>
+			<section>
+				<p>He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before.</p>
+			</section>
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			body {
+				padding: 1em;
+				font-weight: bold;
+				font-family: Helvetica Neue, Segoe UI, sans-serif;
+			}
+
+			section {
+				box-sizing: border-box;
+				hyphens: auto;
+			}
+
+			p:first-child {margin-top: 0}
+			p:last-child {margin-bottom: 0}
+		</style>
+		<details class="notes">
+			Custom properties make responsive design easier,
+			but there are many different ways to use them.
+			The obvious way is using variables in our base CSS,
+			and overriding them as needed in the media query.
+			This tremendously reduces the amount of overrides needed, making code
+			far more maintainable.
+
+			------------
+
+			However, it does mean we still need to hunt down in multiple places for the
+			value of each style. Another strategy to keep everything together is to
+			use different properties for each breakpoint, e.g. `--font-size-large`
+
+			When the adjustment is relative, it means that
+			we need to adjust both when the base value changes.
+			One way to avoid this is to define optional *scaling factors* in our MQs, and
+			use them defensively in our base CSS.
+
+			[Codepen solution](https://codepen.io/leaverou/pen/77d09a1015c57d8d6f40c0fbfda3d839?editors=1100)
+		</details>
+	</article>
+
+	<article class="takeaway slide" id="responsive-takeaway">
+		<h1>RWD strategy 1</h1>
+
+		<p>Base CSS uses <code>var()</code> and sets defaults, MQs override</p>
+
+		<pre><code>
+			margin: var(--gutter);
+			padding: calc(.6em + var(--gutter) * 2);
+		</code></pre>
+
+		<details class="notes">
+			Make sure the relationships you express are real and not spurious correlations that just *happen* to be true for your current numbers.
+			I.e. let's take this case. The code indicates that padding is double the gutter plus a little bit.
+			Is that actually our intention? Will it still be true if we add more breakpoints
+			or is it just a false relationship we extracted by trying to make `1.6em` and `1.2em` depend on their corresponding gutter
+			(and for two data points, it is nearly always possible to extract such spurious relationships).
+		</details>
+	</article>
+
+	<article class="slide" data-insert="#responsive"></article>
+
+	<article class="takeaway slide" id="responsive-takeaway">
+		<h1>RWD strategy 2</h1>
+
+		<p>Base CSS sets different custom properties for each breakpoint, MQs use them</p>
+
+		<pre><code>
+			font-size: 90%;
+			--font-size-large: 110%;
+		</code></pre>
+	</article>
+
+	<article class="takeaway slide" id="responsive-takeaway">
+		<h1>RWD strategy 3</h1>
+
+		<p>Base CSS multiplies by optional scaling factor, MQs set said factor</p>
+
+		<pre><code>
+			font-size: calc(90% * var(--font-size-scale, 1));
+		</code></pre>
+
+		<details class="notes">
+			Want to dig in more?
+			[This article](https://css-tricks.com/responsive-designs-and-css-custom-properties-defining-variables-and-breakpoints/)
+			by Mikolaj Dobrucki is quite good.
+
+			Note that these techniques are useful every time you need to create variations of a design,
+			not just for RWD. E.g. multipliers can be useful when you have multiple instances of a component with different content,
+			and need to vary some of them. In fact, these slides use a similar technique to vary the font size of the live demos!
+		</details>
+	</article>
+
+</section>
+<!-- End RWD-->
+
+<section id="animations">
+	<header class="slide" style="--icon: ⏳; background-color: var(--accent3)">
+		<h1>Transitions <span class="amp">&</span> Animations</h1>
+	</header>
+
+	<article class="isolated demo slide" id="gallery-transition" style="--division: 55">
+		<textarea class="language-css">
+			img {
+				width: 20vw;
+				aspect-ratio: 1 / 1;
+				object-fit: cover;
+				transform: scale(var(--scale, 1))
+				           rotate(var(--rotate, 0deg));
+				transition: .5s;
+			}
+
+			img:hover {
+				background: hsl(50 90% 90%);
+				--scale: 1.2;
+			}
+
+			img:nth-child(odd) { --rotate: 3deg; }
+			img:nth-child(3n+1) { --rotate: -2deg; }
+		</textarea>
+		<style class="demo" data-slide media="not all">
+			img {
+				margin: .3em;
+				padding: .2em;
+				background: white;
+				box-shadow: 0 .05em .1em rgb(0 0 0 / .1);
+			}
+		</style>
+		<textarea class="language-html">
+			<img src="img/cat1.jpg" alt="">
+			<img src="img/cat2.jpg" alt="">
+			<img src="img/cat3.jpg" alt="">
+			<img src="img/cat4.jpg" alt="">
+			<img src="img/cat5.jpg" alt="">
+			<img src="img/cat6.jpg" alt="">
+			<img src="img/cat7.jpg" alt="">
+			<img src="img/cat8.jpg" alt="">
+			<img src="img/cat9.jpg" alt="">
+			<img src="img/cat10.jpg" alt="">
+		</textarea>
+		<details class="notes">
+			Remember this gallery?
+			Note how the hover style triggers a smooth transition.
+			But what if we wanted to apply different parameters to the `--scale`
+			transition and different ones to the background one?
+			For example, if we wanted the scale transition to bounce,
+			by using [`cubic-bezier()`](https://cubic-bezier.com/#.1,.6,.6,2)
+			values > 1.
+			We don’t want our background to bounce too, cause that’s just *weird*.
+			However, restricting our transition to `--scale` does not have the intended result…
+
+			---------------
+
+			Can we enable transitions and animations on the custom property itself?
+			Yes, if we can register it with a syntax!
+		</details>
+	</article>
+
+	<article class="slide">
+		<blockquote style="width: 21em">
+			<p>[CSS variables] can even be <strong>tran&shy;sitioned or ani&shy;mated</strong>, but since the UA has no way to interpret their con&shy;tents, <strong>they always use the "flips at 50%"</strong> behav&shy;ior that is used for any oth&shy;er pair of val&shy;ues that can’t be intelligently interpolated.</p>
+			<p class="cite"><a href="https://w3.org/TR/css-variables-1/">CSS Custom Properties for Cascading Variables Module Level 1</a></p>
+		</blockquote>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>Custom properties can trigger transitions but do not interpolate by default</h1>
+	</article>
+
+	<article class="slide" data-insert="#gallery-transition"></article>
+
+	<article class="takeaway slide">
+		<h1>*Registered* custom properties can interpolate!</h1>
+	</article>
+
+	<article class="isolated demo slide" id="animation" style="--division: 60">
+		<textarea class="language-css">
+			@keyframes bg {
+				from { background-color: yellow; }
+				to { background-color: #0ca; }
+			}
+
+			:root {
+				--accent-color-1: yellow;
+				--accent-color-2: #0ca;
+
+				animation: 2s bg infinite alternate;
+			}
+		</textarea>
+		<textarea class="language-markup">
+			<h1>CSS Variables in @keyframes?</h1>
+		</textarea>
+		<details class="notes">
+			Here we are animating from one color to another.
+			Let's use our two main colors instead of repeating them.
+			This works just fine.
+
+			Animating the custom properties themselves requires registration however.
+		</details>
+	</article>
+
+	<article class="takeaway slide" id="animation-poop">
+		<h1>`var()` in keyframes works just fine</h1>
+	</article>
+
+	<article class="isolated horizontal demo slide">
+		<textarea class="language-css">
+			@keyframes progress {
+				to {
+					background: linear-gradient(to right, black 100%, white);
+				}
+			}
+
+			:root {
+				background: linear-gradient(to right, black 0%, white);
+				animation: 1s progress infinite alternate;
+			}
+		</textarea>
+		<details class="notes">
+			Interpolating parts of non-interpolatable values is a prime use case for
+			animating custom properties, and gradients are possibly the most common such case.
+			Even if gradients *were* interpolatable, animating custom properties is usually preferable,
+			as it allows for more [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) code.
+
+			Let's modify this code to do a cool image reveal!
+
+			Interested in more examples of animating gradients?
+			Ana Tudor has written [a whole article](https://css-tricks.com/the-state-of-changing-gradients-with-css-transitions-and-animations/) about it.
+
+			And when it comes to animating custom properties in general,
+			[this article](https://css-tricks.com/exploring-property-and-its-animating-powers/) by Jhey Tompkins is full of cool examples and interesting techniques.
+
+			A word of caution however: Do *not* use this for long-running animations. It can be a performance hog in today's browsers.
+		</details>
+	</article>
+
+	<!-- <article class="isolated demo slide" style="--division: 65">
+		<textarea class="language-css">
+			:root {
+				background:repeating-conic-gradient(
+					from 0deg,
+					transparent 0 2.5%,
+					hsl(0 0% 100% / .3) 0 5%
+				) slategray;
+				height: 100vh;
+			}
+		</textarea>
+		<details class="notes">
+			Here we have a typical starburst background, generated with a repeating conic gradient.
+			Let’s add some styling hooks through custom properties.
+			What properties would you use?
+
+			Now let's try to make it rotate by increasing the `from` argument
+			(hint: you can just click on it and press the up/down arrows to do that).
+
+			Let's create a CSS animation to produce the same effect.
+			Which of the other custom properties might be fun to animate?
+		</details>
+	</article> -->
+
+	<article class="slide" data-insert="#shadow-range"></article>
+
+	<!-- <article class="isolated horizontal demo slide" id="autoprefixing" style="--division: 60;">
+		<textarea class="language-css">
+			* {
+				--backdrop-filter: initial;
+				-webkit-backdrop-filter: var(--backdrop-filter);
+				backdrop-filter: var(--backdrop-filter);
+			}
+
+			section {
+				background: hsl(0 0% 100% / .5);
+				--backdrop-filter: blur(5px);
+			}
+		</textarea>
+		<style data-slide media="not all" class="demo">
+			body {
+				background: url(img/cat5.jpg) center / cover;
+				display: flex;
+				min-height: 100vh;
+				margin: 0;
+			}
+
+			section {
+				padding: 1em;
+				margin: auto;
+				border-radius: .2em;
+			}
+		</style>
+		<textarea class="language-html">
+			<section>
+				<p>Content</p>
+			</section>
+		</textarea>
+		<details class="notes">
+			Custom properties can help with vendor prefixes.
+			For example, `backdrop-filter` still needs a `-webkit-` prefix
+			in [certain browsers](https://caniuse.com/css-backdrop-filter).
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>CSS Variables enable you to <br>set multiple properties at once
+			<div class="note">but they do not interpolate!</div>
+		</h1>
+	</article> -->
+
+	<article class="codepen slide" id="staggered">
+		<iframe scrolling="no" title="Staggered slide in" src="https://codepen.io/leaverou/embed/preview/wvJpEMQ?height=265&theme-id=dark&default-tab=css,result&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
+		<details class="notes">
+			It is common to want to apply various effects, especially animations,
+			that are different depending on the index of an element among its siblings.
+			Staggered animations are a common example.
+			We can use Sass to define a generic `--index` property that we can then
+			use wherever we want in our CSS.
+
+			Going further: How does our code handle the case of exceeding the number of siblings
+			we have accounted for? Can we improve things?
+		</details>
+	</article>
+
+	<article class="takeaway slide">
+		<h1>A generic `--index` can be used for many effects, including staggered animations</h1>
+	</article>
+</section>
+<!-- End Animations -->
+
 
 <!-- <article class="isolated demo slide" id="homework-buttons">
 	<textarea class="language-css">

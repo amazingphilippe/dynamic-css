@@ -56,7 +56,7 @@ await Inspire.importsLoaded;
 
 // Reduced slide deck for attendees to follow along with certain activities
 if (Inspire.profile !== "speaker") {
-	let remove = `.color-reveal, .demo.reveal, .speaker-only`;
+	let remove = `.color-reveal, .demo.reveal, .speaker-only, .valid-quiz`;
 	let slidesToRemove = $$(`.slide:is(${remove})`);
 
 	slidesToRemove.forEach(slide => slide.remove());
